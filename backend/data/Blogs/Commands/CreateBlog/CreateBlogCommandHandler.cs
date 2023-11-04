@@ -1,3 +1,4 @@
+using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 using MediatR;
 
