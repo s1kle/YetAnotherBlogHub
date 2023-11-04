@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace BlogHub.Data.Commands.CreateBlog;
+namespace BlogHub.Data.Commands.Create;
 
 public record CreateBlogCommand : IRequest<Guid>
 {

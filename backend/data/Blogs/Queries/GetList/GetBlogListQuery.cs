@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace BlogHub.Data.Queries.GetBlogList;
+namespace BlogHub.Data.Queries.GetList;
 
 public record GetBlogListQuery : IRequest<BlogListVm>
 {

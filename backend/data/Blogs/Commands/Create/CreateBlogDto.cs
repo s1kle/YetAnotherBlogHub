@@ -1,6 +1,6 @@
-namespace BlogHub.Data.Queries.GetBlogList;
+namespace BlogHub.Data.Commands.Create;
 
-public record BlogVmForList
+public record CreateBlogDto
 {
     public required string Title { get; init; }
     public required string? Details { get; init; }

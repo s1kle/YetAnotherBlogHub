@@ -11,11 +11,11 @@ public static class DependencyInjection
     public static IServiceCollection AddDependencies(this IServiceCollection services)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        services.AddMediatR(config =>
-            config.RegisterServicesFromAssembly(assembly));
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(assembly));
         services.AddAutoMapper(assembly);
+        services.AddValidatorsFromAssembly(assembly);
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         return services;
     }
 }

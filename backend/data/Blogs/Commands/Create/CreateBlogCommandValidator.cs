@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BlogHub.Data.Commands.CreateBlog;
+namespace BlogHub.Data.Commands.Create;
 
 public class CreateBlogCommandValidator : AbstractValidator<CreateBlogCommand>
 {

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BlogHub.Data.Queries.GetBlogList;
+namespace BlogHub.Data.Queries.GetList;
 
 public class GetBlogListQueryValidator : AbstractValidator<GetBlogListQuery>
 {

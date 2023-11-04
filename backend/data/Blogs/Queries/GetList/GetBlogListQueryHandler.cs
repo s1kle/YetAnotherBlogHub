@@ -1,10 +1,10 @@
 using AutoMapper;
 using BlogHub.Data.Interfaces;
-using BlogHub.Data.Queries.GetBlog;
+using BlogHub.Data.Queries.Get;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogHub.Data.Queries.GetBlogList;
+namespace BlogHub.Data.Queries.GetList;
 
 public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogListVm>
 {

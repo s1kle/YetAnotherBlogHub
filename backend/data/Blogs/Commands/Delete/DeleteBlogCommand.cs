@@ -1,8 +1,8 @@
 using MediatR;
 
-namespace BlogHub.Data.Queries.GetBlog;
+namespace BlogHub.Data.Commands.Delete;
 
-public record GetBlogQuery : IRequest<BlogVm>
+public record DeleteBlogCommand : IRequest<Guid>
 {
     public required Guid UserId { get; init; }
     public required Guid Id { get; init; }
