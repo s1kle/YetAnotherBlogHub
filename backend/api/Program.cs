@@ -1,12 +1,28 @@
+using System.Text;
 using BlogHub.Api.Configuration;
-using BlogHub.Api.Services;
 using BlogHub.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddBlogDbContext(builder.Configuration);
 builder.Services.AddDependencies();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new ()
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JwtOptions:Audience"],
+
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]!))
+        };
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -16,16 +32,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    using (var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetService<BlogDbContext>();
-
-        context?.Database.EnsureCreated();
-    }
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

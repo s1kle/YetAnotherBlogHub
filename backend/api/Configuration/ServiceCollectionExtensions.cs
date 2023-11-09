@@ -1,4 +1,4 @@
-using BlogHub.Api.Services;
+using BlogHub.Api.Data;
 using BlogHub.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

@@ -2,7 +2,7 @@ using BlogHub.Domain;
 using BlogHub.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Data;
 
 public class BlogDbContext : DbContext, IBlogDbContext
 {

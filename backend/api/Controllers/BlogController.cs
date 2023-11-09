@@ -1,14 +1,14 @@
 using AutoMapper;
-using AutoMapper.Configuration.Annotations;
 using BlogHub.Data.Commands.Create;
 using BlogHub.Data.Commands.Delete;
 using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlogHub.Api.BlogController;
+namespace BlogHub.Api.Controllers;
 
 [Route("api/[controller]")]
 public class BlogController : ControllerBase
@@ -23,7 +23,7 @@ public class BlogController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet][Authorize]
     public async Task<ActionResult<BlogListVm>> GetAll() 
     {
         var query = new GetBlogListQuery() 
