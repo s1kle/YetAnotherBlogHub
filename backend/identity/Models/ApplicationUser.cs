@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace BlogHub.Identity.Data;
+namespace BlogHub.Identity.Models;
 
 public class ApplicationUser : IdentityUser
 {

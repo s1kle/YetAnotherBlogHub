@@ -1,4 +1,5 @@
 using BlogHub.Identity.Data;
+using BlogHub.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
