@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
             config.Password.RequireNonAlphanumeric = false;
             config.Password.RequireUppercase = false;
 
-        })
+        }) 
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
 

@@ -1,76 +1,68 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using BlogHub.Identity.Configuration;
 using BlogHub.Identity.Models;
 using IdentityModel;
 using IdentityModel.Client;
-using IdentityServer4.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BlogHub.Identity.Controllers;
 
-[Route("[controller]")]
-public class AuthorizationController : ControllerBase
+[Route("Auth")]
+public class AuthorizationController : Controller
 {
-    private readonly IConfiguration _configuration;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private string _authCode; // TODO: AuthCode Manager
 
-    public AuthorizationController(IConfiguration configuration)
+    public AuthorizationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
-        _configuration = configuration;
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _authCode = ""; // TODO: AuthCode Manager
+    }
+
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = model.Username
+        };
+
+        var registerResult = await _userManager.CreateAsync(user, model.Password);
+
+        if (registerResult.Succeeded is false)
+        {
+            var errorUrl = $"{model.ErrorUri}&ErrorMsg={registerResult.Errors}";
+            return Redirect(errorUrl);
+        }
+
+        return Redirect(model.RedirectUri);
+    }
+
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    {
+        var user = await _userManager.FindByNameAsync(model.Username);
+
+        if (user is null) return NotFound("Invalid login");
+
+        var loginResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+        if (loginResult.Succeeded is false)
+        {
+            var errorUrl = $"{model.ErrorUri}&ErrorMsg=InvalidCredentials";
+            return Redirect(errorUrl);
+        }
+
+        _authCode = CryptoRandom.CreateUniqueId(); // TODO: AuthCode Manager
+
+        var redirectUrl = $"{model.RedirectUri}&AuthCode={_authCode}";
+        return Redirect(redirectUrl);
     }
 
     [HttpPost("connect/token")]
-    public IActionResult GenerateToken(TokenRequest tokenRequest)
+    public IActionResult GenerateToken([FromBody] AuthorizationCodeTokenRequest tokenRequest)
     {
-        Func<TokenRequest, string>? handler = null;
-
-        if (tokenRequest.GrantType.Equals(GrantTypes.ClientCredentials.FirstOrDefault()))
-            handler = HandleClientCredentialsFlow;
-        
-        if (handler is null) return BadRequest(new { Message = $"{tokenRequest.GrantType} flow not implemented"});
-
-        try
-        {
-            var token = handler(tokenRequest);
-            return Ok(new { access_token = token });
-        }
-        catch (ArgumentException exception)
-        {
-            return BadRequest(new { exception.Message });
-        }
-
-    }
-
-    private string HandleClientCredentialsFlow(TokenRequest tokenRequest)
-    {
-        var client = IdentityServerConfiguration.Clients
-            .Where(client => client.ClientId.Equals(tokenRequest.ClientId))
-            .FirstOrDefault();
-
-        if (client is null) 
-            throw new ArgumentException("No client with given id found");
-        
-        if (client.ClientSecrets.FirstOrDefault()!.Value.Equals(tokenRequest.ClientSecret) is false)
-            throw new ArgumentException("Incorrect client secret");
-
-        var claims = client.AllowedScopes.Select(scope => new Claim(JwtClaimTypes.Scope, scope));
-  
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JwtOptions:Issuer"],
-            audience: _configuration["JwtOptions:Audience"],
-            claims: claims,
-            notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddMinutes(30),
-            signingCredentials: new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtOptions:SecretKey"]!)), 
-                SecurityAlgorithms.HmacSha256)
-        );  
-
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return tokenString;
+        throw new NotImplementedException();
     }
 }

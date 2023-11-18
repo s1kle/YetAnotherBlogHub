@@ -14,13 +14,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new ()
         {
-            ValidateIssuer = true,
             ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
-
-            ValidateAudience = true,
             ValidAudience = builder.Configuration["JwtOptions:Audience"],
-
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"]!)),
+            ValidateIssuerSigningKey = true
         };
     });
 builder.Services.AddEndpointsApiExplorer();

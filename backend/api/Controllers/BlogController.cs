@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using BlogHub.Data.Commands.Create;
 using BlogHub.Data.Commands.Delete;
@@ -15,7 +16,6 @@ public class BlogController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    private readonly Guid _userId = Guid.Parse("d65371e9-7c76-4f18-a6d0-eb738fa1ed86");
 
     public BlogController(IMapper mapper, IMediator mediator)
     {
@@ -26,9 +26,11 @@ public class BlogController : ControllerBase
     [HttpGet][Authorize]
     public async Task<ActionResult<BlogListVm>> GetAll() 
     {
+        var userId = GetCurrentUserId();
+
         var query = new GetBlogListQuery() 
         {
-            UserId = _userId
+            UserId = userId
         };
 
         var responce = await _mediator.Send(query);
@@ -36,12 +38,14 @@ public class BlogController : ControllerBase
         return Ok(responce);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}")][Authorize]
     public async Task<ActionResult<BlogVm>> GetById(Guid id)
     {
+        var userId = GetCurrentUserId();
+
         var query = new GetBlogQuery() 
         {
-            UserId = _userId,
+            UserId = userId,
             Id = id
         };
 
@@ -50,39 +54,64 @@ public class BlogController : ControllerBase
         return Ok(responce);
     }
 
-    [HttpPost]
+    [HttpPost][Authorize]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateBlogDto dto)
     {
+        var userId = GetCurrentUserId();
+
         var mappedDto = _mapper.Map<CreateBlogCommand>(dto);
-        var command = mappedDto with { UserId = _userId };
+        var command = mappedDto with { UserId = userId };
 
         var blogId = await _mediator.Send(command);
 
         return Ok(blogId);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}")][Authorize]
     public async Task<ActionResult<Guid>> Update(Guid id, [FromBody] UpdateBlogDto dto)
     {
+        var userId = GetCurrentUserId();
+
         var mappedDto = _mapper.Map<UpdateBlogCommand>(dto);
-        var command = mappedDto with { Id = id, UserId = _userId };
+        var command = mappedDto with { Id = id, UserId = userId };
 
         var blogId = await _mediator.Send(command);
 
         return Ok(blogId);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}")][Authorize]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
+        var userId = GetCurrentUserId();
+
         var command = new DeleteBlogCommand
         {
             Id = id,
-            UserId = _userId
+            UserId = userId
         };
 
         var blogId = await _mediator.Send(command);
 
         return Ok(blogId);
+    }
+
+    private Guid GetCurrentUserId()
+    {
+        var header = HttpContext.Request.Headers["Authorization"]
+            .ToString();
+
+        var token = header.Substring("Bearer ".Length);
+
+        if (string.IsNullOrEmpty(token)) 
+            throw new ArgumentException($"Token parsing error. {token}");
+
+        var handler = new JwtSecurityTokenHandler();
+        var claim = handler.ReadJwtToken(token)?.Payload.Sub 
+            ?? throw new ArgumentException($"Token reading error. {token}");
+
+        var id = Guid.Parse(claim);
+
+        return id;
     }
 }

@@ -7,7 +7,7 @@ namespace BlogHub.Api.Configuration;
 public static class ServiceCollectionExtensions
 {
     private const string BlogsConnectionString = "Blogs";
-
+ 
     public static IServiceCollection AddBlogDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<BlogDbContext>(options =>
