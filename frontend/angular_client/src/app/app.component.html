@@ -1,0 +1,18 @@
+<div class="menu">
+  <div class="left">
+      {{title}}
+  </div>
+  <div class="center">
+
+  </div>
+  <div class="right">
+      <div *ngIf="isAuthenticated">
+          <app-signout-redirect></app-signout-redirect>
+      </div>
+      <div *ngIf="!isAuthenticated">
+          <app-signin-redirect></app-signin-redirect>
+      </div>
+  </div>
+</div>
+<button (click)="showToken()">Show token</button>
+<router-outlet></router-outlet>

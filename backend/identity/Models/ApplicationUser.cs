@@ -4,5 +4,5 @@ namespace BlogHub.Identity.Models;
 
 public class ApplicationUser : IdentityUser
 {
-    
+
 }

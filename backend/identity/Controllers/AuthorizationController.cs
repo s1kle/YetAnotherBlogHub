@@ -1,68 +1,66 @@
 using BlogHub.Identity.Models;
-using IdentityModel;
-using IdentityModel.Client;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Identity.Controllers;
 
-[Route("Auth")]
+[Route("[controller]")]
 public class AuthorizationController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private string _authCode; // TODO: AuthCode Manager
+    private readonly IIdentityServerInteractionService _interactionService;
 
-    public AuthorizationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AuthorizationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IIdentityServerInteractionService interactionService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _authCode = ""; // TODO: AuthCode Manager
+        _interactionService = interactionService;
     }
 
-    [HttpPost("Register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    [HttpGet("[action]")]
+    public IActionResult Login(string returnUrl)
     {
-        var user = new ApplicationUser
+        var viewModel = new LoginViewModel
         {
-            UserName = model.Username
+            ReturnUrl = returnUrl
         };
 
-        var registerResult = await _userManager.CreateAsync(user, model.Password);
-
-        if (registerResult.Succeeded is false)
+        return View(viewModel);
+    }
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Login(LoginViewModel viewModel)
+    {
+        if (ModelState.IsValid is false)
         {
-            var errorUrl = $"{model.ErrorUri}&ErrorMsg={registerResult.Errors}";
-            return Redirect(errorUrl);
+            ModelState.AddModelError(string.Empty, "VM is not valid");
+            return View(viewModel);
         }
 
-        return Redirect(model.RedirectUri);
-    }
+        var user = await _userManager.FindByNameAsync(viewModel.Username!);
 
-    [HttpPost("Login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
-    {
-        var user = await _userManager.FindByNameAsync(model.Username);
+        if (user is null)
+        {
+            ModelState.AddModelError(string.Empty, "User not found");
+            return View(viewModel);
+        }
 
-        if (user is null) return NotFound("Invalid login");
-
-        var loginResult = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+        var loginResult = await _signInManager.PasswordSignInAsync(user, viewModel.Password!, false, false);
 
         if (loginResult.Succeeded is false)
         {
-            var errorUrl = $"{model.ErrorUri}&ErrorMsg=InvalidCredentials";
-            return Redirect(errorUrl);
+            ModelState.AddModelError(string.Empty, "Login error");
+            return View(viewModel);
         }
 
-        _authCode = CryptoRandom.CreateUniqueId(); // TODO: AuthCode Manager
-
-        var redirectUrl = $"{model.RedirectUri}&AuthCode={_authCode}";
-        return Redirect(redirectUrl);
+        return Redirect(viewModel.ReturnUrl!);
     }
 
-    [HttpPost("connect/token")]
-    public IActionResult GenerateToken([FromBody] AuthorizationCodeTokenRequest tokenRequest)
-    {
-        throw new NotImplementedException();
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Logout(string logoutId) {
+        await _signInManager.SignOutAsync();
+        var request = await _interactionService.GetLogoutContextAsync(logoutId);
+        return Redirect(request.PostLogoutRedirectUri);
     }
 }

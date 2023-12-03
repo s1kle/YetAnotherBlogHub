@@ -1,16 +1,17 @@
 using BlogHub.Identity.Configuration;
+using BlogHub.Identity.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDependencies(builder.Configuration);
-builder.Services.AddControllers();
-builder.Services.AddAuthentication();
+builder.Services.AddConfiguration(builder.Configuration);
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseIdentityServer();
-app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
