@@ -1,5 +1,3 @@
-using BlogHub.Data.Queries.Get;
-
 namespace BlogHub.Data.Queries.GetList;
 
 public record BlogVmForList

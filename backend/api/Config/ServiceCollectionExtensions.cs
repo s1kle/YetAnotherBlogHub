@@ -3,6 +3,7 @@ using BlogHub.Data;
 using BlogHub.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace BlogHub.Api.Configuration;
 
@@ -13,6 +14,7 @@ public static class ServiceCollectionExtensions
  
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
     {   
+        services.AddSerilog(config => config.ReadFrom.Configuration(configuration));
         services.AddDataDependencies();
         services.AddDbContext<BlogDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString(BlogsConnectionString)));
