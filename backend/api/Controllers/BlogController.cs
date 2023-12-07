@@ -34,9 +34,9 @@ public class BlogController : ControllerBase
             UserId = _userId
         };
 
-        var responce = await _mediator.Send(query);
+        var response = await _mediator.Send(query);
 
-        return Ok(responce);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -48,9 +48,9 @@ public class BlogController : ControllerBase
             Id = id
         };
 
-        var responce = await _mediator.Send(query);
+        var response = await _mediator.Send(query);
 
-        return Ok(responce);
+        return Ok(response);
     }
 
     [HttpPost]
