@@ -6,11 +6,11 @@ namespace BlogHub.Data.Commands.Create;
 
 public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
 {
-    private readonly IBlogDbContext _context;
+    private readonly IBlogRepository _repository;
 
-    public CreateBlogCommandHandler(IBlogDbContext context)
+    public CreateBlogCommandHandler(IBlogRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     public async Task<Guid> Handle(CreateBlogCommand request, CancellationToken cancellationToken)
@@ -21,14 +21,12 @@ public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
             UserId = request.UserId,
             Title = request.Title,
             Details = request.Details,
-
             CreationDate = DateTime.UtcNow,
             EditDate = null
         };
 
-        await _context.Blogs.AddAsync(blog, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        var id = await _repository.CreateAsync(blog, cancellationToken);
 
-        return blog.Id;
+        return id;
     }
 }
