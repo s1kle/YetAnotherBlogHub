@@ -1,4 +1,5 @@
 using BlogHub.Api.Data;
+using BlogHub.Api.Filters;
 using BlogHub.Data;
 using BlogHub.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,7 @@ namespace BlogHub.Api.Configuration;
 public static class ServiceCollectionExtensions
 {
     private const string BlogsConnectionString = "Blogs";
+    private const string RedisConnectionString = "Redis";
     private const string ClientConnectionString = "Client";
  
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
@@ -19,6 +21,13 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<BlogDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString(BlogsConnectionString)));
         services.AddScoped<IBlogDbContext, BlogDbContext>();
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetConnectionString(RedisConnectionString);
+            options.InstanceName = configuration["Redis:InstanceName"];
+        });
+        services.AddScoped<IBlogRepository, BlogRepository>();
+        services.AddControllers(config => config.Filters.Add<LoggingFilter>());
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
@@ -34,6 +43,8 @@ public static class ServiceCollectionExtensions
                 policy.AllowAnyMethod();
             });
         });
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
         return services;
     }
 }
