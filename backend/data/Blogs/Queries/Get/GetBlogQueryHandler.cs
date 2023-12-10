@@ -1,7 +1,6 @@
 using AutoMapper;
 using BlogHub.Data.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlogHub.Data.Queries.Get;
 
