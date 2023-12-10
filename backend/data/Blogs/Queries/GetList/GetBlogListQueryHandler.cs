@@ -1,5 +1,6 @@
 using AutoMapper;
 using BlogHub.Data.Interfaces;
+using BlogHub.Data.Queries.Get;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,22 +8,24 @@ namespace BlogHub.Data.Queries.GetList;
 
 public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogListVm>
 {
-    private readonly IBlogDbContext _context;
+    private readonly IBlogRepository _repository;
     private readonly IMapper _mapper;
 
-    public GetBlogListQueryHandler(IBlogDbContext context, IMapper mapper)
+    public GetBlogListQueryHandler(IBlogRepository repository, IMapper mapper)
     {
-        _context = context;
+        _repository = repository;
         _mapper = mapper;
     }
 
     public async Task<BlogListVm> Handle(GetBlogListQuery request, CancellationToken cancellationToken)
     {
-        var blogs = await _context.Blogs
-            .Where(blog => blog.UserId.Equals(request.UserId))
+        var blogs = _repository
+            .GetAllBlogsAsync(request.UserId, request.Page, request.Size);
+
+        var mappedBlogs = await blogs
             .Select(blog => _mapper.Map<BlogVmForList>(blog))
             .ToArrayAsync(cancellationToken);
 
-        return new BlogListVm { Blogs = blogs };
+        return new BlogListVm { Blogs = mappedBlogs };
     }
 }

@@ -7,35 +7,29 @@ namespace BlogHub.Data.Commands.Update;
 
 public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 {
-    private readonly IBlogDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly IBlogRepository _repository;
 
-    public UpdateBlogCommandHandler(IBlogDbContext context, IMapper mapper)
+    public UpdateBlogCommandHandler(IBlogRepository repository)
     {
-        _context = context;
-        _mapper = mapper;
+        _repository = repository;
     }
 
     public async Task<Guid> Handle(UpdateBlogCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Blogs.FirstOrDefaultAsync(blog =>
-            blog.Id == request.Id, cancellationToken);
+        var original = await _repository.GetBlogAsync(request.Id, cancellationToken);
 
-        if (entity is null || entity.UserId != request.UserId)
-            throw new ArgumentException(nameof(entity));
+        if (original is null || original.UserId != request.UserId)
+            throw new ArgumentException(nameof(original));
 
-        var blog = entity with
+        var updated = original with
         {
             Title = request.Title,
             Details = request.Details,
-
             EditDate = DateTime.UtcNow
         };
 
-        _context.Blogs.Remove(entity);
-        var result = await _context.Blogs.AddAsync(blog);
-        await _context.SaveChangesAsync(cancellationToken);
+        var id = await _repository.UpdateAsync(original, updated, cancellationToken);
 
-        return blog.Id;
+        return id;
     }
 }

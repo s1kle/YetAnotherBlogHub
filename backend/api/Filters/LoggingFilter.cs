@@ -14,11 +14,11 @@ public class LoggingFilter : IActionFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        _logger.Information("Action Response: {@Response}", context.Result);
+        _logger.Information("Controller Response - {@Response}", context.Result);
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        _logger.Information("Action Request: {@Request}", context.ActionDescriptor.DisplayName);
+        _logger.Information("Controller Request - {@Request}", context.ActionDescriptor.DisplayName);
     }
 }
