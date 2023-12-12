@@ -1,5 +1,4 @@
 using BlogHub.Api.Data;
-using BlogHub.Api.Filters;
 using BlogHub.Data;
 using BlogHub.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,7 +26,7 @@ public static class ServiceCollectionExtensions
             options.InstanceName = configuration["Redis:InstanceName"];
         });
         services.AddScoped<IBlogRepository, BlogRepository>();
-        services.AddControllers(config => config.Filters.Add<LoggingFilter>());
+        services.AddControllers();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
