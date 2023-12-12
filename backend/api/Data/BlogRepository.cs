@@ -3,7 +3,6 @@ using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using ILogger = Serilog.ILogger;
 
 namespace BlogHub.Api.Data;
 
@@ -11,13 +10,11 @@ public class BlogRepository : IBlogRepository
 {
     private readonly IDistributedCache _cache;
     private readonly IBlogDbContext _dbContext;
-    private readonly ILogger _logger;
 
-    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext, ILogger logger)
+    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext)
     {
         _cache = cache;
         _dbContext = dbContext;
-        _logger = logger;
     }
 
 
@@ -29,12 +26,10 @@ public class BlogRepository : IBlogRepository
 
         if (bytes is not null)
         {
-            _logger.Information($"Reading cache for {cacheKey}");
             var cachedBlogs = JsonSerializer.Deserialize<List<Blog>>(bytes);
             return cachedBlogs ?? new ();
         }
 
-        _logger.Information($"Reading data for {userId}");
         var blogs = _dbContext.Blogs
             .Where(blog => blog.UserId.Equals(userId))
             .OrderBy(blog => blog.Id)
@@ -56,12 +51,10 @@ public class BlogRepository : IBlogRepository
 
         if (bytes is not null)
         {
-            _logger.Information($"Reading cache for {cacheKey}");
             var cachedBlog = JsonSerializer.Deserialize<Blog>(bytes);
             return cachedBlog;
         }
 
-        _logger.Information($"Reading data for {blogId}");
         var blog = await _dbContext
             .Blogs
             .FirstOrDefaultAsync(entity => entity.Id.Equals(blogId), cancellationToken);
