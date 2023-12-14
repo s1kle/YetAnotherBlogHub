@@ -22,4 +22,8 @@ public class BlogsFactory
         new (FirstUserId, SecondUserId);
     public GetBlogListFixture GetBlogListFixture(int size) =>
         new (FirstUserId, size);
+    public MappingCreateDtoFixture MappingCreateDtoFixture(string title, string? details) =>
+        new (FirstUserId, title, details);
+        public MappingUpdateDtoFixture MappingUpdateDtoFixture(string title, string? details) =>
+        new (FirstUserId, title, details);
 }
