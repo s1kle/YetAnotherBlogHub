@@ -1,11 +1,15 @@
+using BlogHub.Tests.Data.Fixtures.Mapping;
+using BlogHub.Tests.Data.Fixtures.Requests;
+using BlogHub.Tests.Data.Fixtures.Validation;
+
 namespace BlogHub.Tests.Data.Fixtures;
 
-public class BlogsFactory
+public class FixtureFactory
 {
     public readonly Guid FirstUserId;
     public readonly Guid SecondUserId;
 
-    public BlogsFactory()
+    public FixtureFactory()
     {
         FirstUserId = Guid.Parse("7fa2bd57-76bc-502b-a62a-7fb34b6ac4ae");
         SecondUserId = Guid.Parse("58e19cd0-ea9e-5f8f-b26c-ba61148759de");
@@ -22,4 +26,10 @@ public class BlogsFactory
         new (FirstUserId, SecondUserId);
     public GetBlogListFixture GetBlogListFixture(int size) =>
         new (FirstUserId, size);
+    public MappingCreateDtoFixture MappingCreateDtoFixture(string title, string? details) =>
+        new (FirstUserId, title, details);
+    public MappingUpdateDtoFixture MappingUpdateDtoFixture(string title, string? details) =>
+        new (FirstUserId, title, details);
+    public ValidationFixture ValidationFixture() =>
+        new ();
 }
