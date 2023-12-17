@@ -5,12 +5,12 @@ using BlogHub.Data.Mappings;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
 
-namespace BlogHub.Tests.Data.Behaviors;
+namespace BlogHub.Tests.Data.Mapping;
 
 public class MappingTests
 {
     private readonly IMapper _mapper;
-    private readonly BlogsFactory _blogsFactory;
+    private readonly FixtureFactory _blogsFactory;
     public MappingTests()
     {
         _mapper = new MapperConfiguration(config => config.AddProfile<BlogMappingProfile>())

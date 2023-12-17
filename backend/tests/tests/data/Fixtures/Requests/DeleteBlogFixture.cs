@@ -1,8 +1,7 @@
 using BlogHub.Data.Commands.Delete;
-using BlogHub.Data.Commands.Update;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Data.Fixtures;
+namespace BlogHub.Tests.Data.Fixtures.Requests;
 
 public class DeleteCommandFixture
 {

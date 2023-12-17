@@ -7,7 +7,7 @@ namespace BlogHub.Tests.Data.Requests;
 
 public class GetListQueryTests
 {
-    private readonly BlogsFactory _blogsFactory;
+    private readonly FixtureFactory _blogsFactory;
 
     public GetListQueryTests()
     {

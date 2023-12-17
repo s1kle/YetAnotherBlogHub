@@ -1,6 +1,6 @@
 using BlogHub.Data.Commands.Create;
 
-namespace BlogHub.Tests.Data.Fixtures;
+namespace BlogHub.Tests.Data.Fixtures.Mapping;
 
 public class MappingCreateDtoFixture
 {   

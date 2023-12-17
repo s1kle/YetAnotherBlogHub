@@ -6,7 +6,7 @@ namespace BlogHub.Tests.Data.Requests;
 
 public class CreateCommandTests
 {
-    private readonly BlogsFactory _blogsFactory;
+    private readonly FixtureFactory _blogsFactory;
 
     public CreateCommandTests()
     {
