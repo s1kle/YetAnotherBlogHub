@@ -4,7 +4,6 @@ using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
 using BlogHub.Tests.Data.Fixtures.Validation;
-using FluentValidation;
 
 namespace BlogHub.Tests.Data.Validation;
 

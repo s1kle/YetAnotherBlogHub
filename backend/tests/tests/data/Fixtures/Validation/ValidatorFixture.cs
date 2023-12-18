@@ -1,11 +1,8 @@
-using System.Reflection;
-using AutoFixture;
 using BlogHub.Data.Commands.Create;
 using BlogHub.Data.Commands.Delete;
 using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
-using FluentValidation;
 
 namespace BlogHub.Tests.Data.Fixtures.Validation;
 
