@@ -4,7 +4,7 @@ using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace BlogHub.Api.Data;
+namespace BlogHub.Api.Services;
 
 public class BlogRepository : IBlogRepository
 {
