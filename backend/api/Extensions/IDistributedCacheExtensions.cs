@@ -1,0 +1,37 @@
+using System.Text.Json;
+using Microsoft.Extensions.Caching.Distributed;
+
+namespace BlogHub.Api.Extensions;
+
+public static class IDistributedCacheExtensions
+{
+    public static async Task SetItemAsync<TItem>(this IDistributedCache cache, string key, TItem value, CancellationToken cancellationToken = default)
+    {
+        if (value is null) throw new ArgumentNullException(nameof(value));
+        var bytes = JsonSerializer.SerializeToUtf8Bytes(value);
+        await cache.SetAsync(key, bytes, cancellationToken);
+    }
+
+    public static async Task<TItem?> GetItemAsync<TItem>(this IDistributedCache cache, string key, CancellationToken cancellationToken = default)
+    {
+        var bytes = await cache.GetAsync(key, cancellationToken);
+        if (bytes is null) return default;
+        var value = JsonSerializer.Deserialize<TItem>(bytes);
+        return value;
+    }
+    public static async Task<TItem> GetOrCreateItemAsync<TItem>(this IDistributedCache cache, string key, Func<Task<TItem?>> getItem, CancellationToken cancellationToken = default)
+    {
+        var value = await cache.GetItemAsync<TItem>(key, cancellationToken);
+        if (value is null) 
+        {
+            value = await getItem() ?? throw new ArgumentNullException(nameof(value));
+            await cache.SetItemAsync(key, value, cancellationToken);
+        }
+        return value;
+    }
+
+    public static async Task RemoveAsync(this IDistributedCache cache, CancellationToken cancellationToken = default, params string[] keys)
+    {
+        foreach(var key in keys) await cache.RemoveAsync(key, cancellationToken);
+    }
+}

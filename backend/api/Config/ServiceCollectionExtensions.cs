@@ -1,9 +1,12 @@
 using BlogHub.Api.Data;
-using BlogHub.Api.Filters;
+using BlogHub.Api.Services;
 using BlogHub.Data;
 using BlogHub.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace BlogHub.Api.Configuration;
@@ -26,8 +29,14 @@ public static class ServiceCollectionExtensions
             options.Configuration = configuration.GetConnectionString(RedisConnectionString);
             options.InstanceName = configuration["Redis:InstanceName"];
         });
+        services.AddScoped<IDistributedCache>(provider =>
+        {
+            var redisCacheOptions = provider.GetRequiredService<IOptions<RedisCacheOptions>>();
+            var cache = new RedisCache(redisCacheOptions);
+            return new LoggingDistributedCache(cache);
+        });
         services.AddScoped<IBlogRepository, BlogRepository>();
-        services.AddControllers(config => config.Filters.Add<LoggingFilter>());
+        services.AddControllers();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {

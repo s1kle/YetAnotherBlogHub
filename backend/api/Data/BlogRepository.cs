@@ -1,9 +1,8 @@
-using System.Text.Json;
+using BlogHub.Api.Extensions;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using ILogger = Serilog.ILogger;
 
 namespace BlogHub.Api.Data;
 
@@ -11,100 +10,74 @@ public class BlogRepository : IBlogRepository
 {
     private readonly IDistributedCache _cache;
     private readonly IBlogDbContext _dbContext;
-    private readonly ILogger _logger;
 
-    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext, ILogger logger)
+    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext)
     {
         _cache = cache;
         _dbContext = dbContext;
-        _logger = logger;
     }
 
 
     public async Task<List<Blog>> GetAllBlogsAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
     {
-        var cacheKey = $"Blogs-{userId}";
+        var key = $"Blogs-{userId}";
 
-        var bytes = await _cache.GetAsync(cacheKey, cancellationToken);
-
-        if (bytes is not null)
-        {
-            _logger.Information($"Reading cache for {cacheKey}");
-            var cachedBlogs = JsonSerializer.Deserialize<List<Blog>>(bytes);
-            return cachedBlogs ?? new ();
-        }
-
-        _logger.Information($"Reading data for {userId}");
-        var blogs = _dbContext.Blogs
+        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Blogs
             .Where(blog => blog.UserId.Equals(userId))
             .OrderBy(blog => blog.Id)
             .Skip(page * size)
             .Take(size)
-            .ToList();
-
-        bytes = JsonSerializer.SerializeToUtf8Bytes(blogs);
-        await _cache.SetAsync(cacheKey, bytes, cancellationToken);
-
-        return blogs;
+            .ToListAsync(), 
+        cancellationToken);
     }
 
     public async Task<Blog?> GetBlogAsync(Guid blogId, CancellationToken cancellationToken)
     {
-        var cacheKey = $"Blog-{blogId}";
+        var key = $"Blog-{blogId}";
 
-        var bytes = await _cache.GetAsync(cacheKey, cancellationToken);
-
-        if (bytes is not null)
-        {
-            _logger.Information($"Reading cache for {cacheKey}");
-            var cachedBlog = JsonSerializer.Deserialize<Blog>(bytes);
-            return cachedBlog;
-        }
-
-        _logger.Information($"Reading data for {blogId}");
-        var blog = await _dbContext
-            .Blogs
-            .FirstOrDefaultAsync(entity => entity.Id.Equals(blogId), cancellationToken);
-
-        bytes = JsonSerializer.SerializeToUtf8Bytes(blog);
-        await _cache.SetAsync(cacheKey, bytes, cancellationToken);
-
-        return blog;
+        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Blogs
+            .FirstOrDefaultAsync(blog => blog.Id.Equals(blogId), cancellationToken), 
+        cancellationToken);
     }
 
     public async Task<Guid> CreateAsync(Blog blog, CancellationToken cancellationToken)
     {
+        var key = $"Blog-{blog.Id}";
+        var blogsKey = $"Blogs-{blog.UserId}";
+
         await _dbContext.Blogs.AddAsync(blog, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(blog);
-        await _cache.SetAsync($"Blog-{blog.Id}", bytes, cancellationToken);
-        await _cache.RemoveAsync($"Blogs-{blog.UserId}", cancellationToken);
+        await _cache.SetItemAsync(key, blog, cancellationToken);
+        await _cache.RemoveAsync(blogsKey, cancellationToken);
 
         return blog.Id;
     }
 
     public async Task<Guid> UpdateAsync(Blog original, Blog updated, CancellationToken cancellationToken)
     {
+        var key = $"Blog-{original.Id}";
+        var blogsKey = $"Blogs-{original.UserId}";
+
         _dbContext.Blogs.Remove(original);
         await _dbContext.Blogs.AddAsync(updated, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.RemoveAsync($"Blog-{original.Id}", cancellationToken);
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(updated);
-        await _cache.SetAsync($"Blog-{updated.Id}", bytes, cancellationToken);
-        await _cache.RemoveAsync($"Blogs-{updated.UserId}", cancellationToken);
+        await _cache.RemoveAsync(cancellationToken, key, blogsKey);
+        await _cache.SetItemAsync(key, updated, cancellationToken);
 
         return updated.Id;
     }
 
     public async Task<Guid> RemoveAsync(Blog blog, CancellationToken cancellationToken)
     {
+        var key = $"Blog-{blog.Id}";
+        var blogsKey = $"Blogs-{blog.UserId}";
+        
         _dbContext.Blogs.Remove(blog);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.RemoveAsync($"Blog-{blog.Id}", cancellationToken);
-        await _cache.RemoveAsync($"Blogs-{blog.UserId}", cancellationToken);
+        await _cache.RemoveAsync(cancellationToken, key, blogsKey);
 
         return blog.Id;
     }
