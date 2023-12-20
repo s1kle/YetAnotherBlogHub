@@ -1,7 +1,7 @@
 using BlogHub.Data.Queries.GetList;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Data.Fixtures.Requests;
+namespace BlogHub.Tests.Fixtures.Requests;
 
 public class GetBlogListFixture
 {
@@ -51,7 +51,6 @@ public class GetBlogListFixture
         {
             Id = id,
             Title = title,
-            Details = details,
         };
 
         return (blog, blogVm);

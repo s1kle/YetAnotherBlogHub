@@ -1,8 +1,8 @@
-using BlogHub.Tests.Data.Fixtures.Mapping;
-using BlogHub.Tests.Data.Fixtures.Requests;
-using BlogHub.Tests.Data.Fixtures.Validation;
+using BlogHub.Tests.Fixtures.Mapping;
+using BlogHub.Tests.Fixtures.Requests;
+using BlogHub.Tests.Fixtures.Validation;
 
-namespace BlogHub.Tests.Data.Fixtures;
+namespace BlogHub.Tests.Fixtures;
 
 public class FixtureFactory
 {
@@ -17,7 +17,6 @@ public class FixtureFactory
 
     public CreateCommandFixture CreateCommandFixture(string title, string? details) =>
         new (FirstUserId, title, details);
-
     public UpdateCommandFixture UpdateCommandFixture(string title, string? details, string newTitle, string newDetails) =>
         new (FirstUserId, SecondUserId, title, details, newTitle, newDetails);
     public DeleteCommandFixture DeleteCommandFixture() =>

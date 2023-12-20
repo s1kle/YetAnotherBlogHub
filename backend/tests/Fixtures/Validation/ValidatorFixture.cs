@@ -4,7 +4,7 @@ using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
 
-namespace BlogHub.Tests.Data.Fixtures.Validation;
+namespace BlogHub.Tests.Fixtures.Validation;
 
 public class ValidationFixture
 {

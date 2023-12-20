@@ -1,7 +1,7 @@
 using BlogHub.Data.Commands.Create;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Data.Fixtures.Requests;
+namespace BlogHub.Tests.Fixtures.Requests;
 
 public class CreateCommandFixture
 {
