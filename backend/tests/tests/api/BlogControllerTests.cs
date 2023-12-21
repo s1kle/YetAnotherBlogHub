@@ -1,54 +1,65 @@
-/*
-    temp version
-*/
-
-using System.Reflection;
-using BlogHub.Api.Controllers;
-using BlogHub.Api.Data;
-using BlogHub.Api.Services;
-using BlogHub.Data.Interfaces;
-using BlogHub.Data.Validation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using BlogHub.Data.Queries.GetList;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Tests.Api;
 
 public class BlogControllerTests
 {
-    private readonly BlogController _blogController;
+    private readonly FixtureFactory _fixtureFactory;
 
     public BlogControllerTests()
     {
-        var dataAssembly = Assembly.GetAssembly(typeof(ValidationBehavior<,>));
-        var services = new ServiceCollection();
-        services.AddMediatR(config => config.RegisterServicesFromAssembly(dataAssembly));
-        services.AddAutoMapper(dataAssembly);
-        services.AddValidatorsFromAssembly(dataAssembly);
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddDbContext<BlogDbContext>(options =>
-            options.UseInMemoryDatabase("BlogHub.Tests"));
-        services.AddScoped<IBlogDbContext, BlogDbContext>();
-        services.AddScoped<IDistributedCache, MemoryDistributedCache>();
-        services.AddScoped<IBlogRepository, BlogRepository>();
-        var provider = services.BuildServiceProvider();
-
-        provider.GetService<BlogDbContext>().Database.EnsureCreated();
-
-        var mediatr = provider.GetService<IMediator>();
-        var mapper = provider.GetService<IMapper>();
-        
-        _blogController = new (mapper, mediatr);
+        _fixtureFactory = new ();
     }
 
     [Fact]
-    public async Task Test()
+    public async Task GetAllFromEmptyList_WithValidParams_ShouldSuccess()
     {
-        var result = await _blogController.GetAll(new () { Page = 0, Size = 1});
+        var blogControllerFixture = _fixtureFactory.BlogControllerFixture();
+        var blogController = blogControllerFixture.BlogController;
 
-        return;
+        blogControllerFixture.EnsureCreated();
+
+        var dto = new GetListDto() 
+        {
+            Page = 0,
+            Size = 10
+        };
+
+        var result = (await blogController.GetAll(dto)).Result as OkObjectResult;
+        var value = result.Value as BlogListVm;
+
+        result.Should().NotBeNull();
+        result.StatusCode.Should().Be(StatusCodes.Status200OK);
+        value.Should().NotBeNull();
+        value.Blogs.Should().NotBeNull();
+        value.Blogs.Should().BeEmpty();
+
+        blogControllerFixture.EnsureDeleted();
+    }
+
+    [Fact]
+    public async Task GetAllFromEmptyList_WithInvalidParams_ShouldFail()
+    {
+        var blogControllerFixture = _fixtureFactory.BlogControllerFixture();
+        var blogController = blogControllerFixture.BlogController;
+
+        blogControllerFixture.EnsureCreated();
+
+        var dto = new GetListDto() 
+        {
+            Page = 0,
+            Size = 0
+        };
+
+        var result = (await blogController.GetAll(dto)).Result as BadRequestObjectResult;
+        var value = result.Value as BlogListVm;
+
+        result.Should().NotBeNull();
+        result.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        value.Should().BeNull();
+
+        blogControllerFixture.EnsureDeleted();
     }
 }
