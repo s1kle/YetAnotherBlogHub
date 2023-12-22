@@ -1,4 +1,5 @@
 using BlogHub.Api.Configuration;
+using BlogHub.Api.Middlewares;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseCors("Client");

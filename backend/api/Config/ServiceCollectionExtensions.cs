@@ -1,3 +1,4 @@
+using BlogHub.Api.Middlewares;
 using BlogHub.Api.Services;
 using BlogHub.Data;
 using BlogHub.Data.Interfaces;
@@ -20,6 +21,7 @@ public static class ServiceCollectionExtensions
     {   
         services.AddSerilog(config => config.ReadFrom.Configuration(configuration));
         services.AddDataDependencies();
+        services.AddTransient<ExceptionHandlingMiddleware>();
         services.AddDbContext<BlogDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString(BlogsConnectionString)));
         services.AddScoped<IBlogDbContext, BlogDbContext>();
