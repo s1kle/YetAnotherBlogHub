@@ -18,7 +18,8 @@ public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogLis
     public async Task<BlogListVm> Handle(GetBlogListQuery request, CancellationToken cancellationToken)
     {
         var blogs = await _repository
-            .GetAllBlogsAsync(request.UserId, request.Page, request.Size, cancellationToken);
+            .GetAllBlogsAsync(request.UserId, request.Page, request.Size, cancellationToken)
+            ?? new ();
 
         var mappedBlogs = blogs
             .Select(blog => _mapper.Map<BlogVmForList>(blog))

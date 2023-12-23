@@ -19,12 +19,12 @@ public static class IDistributedCacheExtensions
         var value = JsonSerializer.Deserialize<TItem>(bytes);
         return value;
     }
-    public static async Task<TItem> GetOrCreateItemAsync<TItem>(this IDistributedCache cache, string key, Func<Task<TItem?>> getItem, CancellationToken cancellationToken = default)
+    public static async Task<TItem?> GetOrCreateItemAsync<TItem>(this IDistributedCache cache, string key, Func<Task<TItem?>> getItem, CancellationToken cancellationToken = default)
     {
         var value = await cache.GetItemAsync<TItem>(key, cancellationToken);
         if (value is null) 
         {
-            value = await getItem() ?? throw new ArgumentNullException(nameof(value));
+            value = await getItem();
             await cache.SetItemAsync(key, value, cancellationToken);
         }
         return value;
