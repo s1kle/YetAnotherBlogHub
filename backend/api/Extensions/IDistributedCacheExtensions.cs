@@ -7,7 +7,6 @@ public static class IDistributedCacheExtensions
 {
     public static async Task SetItemAsync<TItem>(this IDistributedCache cache, string key, TItem value, CancellationToken cancellationToken = default)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value));
         var bytes = JsonSerializer.SerializeToUtf8Bytes(value);
         await cache.SetAsync(key, bytes, cancellationToken);
     }
