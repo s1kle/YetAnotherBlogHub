@@ -31,6 +31,6 @@ public class FixtureFactory
         new (FirstUserId, title, details);
     public ValidationFixture ValidationFixture() =>
         new ();
-    public BlogControllerFixture BlogControllerFixture() =>
-        new (FirstUserId, SecondUserId);
+    public BlogControllerFixture BlogControllerFixture(string dbContextName) =>
+        new (FirstUserId, SecondUserId, dbContextName);
 }

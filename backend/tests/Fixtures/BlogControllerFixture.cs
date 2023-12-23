@@ -4,7 +4,6 @@ using BlogHub.Api.Controllers;
 using BlogHub.Api.Services;
 using BlogHub.Data.Interfaces;
 using BlogHub.Data.Validation;
-using BlogHub.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +18,11 @@ public class BlogControllerFixture
     public Guid WrongUserId { get; }
     public BlogController BlogController { get; }
     public BlogDbContext BlogDbContext;
-    private IServiceProvider _serviceProvider;
+    private bool _userState;
 
-    public BlogControllerFixture(Guid userId, Guid wrongUserId)
+    public BlogControllerFixture(Guid userId, Guid wrongUserId, string dbContextName)
     {
+        _userState = false;
         UserId = userId;
         WrongUserId = wrongUserId;
         var dataAssembly = Assembly.GetAssembly(typeof(ValidationBehavior<,>));
@@ -33,18 +33,18 @@ public class BlogControllerFixture
         services.AddAutoMapper(dataAssembly);
         services.AddValidatorsFromAssembly(dataAssembly);
         services.AddDbContext<BlogDbContext>(options => options
-            .UseInMemoryDatabase("BlogHub.Tests"));
+            .UseInMemoryDatabase(dbContextName));
         services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddSingleton<IDistributedCache, MemoryDistributedCache>();
         services.AddSingleton<IBlogRepository, BlogRepository>();
         services.AddSingleton<IBlogDbContext, BlogDbContext>();
         #endregion
 
-        _serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = services.BuildServiceProvider();
 
-        var mediatr = _serviceProvider.GetService<IMediator>();
-        var mapper = _serviceProvider.GetService<IMapper>();
-        BlogDbContext = _serviceProvider.GetService<BlogDbContext>()!;
+        var mediatr = serviceProvider.GetService<IMediator>();
+        var mapper = serviceProvider.GetService<IMapper>();
+        BlogDbContext = serviceProvider.GetService<BlogDbContext>()!;
 
         BlogController = new BlogController(mapper!, mediatr!);
 
@@ -59,12 +59,16 @@ public class BlogControllerFixture
             HttpContext = httpContext
         };
     }
-    public void ChangeUser(Guid userId)
+    public void ChangeUser()
     {
-        var httpContext = A.Fake<HttpContext>();
+        var id = _userState ? UserId : WrongUserId;
+        _userState = !_userState;
+
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-            new (ClaimTypes.NameIdentifier, userId.ToString())
+            new (ClaimTypes.NameIdentifier, id.ToString())
         }));
+
+        var httpContext = A.Fake<HttpContext>();
         A.CallTo(() => httpContext.User).Returns(user);
 
         BlogController.ControllerContext = new ()

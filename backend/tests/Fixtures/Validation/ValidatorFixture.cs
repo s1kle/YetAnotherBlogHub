@@ -18,7 +18,7 @@ public class ValidationFixture
                 x.BaseType.Equals(typeof(AbstractValidator<>).MakeGenericType(requestType)));
 
         foreach(var type in validatorTypes)
-            validators.Add(Activator.CreateInstance(type) as IValidator);
+            validators.Add((Activator.CreateInstance(type) as IValidator)!);
 
         return validators;
     }
