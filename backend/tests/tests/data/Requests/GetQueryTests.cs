@@ -1,4 +1,3 @@
-using AutoMapper;
 using BlogHub.Data.Interfaces;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Domain;

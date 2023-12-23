@@ -1,13 +1,10 @@
-using System.Reflection;
-using AutoFixture;
 using BlogHub.Data.Commands.Create;
 using BlogHub.Data.Commands.Delete;
 using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
-using FluentValidation;
 
-namespace BlogHub.Tests.Data.Fixtures.Validation;
+namespace BlogHub.Tests.Fixtures.Validation;
 
 public class ValidationFixture
 {
@@ -21,7 +18,7 @@ public class ValidationFixture
                 x.BaseType.Equals(typeof(AbstractValidator<>).MakeGenericType(requestType)));
 
         foreach(var type in validatorTypes)
-            validators.Add(Activator.CreateInstance(type) as IValidator);
+            validators.Add((Activator.CreateInstance(type) as IValidator)!);
 
         return validators;
     }

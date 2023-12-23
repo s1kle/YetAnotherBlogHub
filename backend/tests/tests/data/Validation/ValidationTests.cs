@@ -3,8 +3,7 @@ using BlogHub.Data.Commands.Delete;
 using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
-using BlogHub.Tests.Data.Fixtures.Validation;
-using FluentValidation;
+using BlogHub.Tests.Fixtures.Validation;
 
 namespace BlogHub.Tests.Data.Validation;
 

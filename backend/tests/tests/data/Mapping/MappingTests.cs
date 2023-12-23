@@ -1,4 +1,3 @@
-using AutoMapper;
 using BlogHub.Data.Commands.Create;
 using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Mappings;

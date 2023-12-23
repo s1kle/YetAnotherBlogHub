@@ -1,6 +1,6 @@
 using BlogHub.Data.Commands.Update;
 
-namespace BlogHub.Tests.Data.Fixtures.Mapping;
+namespace BlogHub.Tests.Fixtures.Mapping;
 
 public class MappingUpdateDtoFixture
 {   
