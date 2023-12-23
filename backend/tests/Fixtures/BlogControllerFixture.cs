@@ -1,9 +1,10 @@
 using System.Reflection;
 using System.Security.Claims;
 using BlogHub.Api.Controllers;
-using BlogHub.Api.Data;
+using BlogHub.Api.Services;
 using BlogHub.Data.Interfaces;
 using BlogHub.Data.Validation;
+using BlogHub.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,13 @@ public class BlogControllerFixture
     public Guid UserId { get; }
     public Guid WrongUserId { get; }
     public BlogController BlogController { get; }
-    private BlogDbContext _blogDbContext;
+    public BlogDbContext BlogDbContext;
+    private IServiceProvider _serviceProvider;
 
     public BlogControllerFixture(Guid userId, Guid wrongUserId)
     {
+        UserId = userId;
+        WrongUserId = wrongUserId;
         var dataAssembly = Assembly.GetAssembly(typeof(ValidationBehavior<,>));
         var services = new ServiceCollection();
 
@@ -28,19 +32,20 @@ public class BlogControllerFixture
         services.AddMediatR(config => config.RegisterServicesFromAssembly(dataAssembly!));
         services.AddAutoMapper(dataAssembly);
         services.AddValidatorsFromAssembly(dataAssembly);
-        services.AddDbContext<BlogDbContext>(options => options.UseInMemoryDatabase("BlogHub.Tests"));
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddScoped<IBlogDbContext, BlogDbContext>();
-        services.AddScoped<IDistributedCache, MemoryDistributedCache>();
-        services.AddScoped<IBlogRepository, BlogRepository>();
+        services.AddDbContext<BlogDbContext>(options => options
+            .UseInMemoryDatabase("BlogHub.Tests"));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddSingleton<IDistributedCache, MemoryDistributedCache>();
+        services.AddSingleton<IBlogRepository, BlogRepository>();
+        services.AddSingleton<IBlogDbContext, BlogDbContext>();
         #endregion
 
-        var provider = services.BuildServiceProvider();
+        _serviceProvider = services.BuildServiceProvider();
 
-        _blogDbContext = provider.GetService<BlogDbContext>()!;
-        var mediatr = provider.GetService<IMediator>();
-        var mapper = provider.GetService<IMapper>();
-        
+        var mediatr = _serviceProvider.GetService<IMediator>();
+        var mapper = _serviceProvider.GetService<IMapper>();
+        BlogDbContext = _serviceProvider.GetService<BlogDbContext>()!;
+
         BlogController = new BlogController(mapper!, mediatr!);
 
         var httpContext = A.Fake<HttpContext>();
@@ -53,14 +58,6 @@ public class BlogControllerFixture
         {
             HttpContext = httpContext
         };
-    }
-    public void EnsureCreated()
-    {
-        _blogDbContext.Database.EnsureCreated();
-    }
-    public void EnsureDeleted()
-    {
-        _blogDbContext.Database.EnsureDeleted();
     }
     public void ChangeUser(Guid userId)
     {
