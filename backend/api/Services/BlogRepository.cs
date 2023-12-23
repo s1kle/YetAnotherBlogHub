@@ -18,7 +18,7 @@ public class BlogRepository : IBlogRepository
     }
 
 
-    public async Task<List<Blog>> GetAllBlogsAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
+    public async Task<List<Blog>?> GetAllBlogsAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
     {
         var key = $"Blogs-{userId}";
 
@@ -28,7 +28,7 @@ public class BlogRepository : IBlogRepository
             .Skip(page * size)
             .Take(size)
             .ToListAsync(), 
-        cancellationToken);
+        cancellationToken) ?? new List<Blog>();
     }
 
     public async Task<Blog?> GetBlogAsync(Guid blogId, CancellationToken cancellationToken)
