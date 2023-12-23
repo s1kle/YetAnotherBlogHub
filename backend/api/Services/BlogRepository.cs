@@ -28,7 +28,7 @@ public class BlogRepository : IBlogRepository
             .Skip(page * size)
             .Take(size)
             .ToListAsync(), 
-        cancellationToken) ?? new List<Blog>();
+        cancellationToken);
     }
 
     public async Task<Blog?> GetBlogAsync(Guid blogId, CancellationToken cancellationToken)
