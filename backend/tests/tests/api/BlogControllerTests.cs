@@ -1,5 +1,6 @@
 using BlogHub.Data.Commands.Create;
 using BlogHub.Data.Commands.Update;
+using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
 using BlogHub.Domain;
 using Microsoft.AspNetCore.Http;
@@ -298,7 +299,6 @@ public class BlogControllerTests
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
     }
     
-
     [Fact]
     public async Task Delete_WithInvalidParams_ShouldFail()
     {
@@ -406,7 +406,21 @@ public class BlogControllerTests
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
+        var wrongId = Guid.NewGuid();
         var id = Guid.NewGuid();
+
+        var blog = new Blog()
+        {
+            Id = id,
+            UserId = blogControllerFixture.UserId,
+            Title = "Title",
+            Details = "Details",
+            CreationDate = DateTime.UtcNow,
+            EditDate = null
+        };
+
+        await blogControllerFixture.BlogDbContext.Blogs.AddAsync(blog);
+        await blogControllerFixture.BlogDbContext.SaveChangesAsync();
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
@@ -423,7 +437,106 @@ public class BlogControllerTests
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             var result = await blogController
+                .Update(wrongId, new () { Title = "T", Details = "D"});
+        });
+
+        blogControllerFixture.ChangeUser(blogControllerFixture.WrongUserId);
+
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            var result = await blogController
                 .Update(id, new () { Title = "T", Details = "D"});
+        });
+
+        blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
+    }
+
+    [Fact]
+    public async Task Get_WithValidParams_ShouldSuccess()
+    {
+        var blogControllerFixture = _fixtureFactory.BlogControllerFixture();
+        var blogController = blogControllerFixture.BlogController;
+
+        blogControllerFixture.BlogDbContext.Database.EnsureCreated();
+
+        var id = Guid.NewGuid();
+
+        var date = DateTime.UtcNow;
+
+        var blog = new Blog()
+        {
+            Id = id,
+            UserId = blogControllerFixture.UserId,
+            Title = "Title",
+            Details = "Details",
+            CreationDate = date,
+            EditDate = null
+        };
+
+        await blogControllerFixture.BlogDbContext.Blogs.AddAsync(blog);
+        await blogControllerFixture.BlogDbContext.SaveChangesAsync();
+
+        blogControllerFixture.BlogDbContext.Blogs.Count().Should().Be(1);
+
+        var result = (await blogController.GetById(id)).Result as OkObjectResult;
+
+        result.Should().NotBeNull();
+        result.StatusCode.Should().Be(StatusCodes.Status200OK);
+
+        blogControllerFixture.BlogDbContext.Blogs.Count().Should().Be(1);
+
+        var value = result.Value as BlogVm;
+        
+        value.Id.Should().Be(blog.Id);
+        value.Title.Should().BeEquivalentTo(blog.Title);
+        value.Details.Should().BeEquivalentTo(blog.Details);
+        value.CreationDate.Should().BeSameDateAs(blog.CreationDate);
+        value.EditDate.Should().BeNull();
+
+        blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
+    }
+
+    [Fact]
+    public async Task Get_WithInvalidParams_ShouldFail()
+    {
+        var blogControllerFixture = _fixtureFactory.BlogControllerFixture();
+        var blogController = blogControllerFixture.BlogController;
+
+        blogControllerFixture.BlogDbContext.Database.EnsureCreated();
+
+        var id = Guid.NewGuid();
+        var wrongId = Guid.NewGuid();
+
+        var blog = new Blog()
+        {
+            Id = id,
+            UserId = blogControllerFixture.UserId,
+            Title = "Title",
+            Details = "Details",
+            CreationDate = DateTime.UtcNow,
+            EditDate = null
+        };
+
+        await blogControllerFixture.BlogDbContext.Blogs.AddAsync(blog);
+        await blogControllerFixture.BlogDbContext.SaveChangesAsync();
+
+        blogControllerFixture.BlogDbContext.Blogs.Count().Should().Be(1);
+
+        await Assert.ThrowsAsync<ValidationException>(async () =>
+        {
+            var result = await blogController.GetById(Guid.Empty);
+        });
+
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            var result = await blogController.GetById(wrongId);
+        });
+
+        blogControllerFixture.ChangeUser(blogControllerFixture.WrongUserId);
+
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            var result = await blogController.GetById(id);
         });
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
