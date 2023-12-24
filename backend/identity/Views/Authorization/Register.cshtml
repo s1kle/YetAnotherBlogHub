@@ -1,5 +1,5 @@
-@model BlogHub.Identity.Models.LoginViewModel
-<form asp-controller="Authorization" asp-action="Login" method="post">
+@model BlogHub.Identity.Models.RegisterViewModel
+<form asp-controller="Authorization" asp-action="Register" method="post">
     <input type="hidden" asp-for="ReturnUrl" />
     <div>
         <label>Username</label>
@@ -12,9 +12,9 @@
         <span asp-validation-for="Password"></span>
     </div>
     <div>
-        <button style="color: red;" type="submit">Sign In</button>
+        <button style="color: red;" type="submit">Sign Up</button>
     </div>
     <div>
-        <button asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</button>
+        <button asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Sign In</button>
     </div>
 </form>

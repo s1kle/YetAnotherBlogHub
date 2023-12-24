@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlogHub.Identity.Models;
 
-public record LoginViewModel
+public record RegisterViewModel
 {
     public required string Username { get; set; }
     [DataType(DataType.Password)]
