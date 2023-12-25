@@ -1,0 +1,25 @@
+@model BlogHub.Identity.Models.RegisterViewModel
+<form asp-controller="Authorization" asp-action="Register" method="post">
+    <input type="hidden" asp-for="ReturnUrl" />
+    <div>
+        <label>Username</label>
+        <input asp-for="Username" />
+        <span asp-validation-for="Username"></span>
+    </div>
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label>Password Confirmation</label>
+        <input asp-for="PasswordConfirmation" />
+        <span asp-validation-for="PasswordConfirmation"></span>
+    </div>
+    <div>
+        <button style="color: red;" type="submit">Sign Up</button>
+    </div>
+    <div>
+        <button asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Sign In</button>
+    </div>
+</form>

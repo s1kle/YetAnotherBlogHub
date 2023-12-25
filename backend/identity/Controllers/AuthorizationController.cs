@@ -12,7 +12,9 @@ public class AuthorizationController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IIdentityServerInteractionService _interactionService;
 
-    public AuthorizationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IIdentityServerInteractionService interactionService)
+    public AuthorizationController(UserManager<ApplicationUser> userManager, 
+        SignInManager<ApplicationUser> signInManager, 
+        IIdentityServerInteractionService interactionService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -24,11 +26,14 @@ public class AuthorizationController : Controller
     {
         var viewModel = new LoginViewModel
         {
+            Username = string.Empty,
+            Password = string.Empty,
             ReturnUrl = returnUrl
         };
 
         return View(viewModel);
     }
+
     [HttpPost("[action]")]
     public async Task<IActionResult> Login(LoginViewModel viewModel)
     {
@@ -38,7 +43,7 @@ public class AuthorizationController : Controller
             return View(viewModel);
         }
 
-        var user = await _userManager.FindByNameAsync(viewModel.Username!);
+        var user = await _userManager.FindByNameAsync(viewModel.Username);
 
         if (user is null)
         {
@@ -46,7 +51,7 @@ public class AuthorizationController : Controller
             return View(viewModel);
         }
 
-        var loginResult = await _signInManager.PasswordSignInAsync(user, viewModel.Password!, false, false);
+        var loginResult = await _signInManager.PasswordSignInAsync(user, viewModel.Password, false, false);
 
         if (loginResult.Succeeded is false)
         {
@@ -54,7 +59,54 @@ public class AuthorizationController : Controller
             return View(viewModel);
         }
 
-        return Redirect(viewModel.ReturnUrl!);
+        return Redirect(viewModel.ReturnUrl);
+    }
+
+    [HttpGet("[action]")]
+    public IActionResult Register(string returnUrl)
+    {
+        var viewModel = new RegisterViewModel
+        {
+            Username = string.Empty,
+            Password = string.Empty,
+            PasswordConfirmation = string.Empty,
+            ReturnUrl = returnUrl
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Register(RegisterViewModel viewModel)
+    {
+        if (ModelState.IsValid is false)
+        {
+            ModelState.AddModelError(string.Empty, "VM is not valid");
+            return View(viewModel);
+        }
+
+        var user = new ApplicationUser()
+        {
+            UserName = viewModel.Username
+        };
+
+        var registerResult = await _userManager.CreateAsync(user, viewModel.Password);
+
+        if (registerResult.Succeeded is false)
+        {
+            ModelState.AddModelError(string.Empty, $"Login error: {registerResult.Errors}");
+            return View(viewModel);
+        }
+
+        var loginResult = await _signInManager.PasswordSignInAsync(user, viewModel.Password, false, false);
+
+        if (loginResult.Succeeded is false)
+        {
+            ModelState.AddModelError(string.Empty, "Login error");
+            return View(viewModel);
+        }
+
+        return Redirect(viewModel.ReturnUrl);
     }
 
     [HttpGet("[action]")]
