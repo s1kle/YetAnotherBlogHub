@@ -19,8 +19,8 @@ public class UserController : ControllerBase
     {
         var user = await _userManager.FindByIdAsync(userId);
 
-        if (user is null) return NotFound();
-
-        return Ok(new { username = $"{user.UserName}"});
+        return user is not null 
+            ? Ok(new { username = $"{user.UserName}" })
+            : NotFound();
     }
 }

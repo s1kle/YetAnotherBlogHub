@@ -12,7 +12,9 @@ public class AuthorizationController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IIdentityServerInteractionService _interactionService;
 
-    public AuthorizationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IIdentityServerInteractionService interactionService)
+    public AuthorizationController(UserManager<ApplicationUser> userManager, 
+        SignInManager<ApplicationUser> signInManager, 
+        IIdentityServerInteractionService interactionService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -67,6 +69,7 @@ public class AuthorizationController : Controller
         {
             Username = string.Empty,
             Password = string.Empty,
+            PasswordConfirmation = string.Empty,
             ReturnUrl = returnUrl
         };
 
