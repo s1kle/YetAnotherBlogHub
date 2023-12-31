@@ -16,7 +16,7 @@ export class CreateBlogComponent {
 
   constructor(private _api: ApiService) { }
 
-  onCreatePost() {
+  createBlog() {
     const blog: createBlogVm = {
       title: this.title,
       details: this.details ?? null

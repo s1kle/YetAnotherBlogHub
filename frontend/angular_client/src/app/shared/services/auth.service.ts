@@ -27,6 +27,8 @@ export class AuthService {
   getEvents = () =>
     this._userManager.events;
 
+  getUser = () => this._userManager.getUser();
+
   private async onUserLoaded(user: User) {
     this._localStorage.setItem('access_token', user.access_token)
   }

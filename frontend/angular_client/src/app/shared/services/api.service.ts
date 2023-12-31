@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Config } from '../config';
-import { blogListVm, createBlogVm, detailedBlogVm } from '../entities';
+import { blogListVm, createBlogVm, detailedBlogVm, updateBlogVm } from '../entities';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +13,21 @@ export class ApiService {
   constructor(private _http: HttpClient) {
   }
 
-  getAll = (page: number, size: number) =>
+  getAllBlogs = (page: number, size: number) =>
     this._http.get<blogListVm>(`${this.apiUrl}/Blog`, { params: new HttpParams()
       .set('page', page)
       .set('size', size)
     });
 
-  getById = (id: string) =>
+  getBlogById = (id: string) =>
     this._http.get<detailedBlogVm>(`${this.apiUrl}/Blog/${id}`);
 
   createBlog = (vm: createBlogVm) =>
     this._http.post<string>(`${this.apiUrl}/Blog`, vm);
+
+  deleteBlog = (id: string) =>
+    this._http.delete<string>(`${this.apiUrl}/Blog/${id}`);
+
+  updateBlog = (id: string, vm: updateBlogVm) =>
+    this._http.put<string>(`${this.apiUrl}/Blog/${id}`, vm);
 }

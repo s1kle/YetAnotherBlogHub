@@ -1,5 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideRouter, withRouterConfig } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -9,7 +9,7 @@ import { CoolLocalStorage } from '@angular-cool/storage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes), 
+    provideRouter(routes, withRouterConfig({onSameUrlNavigation: 'reload'})), 
     CoolLocalStorage,
     provideClientHydration(), 
     provideHttpClient(withFetch(), withInterceptors([authInterceptor]))

@@ -8,5 +8,5 @@ export const routes: Routes = [
     {path: 'signin-callback', component: SigninCallbackComponent},
     {path: 'signout-callback', component: SignoutCallbackComponent},
     {path: 'blog/:id', component: BlogComponent},
-    {path: '**', component: HomeComponent}
+    {path: '**', component: HomeComponent }
 ];

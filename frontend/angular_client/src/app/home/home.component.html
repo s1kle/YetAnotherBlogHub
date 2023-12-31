@@ -1,2 +1,5 @@
-<app-create-blog></app-create-blog>
+<button (click)="changeState()">Create</button>
+<div *ngIf="isCreating">
+    <app-create-blog></app-create-blog>
+</div>
 <app-blog-list></app-blog-list>

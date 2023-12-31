@@ -21,6 +21,10 @@ export class HeaderComponent {
     this._auth.getEvents().addUserUnloaded(() => this.onUserUnloaded())
   }
 
+  async ngOnInit() {
+    this.user = await this._auth.getUser();
+  }
+
   onUserLoaded(user: User) {
     console.log('User logged in');
     this.user = user;
