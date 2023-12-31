@@ -1,59 +1,59 @@
 import { Injectable } from '@angular/core';
 import { Config } from '../config';
 import { User, UserManager, UserManagerSettings } from 'oidc-client-ts';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { CoolLocalStorage } from '@angular-cool/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  isAuthenticated$: Observable<boolean>;
-
-  private _isAuthenticated: BehaviorSubject<boolean>;
   private _userManager: UserManager;
-  private get identitySettings(): UserManagerSettings {
-    return {
+  private _userManagerSettings: UserManagerSettings = {
       authority: Config.identityUrl,
       client_id: Config.clientId,
       client_secret: Config.clientSecret,
-      scope: 'openid profile BlogHubAPI',
+      scope: Config.scope,
       response_type: 'code',
       redirect_uri: `${Config.baseUrl}/signin-callback`,
       post_logout_redirect_uri: `${Config.baseUrl}/signout-callback`
     }
+  
+  constructor(private _localStorage: CoolLocalStorage) { 
+    this._userManager = new UserManager(this._userManagerSettings);
+    this._userManager.events.addUserLoaded((user) => this.onUserLoaded(user));
+    this._userManager.events.addUserUnloaded(() => this.onUserUnloaded());
   }
-  
-  
-  constructor() { 
-    this._userManager = new UserManager(this.identitySettings)
-    this._isAuthenticated = new BehaviorSubject<boolean>(false);
-    this.isAuthenticated$ = this._isAuthenticated.asObservable();
-  }
-  
 
+  getEvents = () =>
+    this._userManager.events;
+
+  private async onUserLoaded(user: User) {
+    this._localStorage.setItem('access_token', user.access_token)
+  }
+
+  private onUserUnloaded() {
+    this._localStorage.clear();
+  }
+
+  //#region signin/out
   signinRedirect() {
     return this._userManager.signinRedirect();
   }
+
   signinCallback() {
     return this._userManager.signinCallback();
   }
-  signoutRedirect(user: User) {
+
+  async signoutRedirect() {
     this._userManager.clearStaleState();
     this._userManager.removeUser();
-    return this._userManager.signoutRedirect({ 'id_token_hint': user.id_token });
+    return this._userManager.signoutRedirect({ 'id_token_hint': (await this._userManager.getUser())?.id_token });
   }
+  
   signoutCallback() {
     this._userManager.clearStaleState();
     this._userManager.removeUser();
     return this._userManager.signoutCallback();
   }
-  setAccessToken(access_token: string) {
-    localStorage.setItem('access_token', access_token ?? '');
-  }
-  updateAuthState(state: boolean) {
-    this._isAuthenticated.next(state);
-  }
-  getUser() {
-    return this._userManager.getUser();
-  }
+  //#endregion
 }

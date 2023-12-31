@@ -1,0 +1,17 @@
+<h2>Create New Blog Post</h2>
+    
+    <form>
+      <div>
+        <label>Title:</label>
+        <input [(ngModel)]="title" name="title">
+      </div>
+    
+      <div>
+        <label>Details:</label>
+        <textarea [(ngModel)]="details" name="details" [ngModelOptions]="{standalone: true}"></textarea>
+      </div>
+      
+      <button (click)="onCreatePost()">
+        Create Post
+      </button>
+    </form>

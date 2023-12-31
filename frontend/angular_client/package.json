@@ -1,6 +1,6 @@
 {
   "name": "angular-client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-cool/storage": "^13.0.0",
     "@angular/animations": "^17.0.0",
     "@angular/common": "^17.0.0",
     "@angular/compiler": "^17.0.0",

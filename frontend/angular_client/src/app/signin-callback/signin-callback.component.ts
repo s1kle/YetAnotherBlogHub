@@ -9,18 +9,10 @@ import { Router } from '@angular/router';
   styleUrl: './signin-callback.component.css'
 })
 export class SigninCallbackComponent {
+
   constructor(private _auth: AuthService, private _router: Router) { }
 
   ngOnInit() {
-    this._auth.signinCallback().then(user => {
-      if (user)
-        this._auth.setAccessToken(user.access_token);
-      this._auth.updateAuthState(true);
-      this.redirect();
-    });
-  }
-
-  redirect() {
-    this._router.navigate(['']);
+    this._auth.signinCallback().then(() => this._router.navigate(['']));
   }
 }
