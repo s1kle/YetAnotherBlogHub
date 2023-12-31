@@ -27,7 +27,7 @@ public class BlogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<BlogListVm>> GetAll([FromBody] GetListDto dto)
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
     {
         var query = new GetBlogListQuery()
         {
