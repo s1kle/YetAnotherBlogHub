@@ -19,20 +19,38 @@ public class BlogRepository : IBlogRepository
 
     public async Task<List<Blog>?> GetAllBlogsAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
     {
-        var key = $"Blogs-{userId}";
-
-        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Blogs
+        var key = $"Name:Blogs;Page:{page};User:{userId}";
+        
+        var blogsQuery = _dbContext.Blogs
             .Where(blog => blog.UserId.Equals(userId))
-            .OrderBy(blog => blog.Id)
+            .OrderBy(blog => blog.Id);
+
+        _ = CacheBlogsPageAsync(page + 1, size, userId, blogsQuery, cancellationToken);
+        _ = CacheBlogsPageAsync(page - 1, size, userId, blogsQuery, cancellationToken);
+
+        return await _cache.GetOrCreateItemAsync(key, async () => await blogsQuery
             .Skip(page * size)
             .Take(size)
             .ToListAsync(), 
         cancellationToken);
     }
 
+    private async Task CacheBlogsPageAsync(int page, int size, Guid userId, IQueryable<Blog> query, CancellationToken cancellationToken)
+    {
+        if (page < 0) return;
+
+        var key = $"Name:Blogs;Page:{page};User:{userId}";
+        
+        await _cache.SetItemAsync(key, await query
+            .Skip(page * size)
+            .Take(size)
+            .ToListAsync(),
+        cancellationToken);
+    }
+
     public async Task<Blog?> GetBlogAsync(Guid blogId, CancellationToken cancellationToken)
     {
-        var key = $"Blog-{blogId}";
+        var key = $"Name:Blog;Entity:{blogId}";
 
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Blogs
             .FirstOrDefaultAsync(blog => blog.Id.Equals(blogId), cancellationToken), 
@@ -41,28 +59,26 @@ public class BlogRepository : IBlogRepository
 
     public async Task<Guid> CreateAsync(Blog blog, CancellationToken cancellationToken)
     {
-        var key = $"Blog-{blog.Id}";
-        var blogsKey = $"Blogs-{blog.UserId}";
+        var key = $"Name:Blog;Entity:{blog.Id}";
 
         await _dbContext.Blogs.AddAsync(blog, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        await _cache.ClearAsync(cancellationToken);
         await _cache.SetItemAsync(key, blog, cancellationToken);
-        await _cache.RemoveAsync(blogsKey, cancellationToken);
 
         return blog.Id;
     }
 
     public async Task<Guid> UpdateAsync(Blog original, Blog updated, CancellationToken cancellationToken)
     {
-        var key = $"Blog-{original.Id}";
-        var blogsKey = $"Blogs-{original.UserId}";
+        var key = $"Name:Blog;Entity:{original.Id}";
 
         _dbContext.Blogs.Remove(original);
         await _dbContext.Blogs.AddAsync(updated, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.RemoveAsync(cancellationToken, key, blogsKey);
+        await _cache.ClearAsync(cancellationToken);
         await _cache.SetItemAsync(key, updated, cancellationToken);
 
         return updated.Id;
@@ -70,13 +86,10 @@ public class BlogRepository : IBlogRepository
 
     public async Task<Guid> RemoveAsync(Blog blog, CancellationToken cancellationToken)
     {
-        var key = $"Blog-{blog.Id}";
-        var blogsKey = $"Blogs-{blog.UserId}";
-        
         _dbContext.Blogs.Remove(blog);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.RemoveAsync(cancellationToken, key, blogsKey);
+        await _cache.ClearAsync(cancellationToken);
 
         return blog.Id;
     }

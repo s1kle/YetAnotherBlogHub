@@ -5,8 +5,11 @@ namespace BlogHub.Api.Extensions;
 
 public static class IDistributedCacheExtensions
 {
+    private static List<string> _keys { get; } = new ();
+
     public static async Task SetItemAsync<TItem>(this IDistributedCache cache, string key, TItem value, CancellationToken cancellationToken = default)
     {
+        _keys.Add(key);
         var bytes = JsonSerializer.SerializeToUtf8Bytes(value);
         await cache.SetAsync(key, bytes, cancellationToken);
     }
@@ -29,8 +32,8 @@ public static class IDistributedCacheExtensions
         return value;
     }
 
-    public static async Task RemoveAsync(this IDistributedCache cache, CancellationToken cancellationToken = default, params string[] keys)
+    public static async Task ClearAsync(this IDistributedCache cache, CancellationToken cancellationToken)
     {
-        foreach(var key in keys) await cache.RemoveAsync(key, cancellationToken);
+        foreach(var key in _keys) await cache.RemoveAsync(key, cancellationToken);
     }
 }
