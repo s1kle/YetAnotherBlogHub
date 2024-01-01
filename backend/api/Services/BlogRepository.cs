@@ -17,6 +17,13 @@ public class BlogRepository : IBlogRepository
         _dbContext = dbContext;
     }
 
+    public async Task<int> GetListCountAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var key = $"Count-{userId}";
+
+        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Blogs
+            .CountAsync(blog => blog.UserId.Equals(userId), cancellationToken));
+    }
 
     public async Task<List<Blog>?> GetAllBlogsAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
     {
