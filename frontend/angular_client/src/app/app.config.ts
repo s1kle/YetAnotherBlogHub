@@ -9,7 +9,7 @@ import { CoolLocalStorage } from '@angular-cool/storage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withRouterConfig({onSameUrlNavigation: 'reload'})), 
+    provideRouter(routes), 
     CoolLocalStorage,
     provideClientHydration(), 
     provideHttpClient(withFetch(), withInterceptors([authInterceptor]))

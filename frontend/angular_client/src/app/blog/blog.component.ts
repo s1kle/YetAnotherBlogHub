@@ -37,7 +37,7 @@ export class BlogComponent {
     const id = this.blog?.id ?? '';
 
     this._api.deleteBlog(id).subscribe(
-      () => this._router.navigate(['']),
+      () => this._router.navigate(['']).then(() => window.location.reload()),
       error => console.log(error)
     );
   }

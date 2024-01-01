@@ -3,8 +3,8 @@
     <button (click)="goToBlogDetails(blog.id)">Details</button>
 </div>
 <div *ngIf="page > 0">
-    Previous
+    <button (click)="goToPreviousPage()">Previous</button>
 </div>
-<div *ngIf="size * page < (blogList?.count ?? 0)">
-    Next
+<div *ngIf="blogList?.blogs?.length == size">
+    <button (click)="goToNextPage()">Next</button>
 </div>

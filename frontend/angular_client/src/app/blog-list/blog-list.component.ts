@@ -19,12 +19,27 @@ export class BlogListComponent {
   constructor(private _api: ApiService, private _router: Router) { }
 
   ngOnInit() {
-    if (this._router.navigated) 
-      this._api.getAllBlogs(this.page, this.size).subscribe(
-        response => this.blogList = response, 
-        error => console.log(error))
+    this._api.getAllBlogs(this.page, this.size).subscribe(
+      response => this.blogList = response, 
+      error => console.log(error))
   }
 
   goToBlogDetails = (id: string) =>
     this._router.navigate([`/blog/${id}`]);
+
+  goToNextPage() {
+    this.page++;
+
+    this._api.getAllBlogs(this.page, this.size).subscribe(
+      response => this.blogList = response, 
+      error => console.log(error))
+  }
+
+  goToPreviousPage() {
+    this.page--;
+
+    this._api.getAllBlogs(this.page, this.size).subscribe(
+      response => this.blogList = response, 
+      error => console.log(error))
+  }
 }
