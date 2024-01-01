@@ -5,9 +5,9 @@ export interface blogListVm {
 export interface detailedBlogVm {
     id: string;
     title: string;
-    creationDate: string;
+    creationDate: Date;
     details: string | null;
-    editDate: string | null;
+    editDate: Date | null;
 }
 
 export interface blogVmForList {
