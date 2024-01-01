@@ -1,5 +1,6 @@
 export interface blogListVm {
     blogs: blogVmForList[];
+    count: number;
 }
 
 export interface detailedBlogVm {

@@ -2,3 +2,9 @@
     <h2>{{blog.title}}</h2>
     <button (click)="goToBlogDetails(blog.id)">Details</button>
 </div>
+<div *ngIf="page > 0">
+    Previous
+</div>
+<div *ngIf="size * page < (blogList?.count ?? 0)">
+    Next
+</div>
