@@ -9,9 +9,10 @@ import { AuthService } from '../shared/services/auth.service';
   styleUrl: './signin-redirect.component.css'
 })
 export class SigninRedirectComponent {
+
   constructor(private _auth: AuthService) { }
 
-  public signinRedirect() {
+  signinRedirect() {
     this._auth.signinRedirect();
   }
 }

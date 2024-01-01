@@ -9,13 +9,10 @@ import { AuthService } from '../shared/services/auth.service';
   styleUrl: './signout-redirect.component.css'
 })
 export class SignoutRedirectComponent {
+  
   constructor(private _auth: AuthService) { }
 
   signoutRedirect() {
-    this._auth.getUser().then(user => {
-      if (user) {
-        this._auth.signoutRedirect(user);
-      }
-    });
+    this._auth.signoutRedirect();
   }
 }

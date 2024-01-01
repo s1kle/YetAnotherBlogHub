@@ -1,0 +1,15 @@
+<div class="menu">
+    <div class="left">
+        {{title}}
+    </div>
+    <div class="center">
+    </div>
+    <div class="right">
+        <div *ngIf="!user">
+            <app-signin-redirect></app-signin-redirect>
+        </div>
+        <div *ngIf="user">
+            <app-signout-redirect></app-signout-redirect>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div *ngFor="let blog of blogList?.blogs">
+    <h2>{{blog.title}}</h2>
+    <button (click)="goToBlogDetails(blog.id)">Details</button>
+</div>
+<div *ngIf="page > 0">
+    <button (click)="goToPreviousPage()">Previous</button>
+</div>
+<div *ngIf="blogList?.blogs?.length == size">
+    <button (click)="goToNextPage()">Next</button>
+</div>
