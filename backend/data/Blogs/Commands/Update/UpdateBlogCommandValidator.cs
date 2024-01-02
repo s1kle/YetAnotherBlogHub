@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BlogHub.Data.Commands.Update;
+namespace BlogHub.Data.Blogs.Commands.Update;
 
 public class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
 {

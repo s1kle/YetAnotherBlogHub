@@ -1,7 +1,7 @@
 using BlogHub.Data.Interfaces;
 using MediatR;
 
-namespace BlogHub.Data.Commands.Update;
+namespace BlogHub.Data.Blogs.Commands.Update;
 
 public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 {
@@ -14,7 +14,7 @@ public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 
     public async Task<Guid> Handle(UpdateBlogCommand request, CancellationToken cancellationToken)
     {
-        var original = await _repository.GetBlogAsync(request.Id, cancellationToken);
+        var original = await _repository.GetAsync(request.Id, cancellationToken);
 
         if (original is null || original.UserId != request.UserId)
             throw new ArgumentException(nameof(original));

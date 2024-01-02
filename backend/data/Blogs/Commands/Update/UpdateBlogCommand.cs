@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace BlogHub.Data.Commands.Update;
+namespace BlogHub.Data.Blogs.Commands.Update;
 
 public record UpdateBlogCommand : IRequest<Guid>
 {

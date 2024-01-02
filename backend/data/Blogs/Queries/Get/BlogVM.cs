@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Queries.Get;
+namespace BlogHub.Data.Blogs.Queries.Get;
 
 public record BlogVm
 {
