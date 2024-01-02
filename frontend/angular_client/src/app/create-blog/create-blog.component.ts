@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { createBlogVm } from '../shared/entities';
 import { ApiService } from '../shared/services/api.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-blog',
@@ -14,16 +15,19 @@ export class CreateBlogComponent {
   title: string = '';
   details: string = '';
 
-  constructor(private _api: ApiService) { }
+  constructor(private _api: ApiService, private _router: Router) { }
 
-  createBlog() {
+  createBlog = () => {
     const blog: createBlogVm = {
       title: this.title,
       details: this.details ?? null
     };
 
     this._api.createBlog(blog).subscribe(
-      () => window.location.reload(),
+      () => this._router.navigate(['']).then(() => window.location.reload()),
       error => console.log(error));
   }
+
+  goBack = () =>
+    this._router.navigate(['']);
 }

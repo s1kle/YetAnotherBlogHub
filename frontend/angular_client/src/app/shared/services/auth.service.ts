@@ -29,13 +29,11 @@ export class AuthService {
 
   getUser = () => this._userManager.getUser();
 
-  private async onUserLoaded(user: User) {
+  private onUserLoaded = (user: User) =>
     this._localStorage.setItem('access_token', user.access_token)
-  }
 
-  private onUserUnloaded() {
+  private onUserUnloaded = () =>
     this._localStorage.clear();
-  }
 
   //#region signin/out
   signinRedirect() {

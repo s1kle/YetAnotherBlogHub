@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 })
 export class BlogListComponent {
   blogList: blogListVm | null = null;
-  page: number = 0;
   size: number = 10;
+  page: number = 0;
 
   constructor(private _api: ApiService, private _router: Router) { }
 
@@ -27,7 +27,7 @@ export class BlogListComponent {
   goToBlogDetails = (id: string) =>
     this._router.navigate([`/blog/${id}`]);
 
-  goToNextPage() {
+  goToNextPage = () => {
     this.page++;
 
     this._api.getAllBlogs(this.page, this.size).subscribe(
@@ -35,7 +35,7 @@ export class BlogListComponent {
       error => console.log(error))
   }
 
-  goToPreviousPage() {
+  goToPreviousPage = () => {
     this.page--;
 
     this._api.getAllBlogs(this.page, this.size).subscribe(
