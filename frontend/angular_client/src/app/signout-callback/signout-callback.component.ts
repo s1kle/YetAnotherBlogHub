@@ -10,17 +10,10 @@ import { Router } from '@angular/router';
   styleUrl: './signout-callback.component.css'
 })
 export class SignoutCallbackComponent {
+  
   constructor(private _auth: AuthService, private _router: Router) { }
 
   ngOnInit() {
-    this._auth.signoutCallback().then(result => {
-      this._auth.updateAuthState(false);
-      this._auth.setAccessToken('');
-      this.redirect();
-    });
-  }
-
-  redirect() {
-    this._router.navigate(['']);
+    this._auth.signoutCallback().then(() => this._router.navigate(['']));
   }
 }

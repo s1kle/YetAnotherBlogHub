@@ -1,4 +1,5 @@
 using System.Reflection;
+using BlogHub.Data.Logging;
 using BlogHub.Data.Validation;
 using FluentValidation;
 using MediatR;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddAutoMapper(assembly);
         services.AddValidatorsFromAssembly(assembly);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         return services;
     }
 }

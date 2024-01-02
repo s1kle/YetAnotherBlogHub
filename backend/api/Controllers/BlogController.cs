@@ -17,7 +17,7 @@ public class BlogController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    private Guid _userId => 
+    private Guid _userId =>
         Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
     public BlogController(IMapper mapper, IMediator mediator)
@@ -27,30 +27,32 @@ public class BlogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<BlogListVm>> GetAll() 
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
     {
-        var query = new GetBlogListQuery() 
+        var query = new GetBlogListQuery()
         {
-            UserId = _userId
+            UserId = _userId,
+            Page = dto.Page,
+            Size = dto.Size
         };
 
-        var responce = await _mediator.Send(query);
+        var response = await _mediator.Send(query);
 
-        return Ok(responce);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<BlogVm>> GetById(Guid id)
     {
-        var query = new GetBlogQuery() 
+        var query = new GetBlogQuery()
         {
             UserId = _userId,
             Id = id
         };
 
-        var responce = await _mediator.Send(query);
+        var response = await _mediator.Send(query);
 
-        return Ok(responce);
+        return Ok(response);
     }
 
     [HttpPost]

@@ -1,0 +1,20 @@
+<div class="row column-gap-3">
+    <div class="col-3 g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0 text-dark text-center ">New Blog</h3>
+            <a href="blog/create" class="btn btn-outline-warning">Create</a>
+        </div>
+    </div>
+    <div *ngFor="let blog of blogList?.blogs" class="col-3 g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0 text-dark text-center ">{{blog.title}}</h3>
+            <button (click)="goToBlogDetails(blog.id)" class="btn btn-outline-warning">Continue reading</button>
+        </div>
+    </div>
+</div>
+<div *ngIf="page > 0">
+    <button (click)="goToPreviousPage()" class="btn btn-outline-dark">Previous</button>
+</div>
+<div *ngIf="blogList?.blogs?.length == size">
+    <button (click)="goToNextPage()" class="btn btn-outline-dark">Next</button>
+</div>

@@ -1,29 +1,26 @@
 using BlogHub.Data.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlogHub.Data.Commands.Delete;
 
 public class DeleteBlogCommandHandler : IRequestHandler<DeleteBlogCommand, Guid>
 {
-    private readonly IBlogDbContext _context;
+    private readonly IBlogRepository _repository;
 
-    public DeleteBlogCommandHandler(IBlogDbContext context)
+    public DeleteBlogCommandHandler(IBlogRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     public async Task<Guid> Handle(DeleteBlogCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Blogs.FirstOrDefaultAsync(blog =>
-            blog.Id == request.Id, cancellationToken);
+        var blog = await _repository.GetBlogAsync(request.Id, cancellationToken);
 
-        if (entity is null || entity.UserId != request.UserId)
-            throw new ArgumentException(nameof(entity));
+        if (blog is null || blog.UserId != request.UserId)
+            throw new ArgumentException(nameof(blog));
 
-        _context.Blogs.Remove(entity);
-        await _context.SaveChangesAsync(cancellationToken);
+        var id = await _repository.RemoveAsync(blog, cancellationToken);
 
-        return entity.Id;
+        return id;
     }
 }

@@ -1,6 +1,4 @@
 using BlogHub.Identity.Configuration;
-using BlogHub.Identity.Models;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

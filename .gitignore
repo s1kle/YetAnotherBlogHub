@@ -5,7 +5,9 @@
 
 Properties/
 *Configuration.*
+!IdentityServerConfiguration-Template.cs
 appsettings*
+!appsettings.template.json
 *.jwk
 Migrations/
 
@@ -37,6 +39,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+!Log/LoggingBehavior.cs
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

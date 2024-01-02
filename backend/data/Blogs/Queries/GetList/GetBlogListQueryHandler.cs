@@ -1,29 +1,30 @@
 using AutoMapper;
 using BlogHub.Data.Interfaces;
-using BlogHub.Data.Queries.Get;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlogHub.Data.Queries.GetList;
 
 public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogListVm>
 {
-    private readonly IBlogDbContext _context;
+    private readonly IBlogRepository _repository;
     private readonly IMapper _mapper;
 
-    public GetBlogListQueryHandler(IBlogDbContext context, IMapper mapper)
+    public GetBlogListQueryHandler(IBlogRepository repository, IMapper mapper)
     {
-        _context = context;
+        _repository = repository;
         _mapper = mapper;
     }
 
     public async Task<BlogListVm> Handle(GetBlogListQuery request, CancellationToken cancellationToken)
     {
-        var blogs = await _context.Blogs
-            .Where(blog => blog.UserId.Equals(request.UserId))
-            .Select(blog => _mapper.Map<BlogVmForList>(blog))
-            .ToArrayAsync(cancellationToken);
+        var blogs = await _repository
+            .GetAllBlogsAsync(request.UserId, request.Page, request.Size, cancellationToken)
+            ?? new ();
 
-        return new BlogListVm { Blogs = blogs };
+        var mappedBlogs = blogs
+            .Select(blog => _mapper.Map<BlogVmForList>(blog))
+            .ToList();
+
+        return new BlogListVm { Blogs = mappedBlogs };
     }
 }

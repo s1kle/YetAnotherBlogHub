@@ -12,6 +12,9 @@
         <span asp-validation-for="Password"></span>
     </div>
     <div>
-        <button type="submit">Sign In</button>
+        <button style="color: red;" type="submit">Sign In</button>
+    </div>
+    <div>
+        <button style="color: blue;" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</button>
     </div>
 </form>
