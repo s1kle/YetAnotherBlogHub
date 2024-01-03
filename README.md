@@ -49,6 +49,7 @@
   - Backend:
     - Domain layer with blog entity, CQRS implementation for data layer to handle queries and commands, Input validation and mapping, ASP.NET Core Web API with blog controller, IdentityServer4 for authentication and authorization, Integration testing using xUnit
 4. *Future Scope*:
+  - [ ] add: sorting
   - [ ] add: tags
   - [ ] add: search by title/tag
   - [ ] add: comments
