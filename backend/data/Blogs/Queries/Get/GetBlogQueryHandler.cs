@@ -17,7 +17,7 @@ public class GetBlogQueryHandler : IRequestHandler<GetBlogQuery, BlogVm>
 
     public async Task<BlogVm> Handle(GetBlogQuery request, CancellationToken cancellationToken)
     {
-        var blog = await _repository.GetBlogAsync(request.Id, cancellationToken);
+        var blog = await _repository.GetAsync(request.Id, cancellationToken);
 
         if (blog is null || blog.UserId != request.UserId)
             throw new ArgumentException(nameof(blog));

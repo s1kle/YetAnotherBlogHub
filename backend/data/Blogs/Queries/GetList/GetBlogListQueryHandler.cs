@@ -17,11 +17,21 @@ public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogLis
 
     public async Task<BlogListVm> Handle(GetBlogListQuery request, CancellationToken cancellationToken)
     {
-        var blogs = await _repository
-            .GetAllBlogsAsync(request.UserId, request.Page, request.Size, cancellationToken)
-            ?? new ();
+        var blogs = await (request.UserId is not null
+            ? _repository.GetAllByUserIdAsync(request.UserId.Value, request.Page, request.Size, cancellationToken)
+            : _repository.GetAllAsync(request.Page, request.Size, cancellationToken));
+
+        if (blogs is null) return new BlogListVm { Blogs = new List<BlogVmForList>() };
+        
+        // if (string.IsNullOrWhiteSpace(request.SearchQuery) is false)
+        //     blogs = blogs
+        //         .Where(blog => blog.Title.Contains(request.SearchQuery) ||
+        //             (blog.Details?.Contains(request.SearchQuery) ?? false))
+        //         .ToList();
 
         var mappedBlogs = blogs
+            .Search(request.SearchQuery, request.SearchProperties)
+            .SortByProperty(request.SortProperty, request.SortDirection)
             .Select(blog => _mapper.Map<BlogVmForList>(blog))
             .ToList();
 
