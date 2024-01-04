@@ -4,7 +4,7 @@ namespace BlogHub.Data.Queries.GetList;
 
 public static class IEnumerableExtensions
 {
-    public static IEnumerable<T> SortByProperty<T>(this IEnumerable<T> query, string propertyName, bool descending)
+    public static IEnumerable<T> SortByProperty<T>(this IEnumerable<T> query, string? propertyName, bool descending)
     {
         if (string.IsNullOrWhiteSpace(propertyName)) return query;
 
@@ -19,9 +19,9 @@ public static class IEnumerableExtensions
             : query.OrderBy(entity => property.GetValue(entity));
     }
 
-    public static IEnumerable<T> Search<T>(this IEnumerable<T> query, string searchQuery, string[] propertyNames)
+    public static IEnumerable<T> Search<T>(this IEnumerable<T> query, string? searchQuery, string[]? propertyNames)
     {
-        if (string.IsNullOrWhiteSpace(searchQuery) || propertyNames.Length < 1) return query;
+        if (string.IsNullOrWhiteSpace(searchQuery) || propertyNames is null || propertyNames.Length < 1) return query;
 
         var entityType = typeof(T);
         var properties = propertyNames

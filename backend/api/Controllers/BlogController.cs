@@ -103,10 +103,10 @@ public class BlogController : ControllerBase
             UserId = userId,
             Page = dto.Page,
             Size = dto.Size,
-            SearchQuery = dto.SearchQuery ?? "",
-            SearchProperties = dto.SearchProperties?.Split(' ') ?? new string[0],
-            SortProperty = dto.SortProperty ?? "",
-            SortDirection = dto.SortDirection switch
+            SearchQuery = dto.SearchQuery,
+            SearchProperties = dto.SearchProperties?.Split(' '),
+            SortProperty = dto.SortProperty,
+            SortDescending = dto.SortDirection switch
             {
                 "desc" => true,
                 _ => false

@@ -22,16 +22,10 @@ public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogLis
             : _repository.GetAllAsync(request.Page, request.Size, cancellationToken));
 
         if (blogs is null) return new BlogListVm { Blogs = new List<BlogVmForList>() };
-        
-        // if (string.IsNullOrWhiteSpace(request.SearchQuery) is false)
-        //     blogs = blogs
-        //         .Where(blog => blog.Title.Contains(request.SearchQuery) ||
-        //             (blog.Details?.Contains(request.SearchQuery) ?? false))
-        //         .ToList();
 
         var mappedBlogs = blogs
             .Search(request.SearchQuery, request.SearchProperties)
-            .SortByProperty(request.SortProperty, request.SortDirection)
+            .SortByProperty(request.SortProperty, request.SortDescending)
             .Select(blog => _mapper.Map<BlogVmForList>(blog))
             .ToList();
 
