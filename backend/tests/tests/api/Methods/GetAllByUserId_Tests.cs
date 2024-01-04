@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Tests.Api.Methods;
 
-public class GetAll_Tests
+public class GetAllByUserId_Tests
 {
     private readonly FixtureFactory _fixtureFactory;
     private readonly string _dbContextName;
 
-    public GetAll_Tests()
+    public GetAllByUserId_Tests()
     {
         _fixtureFactory = new ();
         _dbContextName = $"{this.GetType()}";
@@ -30,7 +30,7 @@ public class GetAll_Tests
             Size = 10
         };
 
-        var result = (await blogController.GetAll(dto)).Result as OkObjectResult;
+        var result = (await blogController.GetAllByUserId(dto)).Result as OkObjectResult;
 
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status200OK);
@@ -97,12 +97,6 @@ public class GetAll_Tests
                 CreationDate = creationDate,
                 EditDate = editDate
             });
-
-            expected.Add(new ()
-            {
-                Id = id,
-                Title = title
-            });
         }
 
         await blogControllerFixture.BlogDbContext.SaveChangesAsync();
@@ -113,7 +107,7 @@ public class GetAll_Tests
             Size = 10
         };
 
-        var result = (await blogController.GetAll(dto)).Result as OkObjectResult;
+        var result = (await blogController.GetAllByUserId(dto)).Result as OkObjectResult;
 
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status200OK);
@@ -122,7 +116,7 @@ public class GetAll_Tests
 
         actual.Should().NotBeNull();
         actual!.Blogs.Should().NotBeNull();
-        actual.Blogs.Count.Should().Be(count*2);
+        actual.Blogs.Count.Should().Be(count);
         actual.Blogs.Should().Contain(expected);
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
@@ -146,7 +140,7 @@ public class GetAll_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAll(dto);
+            var result = await blogController.GetAllByUserId(dto);
         });
 
         dto = new ()
@@ -157,7 +151,7 @@ public class GetAll_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAll(dto);
+            var result = await blogController.GetAllByUserId(dto);
         });
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
@@ -179,7 +173,7 @@ public class GetAll_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAll(dto);
+            var result = await blogController.GetAllByUserId(dto);
         });
 
         dto = new GetListDto()
@@ -190,7 +184,7 @@ public class GetAll_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAll(dto);
+            var result = await blogController.GetAllByUserId(dto);
         });
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();

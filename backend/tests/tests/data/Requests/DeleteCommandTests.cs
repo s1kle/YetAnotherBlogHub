@@ -20,7 +20,7 @@ public class DeleteCommandTests
         (var command, var expected) = 
             (fixture.Command, fixture.Blog);
         var repository = A.Fake<IBlogRepository>();
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .Returns(expected.Id);
@@ -28,7 +28,7 @@ public class DeleteCommandTests
 
         var result = await handler.Handle(command, CancellationToken.None);
 
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Blog actual, CancellationToken token) =>
@@ -46,7 +46,7 @@ public class DeleteCommandTests
             (fixture.Command, fixture.Blog, fixture.WrongUserId);
         command = command with { UserId = wrongUserId };
         var repository = A.Fake<IBlogRepository>();
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .Returns(expected.Id);
@@ -58,7 +58,7 @@ public class DeleteCommandTests
         });
 
 
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .MustNotHaveHappened();
@@ -71,7 +71,7 @@ public class DeleteCommandTests
             (fixture.Command, fixture.Blog);
         expected = null;
         var repository = A.Fake<IBlogRepository>();
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         var handler = new DeleteBlogCommandHandler(repository);
 
@@ -81,7 +81,7 @@ public class DeleteCommandTests
         });
 
 
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .MustNotHaveHappened();
