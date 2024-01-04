@@ -10,6 +10,16 @@ export interface detailedBlogVm {
     editDate: Date | null;
 }
 
+export interface searchOptions {
+    searchQuery: string;
+    searchProperties?: string;
+}
+
+export interface sortOptions {
+    sortProperty: string;
+    sortDirection?: string;
+}
+
 export interface blogVmForList {
     id: string;
     title: string;

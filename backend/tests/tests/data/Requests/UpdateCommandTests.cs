@@ -20,7 +20,7 @@ public class UpdateCommandTests
         (var command, var expectedOriginal, var expectedUpdated) = 
             (fixture.Command, fixture.Original, fixture.Updated);
         var repository = A.Fake<IBlogRepository>();
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expectedOriginal);
         A.CallTo(() => repository.UpdateAsync(A<Blog>._, A<Blog>._, A<CancellationToken>._))
             .Returns(expectedOriginal.Id);
@@ -28,7 +28,7 @@ public class UpdateCommandTests
 
         var result = await handler.Handle(command, CancellationToken.None);
 
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.UpdateAsync(A<Blog>._, A<Blog>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Blog actualOriginal, Blog actualUpdated, CancellationToken token) =>
@@ -58,7 +58,7 @@ public class UpdateCommandTests
             (fixture.Command, fixture.Original, fixture.Updated);
         expectedOriginal = null;
         var repository = A.Fake<IBlogRepository>();
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expectedOriginal);
         var handler = new UpdateBlogCommandHandler(repository);
 
@@ -67,7 +67,7 @@ public class UpdateCommandTests
             var result = await handler.Handle(command, CancellationToken.None);
         });
 
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.UpdateAsync(A<Blog>._, A<Blog>._, A<CancellationToken>._))
             .MustNotHaveHappened();
@@ -81,7 +81,7 @@ public class UpdateCommandTests
             (fixture.Command, fixture.Original, fixture.Updated, fixture.WrongUserId);
         command = command with { UserId = wrongUserId };
         var repository = A.Fake<IBlogRepository>();
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expectedOriginal);
         var handler = new UpdateBlogCommandHandler(repository);
 
@@ -90,7 +90,7 @@ public class UpdateCommandTests
             var result = await handler.Handle(command, CancellationToken.None);
         });
 
-        A.CallTo(() => repository.GetBlogAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.UpdateAsync(A<Blog>._, A<Blog>._, A<CancellationToken>._))
             .MustNotHaveHappened();

@@ -26,22 +26,27 @@ public class BlogController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet][AllowAnonymous]
     public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
     {
-        var query = new GetBlogListQuery()
-        {
-            UserId = _userId,
-            Page = dto.Page,
-            Size = dto.Size
-        };
+        var query = ParseGetListDto(dto, null);
 
         var response = await _mediator.Send(query);
 
         return Ok(response);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("All")]
+    public async Task<ActionResult<BlogListVm>> GetAllByUserId([FromQuery] GetListDto dto)
+    {
+        var query = ParseGetListDto(dto, _userId);
+
+        var response = await _mediator.Send(query);
+
+        return Ok(response);
+    }
+
+    [HttpGet("Get/{id}")]
     public async Task<ActionResult<BlogVm>> GetById(Guid id)
     {
         var query = new GetBlogQuery()
@@ -55,7 +60,7 @@ public class BlogController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateBlogDto dto)
     {
         var mappedDto = _mapper.Map<CreateBlogCommand>(dto);
@@ -66,7 +71,7 @@ public class BlogController : ControllerBase
         return Ok(blogId);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<ActionResult<Guid>> Update(Guid id, [FromBody] UpdateBlogDto dto)
     {
         var mappedDto = _mapper.Map<UpdateBlogCommand>(dto);
@@ -77,7 +82,7 @@ public class BlogController : ControllerBase
         return Ok(blogId);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
         var command = new DeleteBlogCommand
@@ -89,5 +94,23 @@ public class BlogController : ControllerBase
         var blogId = await _mediator.Send(command);
 
         return Ok(blogId);
+    }
+
+    private GetBlogListQuery ParseGetListDto(GetListDto dto, Guid? userId)
+    {
+        return new ()
+        {
+            UserId = userId,
+            Page = dto.Page,
+            Size = dto.Size,
+            SearchQuery = dto.SearchQuery,
+            SearchProperties = dto.SearchProperties?.Split(' '),
+            SortProperty = dto.SortProperty,
+            SortDescending = dto.SortDirection switch
+            {
+                "desc" => true,
+                _ => false
+            }
+        };
     }
 }
