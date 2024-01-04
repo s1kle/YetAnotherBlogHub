@@ -22,9 +22,9 @@ public static class ServiceCollectionExtensions
         services.AddSerilog(config => config.ReadFrom.Configuration(configuration));
         services.AddDataDependencies();
         services.AddTransient<ExceptionHandlingMiddleware>();
-        services.AddDbContext<BlogDbContext>(options =>
+        services.AddDbContext<IBlogDbContext, BlogDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString(BlogsConnectionString)));
-        services.AddScoped<IBlogDbContext, BlogDbContext>();
+        services.AddScoped<IBlogRepository, BlogRepository>();
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = configuration.GetConnectionString(RedisConnectionString);
@@ -36,7 +36,6 @@ public static class ServiceCollectionExtensions
             var cache = new RedisCache(redisCacheOptions);
             return new LoggingDistributedCache(cache);
         });
-        services.AddScoped<IBlogRepository, BlogRepository>();
         services.AddControllers();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>

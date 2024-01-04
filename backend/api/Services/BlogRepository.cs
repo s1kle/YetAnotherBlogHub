@@ -21,10 +21,10 @@ public class BlogRepository : IBlogRepository
     {
         var key = $"Name:Blogs;Page:{page}";
         
-        var blogsQuery = _dbContext.Blogs;
+        var blogsQuery = _dbContext.Blogs.OrderBy(blog => blog.CreationDate);
 
-        _ = CacheBlogsPageAsync(page + 1, size, null, blogsQuery, cancellationToken);
-        _ = CacheBlogsPageAsync(page - 1, size, null, blogsQuery, cancellationToken);
+        await CacheBlogsPageAsync(page + 1, size, null, blogsQuery, cancellationToken);
+        await CacheBlogsPageAsync(page - 1, size, null, blogsQuery, cancellationToken);
 
         return await _cache.GetOrCreateItemAsync(key, async () => await blogsQuery
             .Skip(page * size)
@@ -103,6 +103,8 @@ public class BlogRepository : IBlogRepository
         var key = userId is null
             ? $"Name:Blogs;Page:{page}"
             : $"Name:Blogs;Page:{page};User:{userId}";
+
+        if (_cache.Contains(key)) return;
 
         await _cache.SetItemAsync(key, await query
             .Skip(page * size)
