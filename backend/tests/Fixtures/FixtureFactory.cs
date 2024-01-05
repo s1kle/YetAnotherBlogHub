@@ -1,4 +1,3 @@
-using BlogHub.Tests.Fixtures.Mapping;
 using BlogHub.Tests.Fixtures.Requests;
 using BlogHub.Tests.Fixtures.Validation;
 
@@ -25,10 +24,6 @@ public class FixtureFactory
         new (FirstUserId, SecondUserId);
     public GetBlogListFixture GetBlogListFixture(int size) =>
         new (FirstUserId, size);
-    public MappingCreateDtoFixture MappingCreateDtoFixture(string title, string? details) =>
-        new (FirstUserId, title, details);
-    public MappingUpdateDtoFixture MappingUpdateDtoFixture(string title, string? details) =>
-        new (FirstUserId, title, details);
     public ValidationFixture ValidationFixture() =>
         new ();
     public BlogControllerFixture BlogControllerFixture(string dbContextName) =>

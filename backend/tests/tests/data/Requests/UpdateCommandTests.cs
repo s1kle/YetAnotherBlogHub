@@ -1,4 +1,5 @@
 using BlogHub.Data.Commands.Update;
+using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 
@@ -62,7 +63,7 @@ public class UpdateCommandTests
             .Returns(expectedOriginal);
         var handler = new UpdateBlogCommandHandler(repository);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(command, CancellationToken.None);
         });
@@ -85,7 +86,7 @@ public class UpdateCommandTests
             .Returns(expectedOriginal);
         var handler = new UpdateBlogCommandHandler(repository);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(command, CancellationToken.None);
         });

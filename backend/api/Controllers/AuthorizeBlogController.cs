@@ -14,7 +14,7 @@ public sealed class AuthorizeBlogController : BaseBlogController
     public AuthorizeBlogController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("my-blogs")]
-    public async Task<ActionResult<BlogListVm>> GetAllByUserId([FromQuery] GetListDto dto)
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
     {
         var query = ParseGetListDto(dto, UserId);
 

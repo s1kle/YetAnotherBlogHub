@@ -1,3 +1,4 @@
+using BlogHub.Data.Exceptions;
 using BlogHub.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class Delete_Tests
     public async Task Delete_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -53,7 +54,7 @@ public class Delete_Tests
     public async Task Delete_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -82,7 +83,7 @@ public class Delete_Tests
 
         blogControllerFixture.ChangeUser();
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await blogController.Delete(id);
         });

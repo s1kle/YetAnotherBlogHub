@@ -20,7 +20,7 @@ public class GetAll_Tests
     public async Task GetAllFromEmptyList_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -48,7 +48,7 @@ public class GetAll_Tests
     public async Task GetAll_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.UnauthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -134,7 +134,7 @@ public class GetAll_Tests
     public async Task GetAllFromEmptyList_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -167,7 +167,7 @@ public class GetAll_Tests
     public async Task GetAll_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 

@@ -20,7 +20,7 @@ public class Create_Tests
     public async Task Create_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -79,7 +79,7 @@ public class Create_Tests
     public async Task Create_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
