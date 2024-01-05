@@ -8,9 +8,10 @@ public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogLis
 {
     private readonly IBlogRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ITagRepository _tagRepository;
 
-    public GetBlogListQueryHandler(IBlogRepository repository, IMapper mapper) =>
-        (_repository, _mapper) = (repository, mapper);
+    public GetBlogListQueryHandler(IBlogRepository repository, IMapper mapper, ITagRepository tagRepository) =>
+        (_repository, _mapper, _tagRepository) = (repository, mapper, tagRepository);
 
     public async Task<BlogListVm> Handle(GetBlogListQuery request, CancellationToken cancellationToken)
     {

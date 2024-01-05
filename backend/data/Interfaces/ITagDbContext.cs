@@ -5,6 +5,6 @@ namespace BlogHub.Data.Interfaces;
 
 public interface ITagDbContext
 {
-    DbSet<Blog> Tags { get; init; }
+    DbSet<Tag> Tags { get; init; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

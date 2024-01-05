@@ -1,4 +1,6 @@
 using System.Reflection;
+using BlogHub.Data.Interfaces;
+using BlogHub.Domain;
 
 namespace BlogHub.Data.Blogs.Queries.GetList;
 
