@@ -13,7 +13,7 @@ public class LoggingBehavior<TRequest, TResponse>
 
         var response = await next();
 
-        Log.Information("Response ({Name}): {@Request}", typeof(TResponse).Name, response);
+        Log.Information("Response ({Name}): {@Request}", typeof(TResponse).Name, response?.GetType());
 
         return response;
     }

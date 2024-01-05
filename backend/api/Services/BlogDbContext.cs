@@ -8,6 +8,5 @@ public class BlogDbContext : DbContext, IBlogDbContext
 {
     public DbSet<Blog> Blogs { get; init;}
 
-    public BlogDbContext(DbContextOptions<BlogDbContext> options)
-        : base(options) { }
+    public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options) { }
 }

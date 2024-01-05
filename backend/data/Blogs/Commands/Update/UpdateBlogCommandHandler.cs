@@ -1,3 +1,4 @@
+using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using MediatR;
 
@@ -7,17 +8,15 @@ public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 {
     private readonly IBlogRepository _repository;
 
-    public UpdateBlogCommandHandler(IBlogRepository repository)
-    {
+    public UpdateBlogCommandHandler(IBlogRepository repository) =>
         _repository = repository;
-    }
 
     public async Task<Guid> Handle(UpdateBlogCommand request, CancellationToken cancellationToken)
     {
         var original = await _repository.GetAsync(request.Id, cancellationToken);
 
         if (original is null || original.UserId != request.UserId)
-            throw new ArgumentException(nameof(original));
+            throw new NotFoundException(nameof(original));
 
         var updated = original with
         {

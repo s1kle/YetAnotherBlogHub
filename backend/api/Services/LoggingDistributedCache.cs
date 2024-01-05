@@ -8,10 +8,8 @@ public class LoggingDistributedCache : IDistributedCache
 {
     private readonly RedisCache _cache;
 
-    public LoggingDistributedCache(RedisCache cache)
-    {
+    public LoggingDistributedCache(RedisCache cache) =>
         _cache = cache;
-    }
 
     public byte[]? Get(string key)
     {
