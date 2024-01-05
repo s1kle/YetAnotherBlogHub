@@ -1,5 +1,3 @@
-using BlogHub.Data.Commands.Create;
-using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Mappings;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
@@ -37,37 +35,6 @@ public class MappingTests
         var expected = fixture.BlogVmList.First();
 
         var actual = _mapper.Map<BlogVmForList>(blog);
-
-        actual.Should().BeEquivalentTo(expected);
-    }
-
-    [Fact]
-    public void Mapping_CreateBlogDtoToCreateBlogCommand_ShouldSuccess()
-    {
-        var fixture = _blogsFactory.MappingCreateDtoFixture("Title", "Details");
-        var userId = fixture.UserId;
-        var expected = fixture.Command;
-        var dto = fixture.Dto;
-
-        var result = _mapper.Map<CreateBlogCommand>(dto);
-
-        var actual = result with { UserId = userId };
-
-        actual.Should().BeEquivalentTo(expected);
-    }
-
-    [Fact]
-    public void Mapping_UpdateBlogDtoToUpdateBlogCommand_ShouldSuccess()
-    {
-        var fixture = _blogsFactory.MappingUpdateDtoFixture("Title", "Details");
-        var id = fixture.Id;
-        var userId = fixture.UserId;
-        var expected = fixture.Command;
-        var dto = fixture.Dto;
-
-        var result = _mapper.Map<UpdateBlogCommand>(dto);
-
-        var actual = result with { UserId = userId, Id = id };
 
         actual.Should().BeEquivalentTo(expected);
     }

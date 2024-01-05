@@ -20,7 +20,7 @@ public class GetAllByUserId_Tests
     public async Task GetAllFromEmptyList_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -30,7 +30,7 @@ public class GetAllByUserId_Tests
             Size = 10
         };
 
-        var result = (await blogController.GetAllByUserId(dto)).Result as OkObjectResult;
+        var result = (await blogController.GetAll(dto)).Result as OkObjectResult;
 
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status200OK);
@@ -48,7 +48,7 @@ public class GetAllByUserId_Tests
     public async Task GetAll_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -107,7 +107,7 @@ public class GetAllByUserId_Tests
             Size = 10
         };
 
-        var result = (await blogController.GetAllByUserId(dto)).Result as OkObjectResult;
+        var result = (await blogController.GetAll(dto)).Result as OkObjectResult;
 
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status200OK);
@@ -128,7 +128,7 @@ public class GetAllByUserId_Tests
     public async Task GetAllFromEmptyList_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -140,7 +140,7 @@ public class GetAllByUserId_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAllByUserId(dto);
+            var result = await blogController.GetAll(dto);
         });
 
         dto = new ()
@@ -151,7 +151,7 @@ public class GetAllByUserId_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAllByUserId(dto);
+            var result = await blogController.GetAll(dto);
         });
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();
@@ -161,7 +161,7 @@ public class GetAllByUserId_Tests
     public async Task GetAll_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -173,7 +173,7 @@ public class GetAllByUserId_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAllByUserId(dto);
+            var result = await blogController.GetAll(dto);
         });
 
         dto = new GetListDto()
@@ -184,7 +184,7 @@ public class GetAllByUserId_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetAllByUserId(dto);
+            var result = await blogController.GetAll(dto);
         });
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();

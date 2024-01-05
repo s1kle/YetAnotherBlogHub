@@ -1,4 +1,5 @@
 using BlogHub.Data.Commands.Update;
+using BlogHub.Data.Exceptions;
 using BlogHub.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ public class Update_Tests
     public async Task Update_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -83,7 +84,7 @@ public class Update_Tests
     public async Task Update_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -115,7 +116,7 @@ public class Update_Tests
                 .Update(id, new () { Title = new ('a', 101), Details = "D"});
         });
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await blogController
                 .Update(wrongId, new () { Title = "T", Details = "D"});
@@ -123,7 +124,7 @@ public class Update_Tests
 
         blogControllerFixture.ChangeUser();
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await blogController
                 .Update(id, new () { Title = "T", Details = "D"});

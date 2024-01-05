@@ -1,4 +1,5 @@
 using BlogHub.Data.Commands.Delete;
+using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 
@@ -52,7 +53,7 @@ public class DeleteCommandTests
             .Returns(expected.Id);
         var handler = new DeleteBlogCommandHandler(repository);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(command, CancellationToken.None);
         });
@@ -75,7 +76,7 @@ public class DeleteCommandTests
             .Returns(expected);
         var handler = new DeleteBlogCommandHandler(repository);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(command, CancellationToken.None);
         });

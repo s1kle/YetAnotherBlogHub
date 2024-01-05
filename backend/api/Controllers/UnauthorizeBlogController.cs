@@ -20,7 +20,7 @@ public sealed class UnauthorizeBlogController : BaseBlogController
     }
 
     [HttpGet("blog/get/id/{id}")]
-    public async Task<ActionResult<BlogVm>> GetById(Guid id)
+    public async Task<ActionResult<BlogVm>> Get(Guid id)
     {
         var query = new GetBlogQuery() { Id = id };
 

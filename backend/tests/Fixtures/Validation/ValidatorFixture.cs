@@ -143,15 +143,8 @@ public class ValidationFixture
         return new[]
         {
             fixture.Build<GetBlogQuery>()
-                .With(request => request.UserId, Guid.Empty)
-                .Create(),
-            fixture.Build<GetBlogQuery>()
                 .With(request => request.Id, Guid.Empty)
                 .Create(),
-            fixture.Build<GetBlogQuery>()
-                .With(request => request.Id, Guid.Empty)
-                .With(request => request.UserId, Guid.Empty)
-                .Create()
         };
     }
     #endregion

@@ -1,3 +1,4 @@
+using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Domain;
@@ -53,31 +54,7 @@ public class GetQueryTests
         A.CallTo(() => mapper.Map<BlogVm>(A<Blog>._)).Returns(expectedVm);
         var handler = new GetBlogQueryHandler(repository, mapper);
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-        {
-            var result = await handler.Handle(query, CancellationToken.None);
-        });
-
-        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .MustHaveHappenedOnceExactly();
-        A.CallTo(() => mapper.Map<BlogVm>(A<Blog>._))
-            .MustNotHaveHappened();
-    }
-
-    [Fact]
-    public async Task GetBlog_WithIncorrectUserId_ShouldFail()
-    {
-        var fixture = _blogsFactory.GetBlogFixture();
-        (var query, var expected, var expectedVm, var wrongUserId) = 
-            (fixture.Query, fixture.Blog, fixture.BlogVm, fixture.WrongUserId);
-        var repository = A.Fake<IBlogRepository>();
-        var mapper = A.Fake<IMapper>();
-        query = query with { UserId = wrongUserId };
-        A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._)).Returns(expected);
-        A.CallTo(() => mapper.Map<BlogVm>(A<Blog>._)).Returns(expectedVm);
-        var handler = new GetBlogQueryHandler(repository, mapper);
-
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(query, CancellationToken.None);
         });
