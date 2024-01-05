@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BlogHub.Data.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -25,14 +26,14 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
         (var status, var title, var detail) = exception switch
         {
-            ArgumentException => 
+            NotFoundException e => 
                 (StatusCodes.Status404NotFound, 
-                "Invalid argument", 
-                "One of the provided arguments is invalid. Please check the passed values."),
-            ValidationException ex => 
+                "Entity not found", 
+                e.Message),
+            ValidationException => 
                 (StatusCodes.Status400BadRequest, 
                 "Validation failed", 
-                $"The provided data failed one or more validation rules. Please check the values. {ex.Errors}"),
+                $"The provided data failed one or more validation rules. Please check the values."),
             _ => 
                 (StatusCodes.Status500InternalServerError, 
                 "Server error", 

@@ -1,24 +1,32 @@
 <div *ngIf="!blog">Loading...</div>
-<div *ngIf="!isEditMode">
-    <div *ngIf="blog">
-        <h1>Title: {{blog.title}}</h1>
-        <p>Details: {{blog.details}}</p>
-        <p>CreationDate: {{blog.creationDate}}</p>
-        <p>EditDate: {{blog.editDate}}</p>
-        <button (click)="delete()">Delete</button>
-        <button (click)="edit()">Edit</button>
+<div>
+    <div *ngIf="!isEditMode" class="d-flex justify-content-center">
+        <div *ngIf="blog" class="row row-cols-2">
+            <div class="col-12 p-3 border rounded-5 text-center text-bg-dark text-info h1">{{blog.title}}</div>
+            <div class="col-12"></div>
+            <div class="col-12 p-3 border rounded-5 text-bg-dark text-center text-danger h3">{{blog.details}}</div>
+            <div class="col-12"></div>
+            <div class="col-6 p-3 border rounded-5 text-bg-dark text-center text-warning h6">Create: {{blog.creationDate | date:'dd.MM.yyyy'}}</div>
+            <div *ngIf="blog.editDate" class="col-6 p-3 border rounded-5 text-bg-dark text-center text-warning h6">Edit: {{blog.editDate | date:'dd.MM.yyyy'}}</div>
+            <div *ngIf="!blog.editDate" class="col-6 p-3 border rounded-5 text-bg-dark text-center text-warning h6">Edit: nope</div>
+            <div class="col-12"></div>
+            <button class="col-3 p-3 border rounded-5 btn btn-success" (click)="edit()">Edit</button>
+            <div class="col-6"></div>
+            <button class="col-3 p-3 border rounded-5 btn btn-danger" (click)="delete()">Delete</button>
+        </div>
+    </div>
+    <div *ngIf="isEditMode" class="d-flex justify-content-center">
+        <div *ngIf="blog" class="row row-cols-2">
+            <input class="col-12 p-3 border rounded-5 text-center text-bg-dark text-info h1" [(ngModel)]="blog.title">
+            <div class="col-12"></div>
+            <input class="col-12 p-3 border rounded-5 text-center text-bg-dark text-danger  h1" [(ngModel)]="blog.details">
+            <button class="col-3 p-3 border rounded-5 btn btn-success" (click)="update()">Update</button>
+            <div class="col-6"></div>
+            <button class="col-3 p-3 border rounded-5 btn btn-danger" (click)="cancel()">Cancel</button>
+        </div>
     </div>
 </div>
-<div *ngIf="isEditMode">
-    <div *ngIf="blog">
-        <input [(ngModel)]="blog.title">
-        <textarea [(ngModel)]="blog.details"></textarea>
-
-        <p>CreationDate: {{blog.creationDate}}</p>
-        <p>EditDate: {{blog.editDate}}</p>
-        <button (click)="cancel()">Cancel</button>
-        <button (click)="update()">Edit</button>
-    </div>
+<p></p>
+<div class="row">
+    <button class="col btn btn-outline-warning" (click)="goBack()">Back</button>
 </div>
-
-<button (click)="goBack()">Back</button>

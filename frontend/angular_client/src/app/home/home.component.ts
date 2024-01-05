@@ -6,13 +6,9 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CreateBlogComponent, BlogListComponent],
+  imports: [CommonModule, BlogListComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  isCreating = false;
-
-  changeState = () =>
-    this.isCreating = !this.isCreating;
 }

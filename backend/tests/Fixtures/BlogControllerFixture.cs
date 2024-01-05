@@ -16,7 +16,8 @@ public class BlogControllerFixture
 {
     public Guid UserId { get; }
     public Guid WrongUserId { get; }
-    public BlogController BlogController { get; }
+    public AuthorizeBlogController AuthorizeBlogController { get; }
+    public UnauthorizeBlogController UnauthorizeBlogController { get; }
     public BlogDbContext BlogDbContext;
     private bool _userState;
 
@@ -46,7 +47,8 @@ public class BlogControllerFixture
         var mapper = serviceProvider.GetService<IMapper>();
         BlogDbContext = serviceProvider.GetService<BlogDbContext>()!;
 
-        BlogController = new BlogController(mapper!, mediatr!);
+        AuthorizeBlogController = new AuthorizeBlogController(mediatr!);
+        UnauthorizeBlogController = new UnauthorizeBlogController(mediatr!);
 
         var httpContext = A.Fake<HttpContext>();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
@@ -54,7 +56,7 @@ public class BlogControllerFixture
         }));
         A.CallTo(() => httpContext.User).Returns(user);
 
-        BlogController.ControllerContext = new ()
+        AuthorizeBlogController.ControllerContext = new ()
         {
             HttpContext = httpContext
         };
@@ -71,7 +73,7 @@ public class BlogControllerFixture
         var httpContext = A.Fake<HttpContext>();
         A.CallTo(() => httpContext.User).Returns(user);
 
-        BlogController.ControllerContext = new ()
+        AuthorizeBlogController.ControllerContext = new ()
         {
             HttpContext = httpContext
         };

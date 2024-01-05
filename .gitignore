@@ -5,7 +5,9 @@
 
 Properties/
 *Configuration.*
+!IdentityServerConfiguration-Template.cs
 appsettings*
+!appsettings.template.json
 *.jwk
 Migrations/
 

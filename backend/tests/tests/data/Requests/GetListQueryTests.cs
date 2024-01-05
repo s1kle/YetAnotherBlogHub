@@ -18,12 +18,12 @@ public class GetListQueryTests
     {
         int size = 10;
         var fixture = _blogsFactory.GetBlogListFixture(size);
-            (var query, var blogList, var blogVmList, var blogListVm) = 
-                (fixture.Query, fixture.BlogList, fixture.BlogVmList, fixture.BlogListVm);
+        (var query, var blogList, var blogVmList, var blogListVm) = 
+            (fixture.Query, fixture.BlogList, fixture.BlogVmList, fixture.BlogListVm);
         var repository = A.Fake<IBlogRepository>();
         var mapper = A.Fake<IMapper>();
 
-        A.CallTo(() => repository.GetAllBlogsAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
             .Returns(blogList);
         A.CallTo(() => mapper.Map<BlogVmForList>(A<Blog>._))
             .ReturnsNextFromSequence(blogVmList.ToArray());
@@ -32,7 +32,7 @@ public class GetListQueryTests
 
         var result = await handler.Handle(query, CancellationToken.None);
 
-        A.CallTo(() => repository.GetAllBlogsAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
+        A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => mapper.Map<BlogVmForList>(A<Blog>._))
             .WhenArgumentsMatch(actualArgument =>
@@ -50,28 +50,5 @@ public class GetListQueryTests
         {
             actualBlogs[i].Should().BeEquivalentTo(blogVmList[i]);
         }
-    }
-
-    [Fact]
-    public async Task GetBlogList_WithIncorrectUserId_ShouldSuccess()
-    {
-        var fixture = _blogsFactory.GetBlogListFixture(1);
-        var query = fixture.Query;
-        var repository = A.Fake<IBlogRepository>();
-        var mapper = A.Fake<IMapper>();
-
-        A.CallTo(() => repository.GetAllBlogsAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
-            .Returns(new List<Blog>());
-
-        var handler = new GetBlogListQueryHandler(repository, mapper);
-
-        var result = await handler.Handle(query, CancellationToken.None);
-
-        A.CallTo(() => repository.GetAllBlogsAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
-            .MustHaveHappenedOnceExactly();
-        A.CallTo(() => mapper.Map<BlogVmForList>(A<Blog>._))
-            .MustNotHaveHappened();
-
-        result.Blogs.Should().BeEmpty();
     }
 }

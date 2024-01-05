@@ -8,10 +8,8 @@ public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
 {
     private readonly IBlogRepository _repository;
 
-    public CreateBlogCommandHandler(IBlogRepository repository)
-    {
+    public CreateBlogCommandHandler(IBlogRepository repository) =>
         _repository = repository;
-    }
 
     public async Task<Guid> Handle(CreateBlogCommand request, CancellationToken cancellationToken)
     {

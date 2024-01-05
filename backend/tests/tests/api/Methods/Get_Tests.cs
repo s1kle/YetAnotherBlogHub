@@ -1,3 +1,4 @@
+using BlogHub.Data.Exceptions;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Domain;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +21,7 @@ public class Get_Tests
     public async Task Get_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.UnauthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -41,7 +42,7 @@ public class Get_Tests
 
         blogControllerFixture.BlogDbContext.Blogs.Count().Should().Be(1);
 
-        var result = (await blogController.GetById(id)).Result as OkObjectResult;
+        var result = (await blogController.Get(id)).Result as OkObjectResult;
 
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status200OK);
@@ -63,7 +64,7 @@ public class Get_Tests
     public async Task Get_WithInvalidParams_ShouldFail()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.BlogController;
+        var blogController = blogControllerFixture.UnauthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -87,19 +88,12 @@ public class Get_Tests
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await blogController.GetById(Guid.Empty);
+            var result = await blogController.Get(Guid.Empty);
         });
 
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
-            var result = await blogController.GetById(wrongId);
-        });
-
-        blogControllerFixture.ChangeUser();
-
-        await Assert.ThrowsAsync<ArgumentException>(async () =>
-        {
-            var result = await blogController.GetById(id);
+            var result = await blogController.Get(wrongId);
         });
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();

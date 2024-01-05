@@ -25,11 +25,11 @@ export class HeaderComponent {
     this.user = await this._auth.getUser();
   }
 
-  onUserLoaded(user: User) {
+  onUserLoaded = (user: User) => {
     console.log('User logged in');
     this.user = user;
   }
-  onUserUnloaded() {
+  onUserUnloaded = () => {
     console.log('User logged out');
     this.user = null;
   }

@@ -27,7 +27,7 @@ public class GetBlogListFixture
         {
             UserId = userId,
             Page = 0,
-            Size = size
+            Size = size,
         };
     }
 

@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Tests.Api.Methods;
 
-public class GetAll_Tests
+public class GetAllByUserId_Tests
 {
     private readonly FixtureFactory _fixtureFactory;
     private readonly string _dbContextName;
 
-    public GetAll_Tests()
+    public GetAllByUserId_Tests()
     {
         _fixtureFactory = new ();
         _dbContextName = $"{this.GetType()}";
@@ -48,7 +48,7 @@ public class GetAll_Tests
     public async Task GetAll_WithValidParams_ShouldSuccess()
     {
         var blogControllerFixture = _fixtureFactory.BlogControllerFixture(_dbContextName);
-        var blogController = blogControllerFixture.UnauthorizeBlogController;
+        var blogController = blogControllerFixture.AuthorizeBlogController;
 
         blogControllerFixture.BlogDbContext.Database.EnsureCreated();
 
@@ -97,12 +97,6 @@ public class GetAll_Tests
                 CreationDate = creationDate,
                 EditDate = editDate
             });
-
-            expected.Add(new ()
-            {
-                Id = id,
-                Title = title
-            });
         }
 
         await blogControllerFixture.BlogDbContext.SaveChangesAsync();
@@ -122,7 +116,7 @@ public class GetAll_Tests
 
         actual.Should().NotBeNull();
         actual!.Blogs.Should().NotBeNull();
-        actual.Blogs.Count.Should().Be(count*2);
+        actual.Blogs.Count.Should().Be(count);
         actual.Blogs.Should().Contain(expected);
 
         blogControllerFixture.BlogDbContext.Database.EnsureDeleted();

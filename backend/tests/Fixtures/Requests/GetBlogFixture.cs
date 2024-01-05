@@ -21,7 +21,6 @@ public class GetBlogFixture
         Query = new ()
         {
             Id = id,
-            UserId = userId
         };
         Blog = new ()
         {

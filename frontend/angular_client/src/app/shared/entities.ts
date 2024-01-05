@@ -5,9 +5,19 @@ export interface blogListVm {
 export interface detailedBlogVm {
     id: string;
     title: string;
-    creationDate: string;
+    creationDate: Date;
     details: string | null;
-    editDate: string | null;
+    editDate: Date | null;
+}
+
+export interface searchOptions {
+    searchQuery: string;
+    searchProperties?: string;
+}
+
+export interface sortOptions {
+    sortProperty: string;
+    sortDirection?: string;
 }
 
 export interface blogVmForList {
