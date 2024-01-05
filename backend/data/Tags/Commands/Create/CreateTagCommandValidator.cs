@@ -9,9 +9,6 @@ public class CreateTagCommandValidator : AbstractValidator<CreateTagCommand>
         RuleFor(command => command.UserId)
             .NotEmpty();
 
-        RuleFor(command => command.BlogId)
-            .NotEmpty();
-
         RuleFor(command => command.Name)
             .NotEmpty()
             .MaximumLength(10);

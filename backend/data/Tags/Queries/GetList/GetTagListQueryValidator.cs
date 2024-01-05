@@ -6,7 +6,7 @@ public class GetTagListQueryValidator : AbstractValidator<GetTagListQuery>
 {
     public GetTagListQueryValidator()
     {
-        RuleFor(query => query.BlogId)
+        RuleFor(query => query.UserId)
             .NotEmpty();
     }
 }

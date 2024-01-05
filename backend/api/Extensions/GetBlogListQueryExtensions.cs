@@ -1,4 +1,4 @@
-using BlogHub.Data.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.GetList;
 
 namespace BlogHub.Api.Extensions;
 
@@ -11,21 +11,18 @@ public static class GetBlogListQueryExtensions
         return query with
         {
             SortFilter = new ()
-                {
-                    SortProperty = property,
-                    SortDescending = direction switch
-                    {
-                        "desc" => true,
-                        _ => false
-                    }
-                }
+            {
+                SortProperty = property,
+                SortDescending = direction?.Equals("desc") ?? false
+            }
         };
     }
 
     public static GetBlogListQuery ApplySearchFilter(this GetBlogListQuery query, string? searchQuery, string? searchProperties)
     {
         if (searchQuery is null || searchProperties is null) return query;
-        return query = query with
+
+        return query with
         {
             SearchFilter = new ()
             {

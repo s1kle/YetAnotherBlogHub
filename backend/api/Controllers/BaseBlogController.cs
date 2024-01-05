@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using BlogHub.Api.Extensions;
-using BlogHub.Data.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

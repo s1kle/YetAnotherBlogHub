@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace BlogHub.Data.Queries.GetList;
+namespace BlogHub.Data.Blogs.Queries.GetList;
 
 public static class IEnumerableExtensions
 {

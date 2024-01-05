@@ -8,8 +8,5 @@ public class GetTagQueryValidator : AbstractValidator<GetTagQuery>
     {
         RuleFor(query => query.Id)
             .NotEmpty();
-
-        RuleFor(query => query.BlogId)
-            .NotEmpty();
     }
 }

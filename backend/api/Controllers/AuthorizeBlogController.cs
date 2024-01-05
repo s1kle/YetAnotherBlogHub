@@ -1,7 +1,7 @@
-using BlogHub.Data.Commands.Create;
-using BlogHub.Data.Commands.Delete;
-using BlogHub.Data.Commands.Update;
-using BlogHub.Data.Queries.GetList;
+using BlogHub.Data.Blogs.Commands.Create;
+using BlogHub.Data.Blogs.Commands.Delete;
+using BlogHub.Data.Blogs.Commands.Update;
+using BlogHub.Data.Blogs.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

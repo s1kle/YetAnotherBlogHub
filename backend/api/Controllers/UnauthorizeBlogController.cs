@@ -1,5 +1,5 @@
-using BlogHub.Data.Queries.Get;
-using BlogHub.Data.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.Get;
+using BlogHub.Data.Blogs.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
