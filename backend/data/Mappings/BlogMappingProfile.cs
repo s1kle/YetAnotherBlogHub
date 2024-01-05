@@ -1,6 +1,4 @@
 using AutoMapper;
-using BlogHub.Data.Commands.Create;
-using BlogHub.Data.Commands.Update;
 using BlogHub.Data.Queries.Get;
 using BlogHub.Data.Queries.GetList;
 using BlogHub.Domain;
@@ -13,7 +11,5 @@ public class BlogMappingProfile : Profile
     {
         CreateMap<Blog, BlogVm>();
         CreateMap<Blog, BlogVmForList>();
-        CreateMap<CreateBlogDto, CreateBlogCommand>();
-        CreateMap<UpdateBlogDto, UpdateBlogCommand>();
     }
 }

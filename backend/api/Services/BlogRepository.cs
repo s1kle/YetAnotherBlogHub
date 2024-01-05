@@ -11,11 +11,8 @@ public class BlogRepository : IBlogRepository
     private readonly IDistributedCache _cache;
     private readonly IBlogDbContext _dbContext;
 
-    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext)
-    {
-        _cache = cache;
-        _dbContext = dbContext;
-    }
+    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext) =>
+        (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<Blog>?> GetAllAsync(int page, int size, CancellationToken cancellationToken)
     {
