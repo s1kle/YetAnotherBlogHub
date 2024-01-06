@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace BlogHub.Data.BlogTags.Commands.Create;
+namespace BlogHub.Data.Tags.Commands.Link;
 
-public class CreateBlogTagCommandValidator : AbstractValidator<CreateBlogTagCommand>
+public class LinkTagCommandValidator : AbstractValidator<LinkTagCommand>
 {
-    public CreateBlogTagCommandValidator()
+    public LinkTagCommandValidator()
     {
         RuleFor(command => command.UserId)
             .NotEmpty();

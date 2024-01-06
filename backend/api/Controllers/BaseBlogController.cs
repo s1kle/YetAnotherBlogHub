@@ -15,15 +15,25 @@ public abstract class BaseBlogController : ControllerBase
     protected BaseBlogController(IMediator mediator) =>
         Mediator = mediator;
 
-    protected GetBlogListQuery ParseGetListDto(GetListDto dto, Guid? userId = null)
+    protected static SortFilter? GetSortFilter(string? property, string? direction)
     {
-        return new GetBlogListQuery()
+        if (property is null) return null;
+
+        return new ()
         {
-            UserId = userId,
-            Size = dto.Size,
-            Page = dto.Page
-        }
-            .ApplySearchFilter(dto.SearchQuery, dto.SearchProperties)
-            .ApplySortFilter(dto.SortProperty, dto.SortDirection);
+            SortProperty = property,
+            SortDescending = direction?.Equals("desc") ?? false
+        };
+    }
+
+    protected static SearchFilter? GetSearchFilter(string? searchQuery, string? searchProperties)
+    {
+        if (searchQuery is null || searchProperties is null) return null;
+
+        return new ()
+        {
+            SearchQuery = searchQuery,
+            SearchProperties = searchProperties.Split(' ')
+        };
     }
 }

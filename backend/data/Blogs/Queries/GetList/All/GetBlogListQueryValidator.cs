@@ -6,9 +6,6 @@ public class GetBlogListQueryValidator : AbstractValidator<GetBlogListQuery>
 {
     public GetBlogListQueryValidator()
     {
-        RuleFor(query => query.UserId)
-            .NotEqual(Guid.Empty);    
-
         RuleFor(query => query.Size)
             .GreaterThan(0);
 

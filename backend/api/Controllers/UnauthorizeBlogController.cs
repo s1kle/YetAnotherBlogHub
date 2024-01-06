@@ -12,7 +12,13 @@ public sealed class UnauthorizeBlogController : BaseBlogController
     [HttpGet("blogs")]
     public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
     {
-        var query = ParseGetListDto(dto);
+        var query = new GetBlogListQuery()
+        {
+            Page = dto.Page,
+            Size = dto.Size,
+            SortFilter = GetSortFilter(dto.SortProperty, dto.SortDirection),
+            SearchFilter = GetSearchFilter(dto.SearchQuery, dto.SearchProperties)
+        };
 
         var response = await Mediator.Send(query);
 

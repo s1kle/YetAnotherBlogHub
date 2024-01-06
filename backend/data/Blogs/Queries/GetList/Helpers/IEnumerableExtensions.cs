@@ -1,11 +1,20 @@
 using System.Reflection;
-using BlogHub.Data.Interfaces;
+using AutoMapper;
 using BlogHub.Domain;
 
 namespace BlogHub.Data.Blogs.Queries.GetList;
 
 public static class IEnumerableExtensions
 {
+    public static List<BlogVmForList> ApplyFilters(this IEnumerable<Blog> query,
+        SortFilter? sortFilter,
+        SearchFilter? searchFilter,
+        IMapper mapper) => query
+        .Search(searchFilter)
+        .SortByProperty(sortFilter)
+        .Select(mapper.Map<BlogVmForList>)
+        .ToList();
+        
     public static IEnumerable<T> SortByProperty<T>(this IEnumerable<T> query, SortFilter? sortFilter)
     {
         if (sortFilter is null) return query;
@@ -26,7 +35,6 @@ public static class IEnumerableExtensions
             ? query.OrderByDescending(entity => property.GetValue(entity))
             : query.OrderBy(entity => property.GetValue(entity));
     }
-
     public static IEnumerable<T> Search<T>(this IEnumerable<T> query, SearchFilter? searchFilter)
     {
         if (searchFilter is null) return query;
