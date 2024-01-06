@@ -19,7 +19,9 @@ public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogLis
 
         if (blogs is null) return new BlogListVm { Blogs = new List<BlogVmForList>() };
 
-        var mappedBlogs = blogs.ApplyFilters(request.SortFilter, request.SearchFilter, _mapper);
+        var mappedBlogs = blogs
+            .Select(_mapper.Map<BlogVmForList>)
+            .ToList();
 
         return new BlogListVm { Blogs = mappedBlogs };
     }

@@ -2,6 +2,8 @@ using BlogHub.Data.Blogs.Commands.Create;
 using BlogHub.Data.Blogs.Commands.Delete;
 using BlogHub.Data.Blogs.Commands.Update;
 using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.ListSearch;
+using BlogHub.Data.Blogs.Queries.ListSort;
 using BlogHub.Data.Tags.Commands.Link;
 using BlogHub.Data.Tags.Commands.Unlink;
 using BlogHub.Data.Tags.Queries.GetList;
@@ -12,23 +14,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogHub.Api.Controllers;
 
 [Authorize]
-public sealed class AuthorizeBlogController : BaseBlogController
+public sealed class AuthorizeBlogController : BaseController
 {
     public AuthorizeBlogController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("my-blogs")]
-    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
+        [FromQuery] ListSortDto sortDto, [FromQuery] ListSearchDto searchDto)
     {
         var query = new GetUserBlogListQuery()
         {
             UserId = UserId,
             Page = dto.Page,
             Size = dto.Size,
-            SortFilter = GetSortFilter(dto.SortProperty, dto.SortDirection),
-            SearchFilter = GetSearchFilter(dto.SearchQuery, dto.SearchProperties)
         };
 
         var response = await Mediator.Send(query);
+
+        response = await ApplyFilters(response, sortDto, searchDto);
 
         return Ok(response);
     }
@@ -48,7 +51,7 @@ public sealed class AuthorizeBlogController : BaseBlogController
         return Ok(blogId);
     }
 
-    [HttpPut("blog/update/id/{id}")]
+    [HttpPut("blog/{id}/update")]
     public async Task<ActionResult<Guid>> Update(Guid id, [FromBody] UpdateBlogDto dto)
     {
         var command = new UpdateBlogCommand 
@@ -64,7 +67,7 @@ public sealed class AuthorizeBlogController : BaseBlogController
         return Ok(blogId);
     }
 
-    [HttpDelete("blog/delete/id/{id}")]
+    [HttpDelete("blog/{id}/delete")]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
         var command = new DeleteBlogCommand
@@ -78,7 +81,7 @@ public sealed class AuthorizeBlogController : BaseBlogController
         return Ok(blogId);
     }
 
-    [HttpPost("blog/get/id/{id}/link/tag")]
+    [HttpPost("blog/{id}/tag/link")]
     public async Task<ActionResult<TagListVm>> LinkTag(Guid id, [FromBody] LinkTagDto dto)
     {
         var query = new LinkTagCommand()
@@ -93,7 +96,7 @@ public sealed class AuthorizeBlogController : BaseBlogController
         return Ok(response);
     }
 
-    [HttpDelete("blog/get/id/{id}/tag/{tagId}/unlink")]
+    [HttpDelete("blog/{id}/tag/{tagId}/unlink")]
     public async Task<ActionResult<TagListVm>> UnlinkTag(Guid id, Guid tagId)
     {
         var query = new UnlinkTagCommand()

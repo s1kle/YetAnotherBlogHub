@@ -1,32 +1,35 @@
 using BlogHub.Data.Blogs.Queries.Get;
 using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.ListSearch;
+using BlogHub.Data.Blogs.Queries.ListSort;
 using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Api.Controllers;
 
-public sealed class UnauthorizeBlogController : BaseBlogController
+public sealed class UnauthorizeBlogController : BaseController
 {
     public UnauthorizeBlogController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("blogs")]
-    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto)
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
+        [FromQuery] ListSortDto sortDto, [FromQuery] ListSearchDto searchDto)
     {
         var query = new GetBlogListQuery()
         {
             Page = dto.Page,
-            Size = dto.Size,
-            SortFilter = GetSortFilter(dto.SortProperty, dto.SortDirection),
-            SearchFilter = GetSearchFilter(dto.SearchQuery, dto.SearchProperties)
+            Size = dto.Size
         };
 
         var response = await Mediator.Send(query);
 
+        response = await ApplyFilters(response, sortDto, searchDto);
+
         return Ok(response);
     }
 
-    [HttpGet("blog/get/id/{id}")]
+    [HttpGet("blog/{id}")]
     public async Task<ActionResult<BlogVm>> Get(Guid id)
     {
         var query = new GetBlogQuery() { Id = id };
@@ -36,7 +39,7 @@ public sealed class UnauthorizeBlogController : BaseBlogController
         return Ok(response);
     }
 
-    [HttpGet("blog/get/id/{id}/tags")]
+    [HttpGet("blog/{id}/tags")]
     public async Task<ActionResult<TagListVm>> GetTags(Guid id)
     {
         var query = new GetBlogTagListQuery()

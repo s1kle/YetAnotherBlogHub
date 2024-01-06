@@ -6,6 +6,4 @@ public record GetBlogListQuery : IRequest<BlogListVm>
 {
     public required int Page { get; init; }
     public required int Size { get; init; }
-    public SortFilter? SortFilter { get; init; }
-    public SearchFilter? SearchFilter { get; init; }
 }

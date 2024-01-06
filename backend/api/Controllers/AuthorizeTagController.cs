@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Api.Controllers;
 
-public class AuthorizeTagController : BlogHubController
+public class AuthorizeTagController : BaseController
 {
     public AuthorizeTagController(IMediator mediator) : base (mediator) { }
 
@@ -37,7 +37,7 @@ public class AuthorizeTagController : BlogHubController
         return Ok(blogId);
     }
 
-    [HttpDelete("tag/delete/id/{id}")]
+    [HttpDelete("tag/{id}/delete")]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
         var command = new DeleteTagCommand

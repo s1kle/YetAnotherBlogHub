@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Api.Controllers;
 
-public sealed class UnauthorizeTagController : BlogHubController
+public sealed class UnauthorizeTagController : BaseController
 {
     public UnauthorizeTagController(IMediator mediator) : base (mediator) { }
 
@@ -21,7 +21,7 @@ public sealed class UnauthorizeTagController : BlogHubController
         return Ok(response);
     }
 
-    [HttpGet("tag/get/id/{id}")]
+    [HttpGet("tag/{id}")]
     public async Task<ActionResult<BlogVm>> Get(Guid id)
     {
         var query = new GetTagQuery() { Id = id };
