@@ -1,19 +1,11 @@
-using System.Security.Claims;
-using BlogHub.Api.Extensions;
 using BlogHub.Data.Blogs.Queries.GetList;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Api.Controllers;
 
-public abstract class BaseBlogController : ControllerBase
+public abstract class BaseBlogController : BlogHubController
 {
-    protected IMediator Mediator { get; }
-    protected Guid UserId =>
-        Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-    protected BaseBlogController(IMediator mediator) =>
-        Mediator = mediator;
+    protected BaseBlogController(IMediator mediator) : base(mediator) { }
 
     protected static SortFilter? GetSortFilter(string? property, string? direction)
     {

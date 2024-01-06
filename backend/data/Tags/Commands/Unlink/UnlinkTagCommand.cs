@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace BlogHub.Data.Tags.Commands.Link;
+namespace BlogHub.Data.Tags.Commands.Unlink;
 
 public class UnlinkTagCommand : IRequest<Guid>
 {

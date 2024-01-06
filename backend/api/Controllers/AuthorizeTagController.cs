@@ -1,7 +1,6 @@
 using BlogHub.Data.Tags.Commands.Create;
 using BlogHub.Data.Tags.Commands.Delete;
 using BlogHub.Data.Tags.Queries.GetList;
-using BlogHub.Data.Tags.Queries.GetList.ByUserId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +13,7 @@ public class AuthorizeTagController : BlogHubController
     [HttpGet("my-tags")]
     public async Task<ActionResult<TagListVm>> GetAll()
     {
-        var query = new GetTagListByUserIdQuery()
+        var query = new GetUserTagListQuery()
         {
             UserId = UserId
         };

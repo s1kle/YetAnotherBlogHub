@@ -1,5 +1,6 @@
 using BlogHub.Data.Blogs.Queries.Get;
 using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,19 @@ public sealed class UnauthorizeBlogController : BaseBlogController
     public async Task<ActionResult<BlogVm>> Get(Guid id)
     {
         var query = new GetBlogQuery() { Id = id };
+
+        var response = await Mediator.Send(query);
+
+        return Ok(response);
+    }
+
+    [HttpGet("blog/get/id/{id}/tags")]
+    public async Task<ActionResult<TagListVm>> GetTags(Guid id)
+    {
+        var query = new GetBlogTagListQuery()
+        {
+            BlogId = id
+        };
 
         var response = await Mediator.Send(query);
 

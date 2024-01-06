@@ -2,6 +2,9 @@ using BlogHub.Data.Blogs.Commands.Create;
 using BlogHub.Data.Blogs.Commands.Delete;
 using BlogHub.Data.Blogs.Commands.Update;
 using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Tags.Commands.Link;
+using BlogHub.Data.Tags.Commands.Unlink;
+using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -73,5 +76,35 @@ public sealed class AuthorizeBlogController : BaseBlogController
         var blogId = await Mediator.Send(command);
 
         return Ok(blogId);
+    }
+
+    [HttpPost("blog/get/id/{id}/link/tag")]
+    public async Task<ActionResult<TagListVm>> LinkTag(Guid id, [FromBody] LinkTagDto dto)
+    {
+        var query = new LinkTagCommand()
+        {
+            UserId = UserId,
+            BlogId = id,
+            TagId = dto.TagId
+        };
+
+        var response = await Mediator.Send(query);
+
+        return Ok(response);
+    }
+
+    [HttpDelete("blog/get/id/{id}/tag/{tagId}/unlink")]
+    public async Task<ActionResult<TagListVm>> UnlinkTag(Guid id, Guid tagId)
+    {
+        var query = new UnlinkTagCommand()
+        {
+            UserId = UserId,
+            BlogId = id,
+            TagId = tagId
+        };
+
+        var response = await Mediator.Send(query);
+
+        return Ok(response);
     }
 }

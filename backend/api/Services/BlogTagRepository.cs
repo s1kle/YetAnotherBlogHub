@@ -41,7 +41,7 @@ public class BlogTagRepository : IBlogTagRepository
 
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
             .Links
-            .FirstOrDefaultAsync(link => link.BlogId.Equals(link) &&
+            .FirstOrDefaultAsync(link => link.BlogId.Equals(blogId) &&
                 link.TagId.Equals(tagId), cancellationToken), 
         cancellationToken);
     }

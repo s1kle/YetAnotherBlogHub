@@ -29,7 +29,13 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ExceptionHandlingMiddleware>();
         services.AddDbContext<IBlogDbContext, BlogDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString(BlogsString)));
+        services.AddDbContext<ITagDbContext, TagDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString(BlogsString)));
+        services.AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString(BlogsString)));
         services.AddScoped<IBlogRepository, BlogRepository>();
+        services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IBlogTagRepository, BlogTagRepository>();
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = configuration.GetConnectionString(RedisString);

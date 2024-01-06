@@ -2,7 +2,7 @@ using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using MediatR;
 
-namespace BlogHub.Data.Tags.Commands.Link;
+namespace BlogHub.Data.Tags.Commands.Unlink;
 
 public class UnlinkTagCommandHandler : IRequestHandler<UnlinkTagCommand, Guid>
 {
