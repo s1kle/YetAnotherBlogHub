@@ -2,7 +2,7 @@ using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using MediatR;
 
-namespace BlogHub.Data.Commands.Delete;
+namespace BlogHub.Data.Blogs.Commands.Delete;
 
 public class DeleteBlogCommandHandler : IRequestHandler<DeleteBlogCommand, Guid>
 {

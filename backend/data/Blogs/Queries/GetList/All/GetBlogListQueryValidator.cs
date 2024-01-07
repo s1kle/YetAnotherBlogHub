@@ -1,14 +1,11 @@
 using FluentValidation;
 
-namespace BlogHub.Data.Queries.GetList;
+namespace BlogHub.Data.Blogs.Queries.GetList;
 
 public class GetBlogListQueryValidator : AbstractValidator<GetBlogListQuery>
 {
     public GetBlogListQueryValidator()
     {
-        RuleFor(query => query.UserId)
-            .NotEqual(Guid.Empty);    
-
         RuleFor(query => query.Size)
             .GreaterThan(0);
 

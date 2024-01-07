@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BlogHub.Data.Commands.Delete;
+namespace BlogHub.Data.Blogs.Commands.Delete;
 
 public class DeleteBlogCommandValidator : AbstractValidator<DeleteBlogCommand>
 {

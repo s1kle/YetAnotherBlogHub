@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Commands.Create;
+namespace BlogHub.Data.Blogs.Commands.Create;
 
 public record CreateBlogDto
 {

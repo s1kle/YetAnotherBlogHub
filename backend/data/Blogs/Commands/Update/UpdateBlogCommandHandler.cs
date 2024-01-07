@@ -2,7 +2,7 @@ using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using MediatR;
 
-namespace BlogHub.Data.Commands.Update;
+namespace BlogHub.Data.Blogs.Commands.Update;
 
 public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 {

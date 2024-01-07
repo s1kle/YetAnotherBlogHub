@@ -3,7 +3,7 @@ using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using MediatR;
 
-namespace BlogHub.Data.Queries.Get;
+namespace BlogHub.Data.Blogs.Queries.Get;
 
 public class GetBlogQueryHandler : IRequestHandler<GetBlogQuery, BlogVm>
 {

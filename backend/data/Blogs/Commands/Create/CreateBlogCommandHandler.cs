@@ -2,7 +2,7 @@ using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 using MediatR;
 
-namespace BlogHub.Data.Commands.Create;
+namespace BlogHub.Data.Blogs.Commands.Create;
 
 public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
 {
