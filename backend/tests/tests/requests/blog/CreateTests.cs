@@ -1,27 +1,27 @@
-using BlogHub.Data.Commands.Create;
+using BlogHub.Data.Blogs.Commands.Create;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Data.Requests;
+namespace BlogHub.Tests.Requests;
 
-public class CreateCommandTests
+public class CreateTests
 {
-    private readonly FixtureFactory _blogsFactory;
-
-    public CreateCommandTests()
-    {
-        _blogsFactory = new ();
-    }
-
     [Fact]
     public async Task CreateBlog_ShouldSuccess()
     {
-        var fixture = _blogsFactory.CreateCommandFixture("Title", null);
-        (var command, var expected) = (fixture.Command, fixture.Blog);
-        var actualBlogId = Guid.Empty; // ignoring expected.Id
+        var expected = BlogFactory.CreateBlog("title");
+
+        var command = new CreateBlogCommand()
+        {
+            UserId = expected.UserId,
+            Title = expected.Title
+        };
+
         var repository = A.Fake<IBlogRepository>();
+    
         A.CallTo(() => repository.CreateAsync(A<Blog>._, A<CancellationToken>._))
             .Returns(expected.Id);
+
         var handler = new CreateBlogCommandHandler(repository);
 
         var result = await handler.Handle(command, CancellationToken.None);
@@ -29,15 +29,16 @@ public class CreateCommandTests
         A.CallTo(() => repository.CreateAsync(A<Blog>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Blog actual, CancellationToken token) =>
             {
-                actualBlogId = actual.Id;
                 actual.UserId.Should().Be(expected.UserId);
                 actual.Title.Should().BeEquivalentTo(expected.Title);
                 actual.CreationDate.Should().BeOnOrAfter(expected.CreationDate);
                 actual.Details.Should().BeNull();
                 actual.EditDate.Should().BeNull();
+
+                token.Should().Be(CancellationToken.None);
+
                 return true;
             })
             .MustHaveHappenedOnceExactly();
-        actualBlogId.Should().NotBeEmpty();
     }
 }

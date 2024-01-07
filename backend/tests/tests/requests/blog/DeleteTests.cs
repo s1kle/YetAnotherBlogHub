@@ -1,56 +1,68 @@
-using BlogHub.Data.Commands.Delete;
+using BlogHub.Data.Blogs.Commands.Delete;
 using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Data.Requests;
+namespace BlogHub.Tests.Requests;
 
-public class DeleteCommandTests
+public class DeleteTests
 {
-    private readonly FixtureFactory _blogsFactory;
-
-    public DeleteCommandTests()
-    {
-        _blogsFactory = new ();
-    }
-
     [Fact]
     public async Task DeleteBlog_WithCorrectData_ShouldSuccess()
     {
-        var fixture = _blogsFactory.DeleteCommandFixture();
-        (var command, var expected) = 
-            (fixture.Command, fixture.Blog);
+        var expected = BlogFactory.CreateBlog();
+
+        var command = new DeleteBlogCommand()
+        {
+            UserId = expected.UserId,
+            Id = expected.Id
+        };
+
         var repository = A.Fake<IBlogRepository>();
+        
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .Returns(expected.Id);
+
         var handler = new DeleteBlogCommandHandler(repository);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .WhenArgumentsMatch((Guid id, CancellationToken token) =>
+            {
+                id.Should().Be(command.Id);
+                token.Should().Be(CancellationToken.None);
+                return true;
+            })
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Blog actual, CancellationToken token) =>
             {
                 actual.Should().BeEquivalentTo(expected);
+                token.Should().Be(CancellationToken.None);
                 return true;
             })
             .MustHaveHappenedOnceExactly();
     }
+
     [Fact]
     public async Task DeleteBlog_WithIncorrectUserId_ShouldFail()
     {
-        var fixture = _blogsFactory.DeleteCommandFixture();
-        (var command, var expected, var wrongUserId) = 
-            (fixture.Command, fixture.Blog, fixture.WrongUserId);
-        command = command with { UserId = wrongUserId };
+        var blog = BlogFactory.CreateBlog("title");
+
+        var command = new DeleteBlogCommand()
+        {
+            UserId = Guid.NewGuid(),
+            Id = blog.Id,
+        };
+
         var repository = A.Fake<IBlogRepository>();
+        
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(expected);
-        A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
-            .Returns(expected.Id);
+            .Returns(blog);
+
         var handler = new DeleteBlogCommandHandler(repository);
 
         await Assert.ThrowsAsync<NotFoundException>(async () =>
@@ -58,22 +70,29 @@ public class DeleteCommandTests
             var result = await handler.Handle(command, CancellationToken.None);
         });
 
-
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
+
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
+
     [Fact]
     public async Task DeleteBlog_WithIncorrectBlogId_ShouldFail()
     {
-        var fixture = _blogsFactory.DeleteCommandFixture();
-        (var command, var expected) = 
-            (fixture.Command, fixture.Blog);
-        expected = null;
+        Blog? blog = null;
+
+        var command = new DeleteBlogCommand()
+        {
+            UserId = Guid.NewGuid(),
+            Id = Guid.NewGuid()
+        };
+
         var repository = A.Fake<IBlogRepository>();
+        
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(expected);
+            .Returns(blog);
+
         var handler = new DeleteBlogCommandHandler(repository);
 
         await Assert.ThrowsAsync<NotFoundException>(async () =>
@@ -81,9 +100,9 @@ public class DeleteCommandTests
             var result = await handler.Handle(command, CancellationToken.None);
         });
 
-
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
+
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
