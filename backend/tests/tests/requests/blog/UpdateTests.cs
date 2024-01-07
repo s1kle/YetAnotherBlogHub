@@ -3,7 +3,7 @@ using BlogHub.Data.Exceptions;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Requests;
+namespace BlogHub.Tests.Requests.Blogs;
 
 public class UpdateTests
 {

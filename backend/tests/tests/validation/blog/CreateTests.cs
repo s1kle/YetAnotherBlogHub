@@ -1,6 +1,6 @@
 using BlogHub.Data.Blogs.Commands.Create;
 
-namespace BlogHub.Tests.Validation;
+namespace BlogHub.Tests.Validation.Blogs;
 
 public class CreateTests
 {

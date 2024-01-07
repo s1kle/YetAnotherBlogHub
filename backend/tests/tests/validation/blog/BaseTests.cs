@@ -5,7 +5,7 @@ using BlogHub.Data.Blogs.Commands.Update;
 using BlogHub.Data.Blogs.Queries.Get;
 using BlogHub.Data.Blogs.Queries.GetList;
 
-namespace BlogHub.Tests.Validation;
+namespace BlogHub.Tests.Validation.Blogs;
 
 
 public class BaseTests

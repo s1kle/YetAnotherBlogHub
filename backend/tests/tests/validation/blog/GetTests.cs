@@ -1,6 +1,6 @@
 using BlogHub.Data.Blogs.Queries.Get;
 
-namespace BlogHub.Tests.Validation;
+namespace BlogHub.Tests.Validation.Blogs;
 
 public class GetTests
 {

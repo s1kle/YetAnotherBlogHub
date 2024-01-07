@@ -1,8 +1,7 @@
 using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.ListSearch;
 using BlogHub.Data.Blogs.Queries.ListSort;
 
-namespace BlogHub.Tests.Requests;
+namespace BlogHub.Tests.Requests.Blogs;
 
 public class ListSortTests
 {

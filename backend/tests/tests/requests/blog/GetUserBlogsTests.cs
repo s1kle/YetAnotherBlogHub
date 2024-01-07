@@ -2,7 +2,7 @@ using BlogHub.Data.Blogs.Queries.GetList;
 using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 
-namespace BlogHub.Tests.Requests;
+namespace BlogHub.Tests.Requests.Blogs;
 
 public class GetUserBlogsTests
 {

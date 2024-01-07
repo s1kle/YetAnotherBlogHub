@@ -1,7 +1,7 @@
 using BlogHub.Data.Blogs.Queries.GetList;
 using BlogHub.Data.Blogs.Queries.ListSearch;
 
-namespace BlogHub.Tests.Requests;
+namespace BlogHub.Tests.Requests.Blogs;
 
 public class ListSearchTests
 {
