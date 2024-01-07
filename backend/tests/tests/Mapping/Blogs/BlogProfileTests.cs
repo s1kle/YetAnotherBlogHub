@@ -2,7 +2,7 @@ using BlogHub.Data.Blogs.Queries.Get;
 using BlogHub.Data.Blogs.Queries.GetList;
 using BlogHub.Data.Mappings;
 
-namespace BlogHub.Tests.Mapping;
+namespace BlogHub.Tests.Mapping.Blogs;
 
 public class BlogProfileTests
 {
