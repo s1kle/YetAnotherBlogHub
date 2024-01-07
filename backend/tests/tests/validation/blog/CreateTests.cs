@@ -8,8 +8,10 @@ public class CreateTests
     public void InvalidCommands_ShouldFail()
     {
         var requests = ValidatorFactory.CreateInvalidRequest<CreateBlogCommand>(
-            command => command.UserId,
-            command => command.Title);
+            (c => c.UserId, Guid.Empty),
+            (c => c.Title, new string('*', 101)),
+            (c => c.Title, new string(' ', 11)),
+            (c => c.Title, new string('*', 3)));
         var validators = ValidatorFactory.GetValidators<CreateBlogCommand>();
 
         foreach(var request in requests)

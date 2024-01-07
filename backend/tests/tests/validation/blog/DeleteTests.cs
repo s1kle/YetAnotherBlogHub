@@ -1,4 +1,4 @@
-using BlogHub.Data.Blogs.Commands.Create;
+using BlogHub.Data.Blogs.Commands.Delete;
 
 namespace BlogHub.Tests.Validation;
 
@@ -7,14 +7,14 @@ public class DeleteTests
     [Fact]
     public void InvalidCommands_ShouldFail()
     {
-        var requests = ValidatorFactory.CreateInvalidRequest<CreateBlogCommand>(
-            command => command.UserId,
-            command => command.Title);
-        var validators = ValidatorFactory.GetValidators<CreateBlogCommand>();
+        var requests = ValidatorFactory.CreateInvalidRequest<DeleteBlogCommand>(
+            (c => c.UserId, Guid.Empty),
+            (c => c.Id, Guid.Empty));
+        var validators = ValidatorFactory.GetValidators<DeleteBlogCommand>();
 
         foreach(var request in requests)
         {
-            var context = new ValidationContext<CreateBlogCommand>(request);
+            var context = new ValidationContext<DeleteBlogCommand>(request);
 
             validators
                 .Select(validator => validator.Validate(context))

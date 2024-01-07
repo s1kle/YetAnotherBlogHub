@@ -8,7 +8,7 @@ public class GetTests
     public void InvalidQueries_ShouldFail()
     {
         var requests = ValidatorFactory.CreateInvalidRequest<GetBlogQuery>(
-            query => query.Id);
+            (q => q.Id, Guid.Empty));
         var validators = ValidatorFactory.GetValidators<GetBlogQuery>();
 
         foreach(var request in requests)

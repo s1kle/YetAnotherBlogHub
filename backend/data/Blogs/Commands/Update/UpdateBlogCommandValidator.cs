@@ -11,6 +11,8 @@ public class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
         RuleFor(command => command.UserId)
             .NotEqual(Guid.Empty);
         RuleFor(command => command.Title)
+            .NotEmpty()
+            .MinimumLength(10)
             .MaximumLength(100);
     }
 }

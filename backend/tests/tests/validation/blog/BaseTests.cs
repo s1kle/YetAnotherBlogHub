@@ -23,19 +23,22 @@ public class BaseTests
             .GetMethod(nameof(ValidatorFactory.CreateValidRequest), BindingFlags.Static | BindingFlags.Public)!
             .MakeGenericMethod(type);
 
-        var request = requestsMethod.Invoke(null, null) ?? throw new ArgumentNullException();
+        var request = requestsMethod.Invoke(null, null) 
+            ?? throw new ArgumentNullException();
 
         var validatorsMethod = typeof(ValidatorFactory)  
             .GetMethod(nameof(ValidatorFactory.GetValidators), BindingFlags.Static | BindingFlags.Public)!
             .MakeGenericMethod(type);
 
-        var validators = (IEnumerable<IValidator>)(validatorsMethod.Invoke(null, null) ?? throw new ArgumentNullException());
+        var validators = (IEnumerable<IValidator>)(validatorsMethod.Invoke(null, null) 
+            ?? throw new ArgumentNullException());
 
         var contextMethod = typeof(ValidatorFactory)
             .GetMethod(nameof(ValidatorFactory.GetValidationContext), BindingFlags.Static | BindingFlags.Public)!
             .MakeGenericMethod(type);
 
-        var context = (IValidationContext)(contextMethod.Invoke(null, new [] { request }) ?? throw new ArgumentNullException());
+        var context = (IValidationContext)(contextMethod.Invoke(null, new [] { request }) 
+            ?? throw new ArgumentNullException());
 
         validators
             .Select(validator => validator.Validate(context))

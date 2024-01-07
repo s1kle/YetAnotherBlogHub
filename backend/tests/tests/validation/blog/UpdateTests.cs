@@ -8,9 +8,11 @@ public class UpdateTests
     public void InvalidCommands_ShouldFail()
     {
         var requests = ValidatorFactory.CreateInvalidRequest<UpdateBlogCommand>(
-            command => command.UserId,
-            command => command.Id,
-            command => command.Title);
+            (c => c.UserId, Guid.Empty),
+            (c => c.Id, Guid.Empty),
+            (c => c.Title, new string('*', 101)),
+            (c => c.Title, new string(' ', 11)),
+            (c => c.Title, new string('*', 3)));
         var validators = ValidatorFactory.GetValidators<UpdateBlogCommand>();
 
         foreach(var request in requests)
