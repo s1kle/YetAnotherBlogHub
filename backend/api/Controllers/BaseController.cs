@@ -12,17 +12,16 @@ public abstract class BaseController : ControllerBase
 {
     protected IMediator Mediator { get; }
     protected Guid UserId =>
-        Guid.Parse("0fe5fabf-67d0-5ba8-9020-a29d963763d6");
-        // Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
     protected BaseController(IMediator mediator) =>
         Mediator = mediator;
 
-    protected async Task<BlogListVm> ApplyFilters(BlogListVm list, ListSortDto sortDto, ListSearchDto searchDto)
+    protected async Task<BlogListVm> ApplyFilters(BlogListVm list, ListSortDto? sortDto, ListSearchDto? searchDto)
     {
         var result = list;
 
-        if (searchDto.SearchQuery is not null)
+        if (searchDto?.SearchQuery is not null)
         {
             
             var searchQuery = new ListSearchQuery()
@@ -37,7 +36,7 @@ public abstract class BaseController : ControllerBase
         }
         
 
-        if (sortDto.SortProperty is not null)
+        if (sortDto?.SortProperty is not null)
         {
             var sortQuery = new ListSortQuery()
             {

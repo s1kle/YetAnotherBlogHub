@@ -14,7 +14,7 @@ public sealed class UnauthorizeBlogController : BaseController
 
     [HttpGet("blogs")]
     public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
-        [FromQuery] ListSortDto sortDto, [FromQuery] ListSearchDto searchDto)
+        [FromQuery] ListSortDto? sortDto = null, [FromQuery] ListSearchDto? searchDto = null)
     {
         var query = new GetBlogListQuery()
         {

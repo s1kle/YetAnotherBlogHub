@@ -20,7 +20,7 @@ public sealed class AuthorizeBlogController : BaseController
 
     [HttpGet("my-blogs")]
     public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
-        [FromQuery] ListSortDto sortDto, [FromQuery] ListSearchDto searchDto)
+        [FromQuery] ListSortDto? sortDto = null, [FromQuery] ListSearchDto? searchDto = null)
     {
         var query = new GetUserBlogListQuery()
         {

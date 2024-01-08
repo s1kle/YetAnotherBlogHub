@@ -12,8 +12,8 @@ public class BlogFactory
         CreationDate = DateTime.UtcNow
     };
 
-    public static List<Blog> CreateBlogs(int size, Guid? userId = null) => Enumerable
+    public static List<Blog> CreateBlogs(int size, Guid? userId = null, string title = "title") => Enumerable
         .Range(0, size)
-        .Select(index => CreateBlog($"Title {index}", userId))
+        .Select(index => CreateBlog($"{title} {index}", userId))
         .ToList();
 }

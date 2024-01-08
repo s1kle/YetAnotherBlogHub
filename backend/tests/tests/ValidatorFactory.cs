@@ -37,7 +37,7 @@ public class ValidatorFactory
         var fixture = new Fixture();
 
         fixture.Customize<Guid>(g => g.FromFactory(() => Guid.NewGuid()));
-        fixture.Customize<string>(s => s.FromFactory(() => Guid.NewGuid().ToString()));
+        fixture.Customize<string>(s => s.FromFactory(() => new string('*', 10)));
         fixture.Customize<int>(n => n.FromFactory(() => 2));
 
         return fixture;
