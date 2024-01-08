@@ -1,4 +1,6 @@
+using BlogHub.Domain.UserEvents;
 using BlogHub.Identity.Models;
+using BlogHub.Identity.Services;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +13,17 @@ public class AuthorizationController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IIdentityServerInteractionService _interactionService;
+    private readonly IUserEventService _userEventService;
 
     public AuthorizationController(UserManager<ApplicationUser> userManager, 
         SignInManager<ApplicationUser> signInManager, 
-        IIdentityServerInteractionService interactionService)
+        IIdentityServerInteractionService interactionService,
+        IUserEventService userEventService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _interactionService = interactionService;
+        _userEventService = userEventService;
     }
 
     [HttpGet("[action]")]
@@ -97,6 +102,8 @@ public class AuthorizationController : Controller
             ModelState.AddModelError(string.Empty, $"Login error: {registerResult.Errors}");
             return View(viewModel);
         }
+
+        _userEventService.Publish(new UserCreatedEvent() { Id = Guid.Parse(user.Id), Name = user.UserName });
 
         var loginResult = await _signInManager.PasswordSignInAsync(user, viewModel.Password, false, false);
 
