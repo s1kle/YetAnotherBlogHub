@@ -9,6 +9,8 @@ public class CreateBlogCommandValidator : AbstractValidator<CreateBlogCommand>
         RuleFor(command => command.UserId)
             .NotEqual(Guid.Empty);
         RuleFor(command => command.Title)
+            .NotEmpty()
+            .MinimumLength(10)
             .MaximumLength(100);
     }
 }
