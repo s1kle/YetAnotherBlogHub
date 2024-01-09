@@ -2,6 +2,7 @@ using BlogHub.Api.Middlewares;
 using BlogHub.Api.Services;
 using BlogHub.Data;
 using BlogHub.Data.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -19,49 +20,74 @@ public static class ServiceCollectionExtensions
     private const string RedisInstanceName = "Redis:InstanceName";
     private const string Authority = "JwtOptions:Authority";
     private const string Audience = "JwtOptions:Audience";
+    private const string RabbitMQHost = "RabbitMQ:Host";
+    private const string RabbitMQUser = "RabbitMQ:User";
+    private const string RabbitMQPassword = "RabbitMQ:Password";
+    private const string RabbitMQExchange = "RabbitMQ:Exchange";
  
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
     {   
         services.AddSerilog(config => config
             .ReadFrom
             .Configuration(configuration));
-        services.AddDataDependencies();
-        services.AddTransient<ExceptionHandlingMiddleware>();
-        services.AddDbContext<IBlogDbContext, BlogDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString(BlogsString)));
-        services.AddDbContext<ITagDbContext, TagDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString(BlogsString)));
-        services.AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString(BlogsString)));
-        services.AddScoped<IBlogRepository, BlogRepository>();
-        services.AddScoped<ITagRepository, TagRepository>();
-        services.AddScoped<IBlogTagRepository, BlogTagRepository>();
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration.GetConnectionString(RedisString);
-            options.InstanceName = configuration[RedisInstanceName];
-        });
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services
+            .AddDataDependencies()
+        
+            .AddHostedService(provider => new EventConsumerService(
+                configuration[RabbitMQHost]!, 
+                configuration[RabbitMQUser]!, 
+                configuration[RabbitMQPassword]!,
+                configuration[RabbitMQExchange]!,
+                provider))
+
+            .AddTransient<ExceptionHandlingMiddleware>()
+
+            .AddDbContext<IBlogDbContext, BlogDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+            .AddDbContext<ITagDbContext, TagDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+            .AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+            .AddDbContext<IUserDbContext, UserDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+
+            .AddScoped<IBlogRepository, BlogRepository>()
+            .AddScoped<ITagRepository, TagRepository>()
+            .AddScoped<IBlogTagRepository, BlogTagRepository>()
+            .AddScoped<IUserRepository, UserRepository>()
+            
+            .AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString(RedisString);
+                options.InstanceName = configuration[RedisInstanceName];
+            })
+            .AddScoped<IDistributedCache>(provider => new LoggingDistributedCache(
+                new RedisCache(
+                    provider.GetRequiredService<IOptions<RedisCacheOptions>>())))
+
+            .AddCors(options => options
+                .AddPolicy(ClientString, policy =>
+                {
+                    policy.WithOrigins(configuration.GetConnectionString(ClientString) 
+                        ?? throw new ArgumentNullException("No connection string for client provided"));
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                }))
+
+            .AddEndpointsApiExplorer()
+            .AddSwaggerGen();
+
+        services
+            .AddControllers();
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.Authority = configuration[Authority];
                 options.Audience = configuration[Audience];
             });
-        services.AddScoped<IDistributedCache>(provider => 
-            new LoggingDistributedCache(
-                new RedisCache(
-                    provider.GetRequiredService<IOptions<RedisCacheOptions>>())));
-        services.AddCors(options =>
-            options.AddPolicy(ClientString, policy =>
-            {
-                policy.WithOrigins(configuration.GetConnectionString(ClientString) 
-                    ?? throw new ArgumentNullException("No connection string for client provided"));
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-            }));
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+            
         return services;
     }
 }

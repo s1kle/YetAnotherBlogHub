@@ -1,8 +1,8 @@
-namespace BlogHub.Data.Blogs.Queries.GetList;
+namespace BlogHub.Data.Blogs.Queries.ListAddUser;
 
-public record BlogVmForList
+public record BlogWithAuthorVmForList
 {
-    public required Guid UserId { get; init; }
+    public required string? Author { get; init; }
     public required Guid Id { get; init; }
     public required string Title { get; init; }
     public required DateTime CreationDate { get; init; }

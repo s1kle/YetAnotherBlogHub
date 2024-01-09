@@ -1,5 +1,7 @@
 using System.Security.Claims;
+using BlogHub.Data.Blogs.Queries.Get;
 using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.ListAddUser;
 using BlogHub.Data.Blogs.Queries.ListSearch;
 using BlogHub.Data.Blogs.Queries.ListSort;
 using MediatR;
@@ -17,16 +19,16 @@ public abstract class BaseController : ControllerBase
     protected BaseController(IMediator mediator) =>
         Mediator = mediator;
 
-    protected async Task<BlogListVm> ApplyFilters(BlogListVm list, ListSortDto? sortDto, ListSearchDto? searchDto)
+    protected async Task<BlogListVm> ApplyFilters(BlogListVm blogs, ListSortDto? sortDto, ListSearchDto? searchDto)
     {
-        var result = list;
+        var result = blogs;
 
         if (searchDto?.SearchQuery is not null)
         {
             
             var searchQuery = new ListSearchQuery()
             {
-                Blogs = list,
+                Blogs = blogs,
                 Query = searchDto.SearchQuery,
                 Properties = searchDto.SearchProperties?.Split(' ')
                     ?? new [] { "title" }
@@ -40,7 +42,7 @@ public abstract class BaseController : ControllerBase
         {
             var sortQuery = new ListSortQuery()
             {
-                Blogs = list,
+                Blogs = blogs,
                 Property = sortDto.SortProperty,
                 Descending = sortDto.SortDirection switch
                 {
@@ -54,4 +56,10 @@ public abstract class BaseController : ControllerBase
 
         return result;
     }
+
+    protected async Task<BlogListWithAuthorVm> AddAuthors(BlogListVm blogs) =>
+        await Mediator.Send(new ListAddUserQuery() { Blogs = blogs });
+
+    protected async Task<BlogWithAuthorVm> AddAuthor(BlogVm blog) =>
+        await Mediator.Send(new BlogAddUserQuery() { Blog = blog });
 }
