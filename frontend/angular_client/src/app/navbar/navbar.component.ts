@@ -1,25 +1,29 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { SigninRedirectComponent } from '../signin-redirect/signin-redirect.component';
 import { SignoutRedirectComponent } from '../signout-redirect/signout-redirect.component';
-import { AuthService } from '../shared/services/auth.service';
 import { User } from 'oidc-client-ts';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, SigninRedirectComponent, SignoutRedirectComponent],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
 })
-export class HeaderComponent {
+export class NavbarComponent {
   user: User | null = null;
-  title = 'Angular Client';
+  isSearching = false;
 
-  constructor(private _auth: AuthService) {
+  constructor(private _auth: AuthService, private _router: Router) {
     this._auth.getEvents().addUserLoaded((user) => this.onUserLoaded(user));
     this._auth.getEvents().addUserUnloaded(() => this.onUserUnloaded())
   }
+
+  redirect = () =>
+    this._router.navigate([`/blog/create`]);
 
   async ngOnInit() {
     this.user = await this._auth.getUser();
@@ -32,5 +36,9 @@ export class HeaderComponent {
   onUserUnloaded = () => {
     console.log('User logged out');
     this.user = null;
+  }
+
+  search = () => {
+    console.log('Searching');
   }
 }

@@ -24,7 +24,7 @@ export class BlogComponent {
 
       console.log('Getting blog ', id);
 
-      this._api.getBlogById(id).subscribe(
+      this._api.getBlog(id).subscribe(
         response => this.blog = response, 
         error => {
           console.log(error);
