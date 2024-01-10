@@ -1,0 +1,15 @@
+.border-main-color {
+    border-color: #FA3B32 !important;
+}
+
+.main-color {
+    color: #FA3B32;
+}
+
+.btn-text {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: #FA3B32;
+    text-decoration: underline;
+}
