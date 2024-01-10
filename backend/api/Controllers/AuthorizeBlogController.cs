@@ -85,7 +85,7 @@ public sealed class AuthorizeBlogController : BaseController
     }
 
     [HttpPost("blog/{id}/tag/link")]
-    public async Task<ActionResult<TagListVm>> LinkTag(Guid id, [FromBody] LinkTagDto dto)
+    public async Task<ActionResult<Guid>> LinkTag(Guid id, [FromBody] LinkTagDto dto)
     {
         var query = new LinkTagCommand()
         {
@@ -100,7 +100,7 @@ public sealed class AuthorizeBlogController : BaseController
     }
 
     [HttpDelete("blog/{id}/tag/{tagId}/unlink")]
-    public async Task<ActionResult<TagListVm>> UnlinkTag(Guid id, Guid tagId)
+    public async Task<ActionResult<Guid>> UnlinkTag(Guid id, Guid tagId)
     {
         var query = new UnlinkTagCommand()
         {
