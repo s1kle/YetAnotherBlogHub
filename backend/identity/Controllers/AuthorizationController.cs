@@ -74,7 +74,6 @@ public class AuthorizationController : Controller
         {
             Username = string.Empty,
             Password = string.Empty,
-            PasswordConfirmation = string.Empty,
             ReturnUrl = returnUrl
         };
 
