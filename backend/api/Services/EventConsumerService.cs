@@ -4,7 +4,6 @@ using BlogHub.Data.Users.Commands.Create;
 using BlogHub.Data.Users.Commands.Delete;
 using BlogHub.Domain.UserEvents;
 using MediatR;
-using MongoDB.Driver;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Serilog;
