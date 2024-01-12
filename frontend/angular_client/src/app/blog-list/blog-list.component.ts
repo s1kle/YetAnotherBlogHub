@@ -3,11 +3,12 @@ import { blogListVm } from '../shared/entities';
 import { ApiService } from '../shared/services/api.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './blog-list.component.html',
   styleUrl: './blog-list.component.css'
 })
@@ -20,26 +21,28 @@ export class BlogListComponent {
 
   ngOnInit() {
     this._api.getAllBlogs(this.page, this.size).subscribe(
-      response => this.blogList = response, 
+      response => {
+        this.blogList = response;
+      }, 
       error => console.log(error))
   }
 
-  goToBlogDetails = (id: string) =>
-    this._router.navigate([`/blog/${id}`]);
+  goToBlogDetails = (blogId: string) =>
+    this._router.navigate([`/blog/${blogId}`]);
 
   goToNextPage = () => {
-    this.page++;
-
-    this._api.getAllBlogs(this.page, this.size).subscribe(
-      response => this.blogList = response, 
+    this._api.getAllBlogs(++this.page, this.size).subscribe(
+      response => {
+        this.blogList = response
+      }, 
       error => console.log(error))
   }
 
   goToPreviousPage = () => {
-    this.page--;
-
-    this._api.getAllBlogs(this.page, this.size).subscribe(
-      response => this.blogList = response, 
+    this._api.getAllBlogs(--this.page, this.size).subscribe(
+      response => {
+        this.blogList = response
+      }, 
       error => console.log(error))
   }
 }

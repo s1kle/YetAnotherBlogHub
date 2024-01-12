@@ -1,0 +1,16 @@
+.main-list {
+    padding-top: 70px;
+}
+
+.blog-list {
+    width: 800px;
+}
+
+.blog {
+    height: 200px;
+    padding-top: 30px;
+}
+
+.rotated {
+    transform: rotate(-90deg);
+}

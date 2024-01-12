@@ -32,6 +32,9 @@ public static class IDistributedCacheExtensions
         return value;
     }
 
+    public static bool Contains(this IDistributedCache cache, string key) =>
+        _keys.Contains(key);
+
     public static async Task ClearAsync(this IDistributedCache cache, CancellationToken cancellationToken)
     {
         foreach(var key in _keys) await cache.RemoveAsync(key, cancellationToken);

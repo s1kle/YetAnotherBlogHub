@@ -1,8 +1,6 @@
-using FluentValidation;
+namespace BlogHub.Data.Blogs.Commands.Update;
 
-namespace BlogHub.Data.Commands.Update;
-
-public class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
+internal sealed class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
 {
     public UpdateBlogCommandValidator()
     {
@@ -11,6 +9,8 @@ public class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
         RuleFor(command => command.UserId)
             .NotEqual(Guid.Empty);
         RuleFor(command => command.Title)
+            .NotEmpty()
+            .MinimumLength(10)
             .MaximumLength(100);
     }
 }

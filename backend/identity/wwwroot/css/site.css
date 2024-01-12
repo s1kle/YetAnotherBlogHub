@@ -1,0 +1,32 @@
+body {
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.border-main-color {
+    border-color: #6233C8 !important;
+}
+
+.main-color {
+    color: #6233C8;
+}
+
+.rotated {
+    rotate: -90deg;
+}
+
+.bg-cool {
+    background-color: #272727;
+}
+
+.page {
+    width: 960px;
+    height: 540px;    
+}
+
+.btn-text {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: #6233C8;
+    text-decoration: underline;
+}

@@ -1,17 +1,11 @@
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
-using MediatR;
+namespace BlogHub.Data.Blogs.Commands.Create;
 
-namespace BlogHub.Data.Commands.Create;
-
-public class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
+internal sealed class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
 {
     private readonly IBlogRepository _repository;
 
-    public CreateBlogCommandHandler(IBlogRepository repository)
-    {
+    public CreateBlogCommandHandler(IBlogRepository repository) =>
         _repository = repository;
-    }
 
     public async Task<Guid> Handle(CreateBlogCommand request, CancellationToken cancellationToken)
     {

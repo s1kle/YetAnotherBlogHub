@@ -8,10 +8,8 @@ public class LoggingDistributedCache : IDistributedCache
 {
     private readonly RedisCache _cache;
 
-    public LoggingDistributedCache(RedisCache cache)
-    {
+    public LoggingDistributedCache(RedisCache cache) =>
         _cache = cache;
-    }
 
     public byte[]? Get(string key)
     {
@@ -52,7 +50,7 @@ public class LoggingDistributedCache : IDistributedCache
         Log.Information($"Setting cache for key - {key}");
         _cache.Set(key, value, new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
         });
     }
 
@@ -61,7 +59,7 @@ public class LoggingDistributedCache : IDistributedCache
         Log.Information($"Setting cache for key - {key}");
         await _cache.SetAsync(key, value, new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
         }, token);
     }
 }

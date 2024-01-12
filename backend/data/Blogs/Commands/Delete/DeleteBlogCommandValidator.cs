@@ -1,8 +1,6 @@
-using FluentValidation;
+namespace BlogHub.Data.Blogs.Commands.Delete;
 
-namespace BlogHub.Data.Commands.Delete;
-
-public class DeleteBlogCommandValidator : AbstractValidator<DeleteBlogCommand>
+internal sealed class DeleteBlogCommandValidator : AbstractValidator<DeleteBlogCommand>
 {
     public DeleteBlogCommandValidator()
     {

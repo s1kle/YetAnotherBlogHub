@@ -1,7 +1,7 @@
-namespace BlogHub.Data.Commands.Create;
+namespace BlogHub.Data.Blogs.Commands.Create;
 
-public record CreateBlogDto
+public sealed record CreateBlogDto
 {
     public required string Title { get; init; }
-    public required string? Details { get; init; }
+    public string? Details { get; init; }
 }

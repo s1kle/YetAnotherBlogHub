@@ -1,6 +1,6 @@
-namespace BlogHub.Data.Queries.GetList;
+namespace BlogHub.Data.Blogs.Queries.GetList;
 
-public record GetListDto
+public sealed record GetListDto
 {
     public required int Page { get; init; }
     public required int Size { get; init; }

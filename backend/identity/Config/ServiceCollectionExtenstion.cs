@@ -1,5 +1,6 @@
 using BlogHub.Identity.Data;
 using BlogHub.Identity.Models;
+using BlogHub.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,13 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<AuthorizationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString(IdentityConnectionString)));
+
+        services.AddSingleton<IUserEventService, UserEventService>(provider =>
+            new UserEventService(
+                configuration["RabbitMQ:Host"]!, 
+                configuration["RabbitMQ:User"]!, 
+                configuration["RabbitMQ:Password"]!,
+                configuration["RabbitMQ:Exchange"]!));
 
         services.AddIdentity<ApplicationUser, IdentityRole>(config =>
         {
