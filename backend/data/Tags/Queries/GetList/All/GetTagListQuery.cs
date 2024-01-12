@@ -1,5 +1,5 @@
-using MediatR;
+using BlogHub.Data.Tags.Queries.Get;
 
 namespace BlogHub.Data.Tags.Queries.GetList;
 
-public record GetTagListQuery : IRequest<TagListVm> { }
+public sealed record GetTagListQuery : IRequest<IReadOnlyList<TagVm>> { }

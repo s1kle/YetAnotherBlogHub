@@ -1,10 +1,6 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Blogs.Commands.Update;
 
-public class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
+internal sealed class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 {
     private readonly IBlogRepository _repository;
 

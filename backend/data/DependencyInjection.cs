@@ -1,8 +1,6 @@
 using System.Reflection;
 using BlogHub.Data.Logging;
 using BlogHub.Data.Validation;
-using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlogHub.Data;

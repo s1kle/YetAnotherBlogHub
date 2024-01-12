@@ -1,8 +1,6 @@
-using MediatR;
-
 namespace BlogHub.Data.Blogs.Queries.Get;
 
-public record BlogAddUserQuery : IRequest<BlogWithAuthorVm>
+public sealed record BlogAddUserQuery : IRequest<BlogVm>
 {
     public required BlogVm Blog { get; init; }
 }

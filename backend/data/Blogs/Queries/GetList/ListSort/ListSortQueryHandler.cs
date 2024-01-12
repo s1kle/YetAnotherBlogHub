@@ -1,10 +1,9 @@
 using System.Reflection;
 using BlogHub.Data.Blogs.Queries.GetList;
-using MediatR;
 
 namespace BlogHub.Data.Blogs.Queries.ListSort;
 
-public class ListSortQueryHandler : IRequestHandler<ListSortQuery, BlogListVm>
+internal sealed class ListSortQueryHandler : IRequestHandler<ListSortQuery, BlogListVm>
 {
     public async Task<BlogListVm> Handle(ListSortQuery request, CancellationToken cancellationToken)
     {

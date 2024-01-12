@@ -1,4 +1,3 @@
-using BlogHub.Data.Blogs.Queries.Get;
 using BlogHub.Data.Tags.Queries.Get;
 using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
@@ -11,7 +10,7 @@ public sealed class UnauthorizeTagController : BaseController
     public UnauthorizeTagController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("tags")]
-    public async Task<ActionResult<TagListVm>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<TagVm>>> GetAll()
     {
         var query = new GetTagListQuery();
 

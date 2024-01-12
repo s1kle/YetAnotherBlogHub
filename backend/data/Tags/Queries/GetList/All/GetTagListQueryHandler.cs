@@ -1,10 +1,8 @@
-using AutoMapper;
-using BlogHub.Data.Interfaces;
-using MediatR;
+using BlogHub.Data.Tags.Queries.Get;
 
 namespace BlogHub.Data.Tags.Queries.GetList;
 
-public class GetTagListQueryHandler : IRequestHandler<GetTagListQuery, TagListVm>
+internal sealed class GetTagListQueryHandler : IRequestHandler<GetTagListQuery, IReadOnlyList<TagVm>>
 {
     private readonly ITagRepository _repository;
     private readonly IMapper _mapper;
@@ -12,14 +10,12 @@ public class GetTagListQueryHandler : IRequestHandler<GetTagListQuery, TagListVm
     public GetTagListQueryHandler(ITagRepository repository, IMapper mapper) =>
         (_repository, _mapper) = (repository, mapper);
 
-    public async Task<TagListVm> Handle(GetTagListQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TagVm>> Handle(GetTagListQuery request, CancellationToken cancellationToken)
     {
         var tags = await _repository.GetAllAsync(cancellationToken);
 
-        if (tags is null) return new () { Tags = Array.Empty<TagVmForList>() };
+        if (tags is null) return Array.Empty<TagVm>();
 
-        var mappedTags = tags.Select(_mapper.Map<TagVmForList>).ToList();
-
-        return new () { Tags = mappedTags };
+        return tags.Select(_mapper.Map<TagVm>).ToList();
     }
 }

@@ -1,10 +1,6 @@
-using AutoMapper;
-using BlogHub.Data.Interfaces;
-using MediatR;
+namespace BlogHub.Data.Blogs.Queries.GetList.All;
 
-namespace BlogHub.Data.Blogs.Queries.GetList;
-
-public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogListVm>
+internal sealed class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogListVm>
 {
     private readonly IBlogRepository _repository;
     private readonly IMapper _mapper;
@@ -17,12 +13,8 @@ public class GetBlogListQueryHandler : IRequestHandler<GetBlogListQuery, BlogLis
         var blogs = await _repository
             .GetAllAsync(request.Page, request.Size, cancellationToken);
 
-        if (blogs is null) return new BlogListVm { Blogs = new List<BlogVmForList>() };
+        if (blogs is null) return new () { Blogs = Array.Empty<BlogVmForList>() };
 
-        var mappedBlogs = blogs
-            .Select(_mapper.Map<BlogVmForList>)
-            .ToList();
-
-        return new BlogListVm { Blogs = mappedBlogs };
+        return new () { Blogs = blogs.Select(_mapper.Map<BlogVmForList>).ToList() };
     }
 }

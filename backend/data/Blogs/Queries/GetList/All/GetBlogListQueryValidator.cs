@@ -1,8 +1,6 @@
-using FluentValidation;
+namespace BlogHub.Data.Blogs.Queries.GetList.All;
 
-namespace BlogHub.Data.Blogs.Queries.GetList;
-
-public class GetBlogListQueryValidator : AbstractValidator<GetBlogListQuery>
+internal sealed class GetBlogListQueryValidator : AbstractValidator<GetBlogListQuery>
 {
     public GetBlogListQueryValidator()
     {

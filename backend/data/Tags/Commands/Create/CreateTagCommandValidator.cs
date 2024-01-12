@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace BlogHub.Data.Tags.Commands.Create;
 
-public class CreateTagCommandValidator : AbstractValidator<CreateTagCommand>
+internal sealed class CreateTagCommandValidator : AbstractValidator<CreateTagCommand>
 {
     public CreateTagCommandValidator()
     {

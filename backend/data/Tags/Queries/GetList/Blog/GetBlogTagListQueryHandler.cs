@@ -1,11 +1,8 @@
-using AutoMapper;
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
-using MediatR;
+using BlogHub.Data.Tags.Queries.Get;
 
 namespace BlogHub.Data.Tags.Queries.GetList;
 
-public class GetBlogTagListQueryHandler : IRequestHandler<GetBlogTagListQuery, TagListVm>
+internal sealed class GetBlogTagListQueryHandler : IRequestHandler<GetBlogTagListQuery, IReadOnlyList<TagVm>>
 {
     private readonly ITagRepository _tagRepository;
     private readonly IBlogTagRepository _linkRepository;
@@ -14,11 +11,11 @@ public class GetBlogTagListQueryHandler : IRequestHandler<GetBlogTagListQuery, T
     public GetBlogTagListQueryHandler(ITagRepository tagRepository, IBlogTagRepository linkRepository, IMapper mapper) =>
         (_tagRepository, _linkRepository, _mapper) = (tagRepository, linkRepository, mapper);
 
-    public async Task<TagListVm> Handle(GetBlogTagListQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TagVm>> Handle(GetBlogTagListQuery request, CancellationToken cancellationToken)
     {
         var links = await _linkRepository.GetAllByBlogIdAsync(request.BlogId, cancellationToken);
 
-        if (links is null) return new () { Tags = Array.Empty<TagVmForList>() };
+        if (links is null) return Array.Empty<TagVm>();
 
         var tags = new List<Tag>();
 
@@ -31,8 +28,6 @@ public class GetBlogTagListQueryHandler : IRequestHandler<GetBlogTagListQuery, T
             tags.Add(tag);
         }
 
-        var mappedTags = tags.Select(_mapper.Map<TagVmForList>).ToList();
-
-        return new () { Tags = mappedTags };
+        return tags.Select(_mapper.Map<TagVm>).ToList();
     }
 }
