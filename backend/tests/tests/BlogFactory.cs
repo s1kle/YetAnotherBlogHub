@@ -1,5 +1,3 @@
-using BlogHub.Domain;
-
 namespace BlogHub.Tests;
 
 public class BlogFactory

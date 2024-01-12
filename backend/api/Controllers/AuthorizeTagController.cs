@@ -1,5 +1,6 @@
 using BlogHub.Data.Tags.Commands.Create;
 using BlogHub.Data.Tags.Commands.Delete;
+using BlogHub.Data.Tags.Queries.Get;
 using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class AuthorizeTagController : BaseController
     public AuthorizeTagController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("my-tags")]
-    public async Task<ActionResult<TagListVm>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<TagVm>>> GetAll()
     {
         var query = new GetUserTagListQuery()
         {

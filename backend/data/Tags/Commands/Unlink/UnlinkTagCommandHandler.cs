@@ -1,10 +1,6 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Tags.Commands.Unlink;
 
-public class UnlinkTagCommandHandler : IRequestHandler<UnlinkTagCommand, Guid>
+internal sealed class UnlinkTagCommandHandler : IRequestHandler<UnlinkTagCommand, Guid>
 {
     private readonly ITagRepository _tagRepository;
     private readonly IBlogTagRepository _linkRepository;

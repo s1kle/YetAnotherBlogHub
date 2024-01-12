@@ -1,4 +1,4 @@
-using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.GetList.All;
 
 namespace BlogHub.Tests.Validation.Blogs;
 

@@ -1,10 +1,6 @@
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
-using MediatR;
-
 namespace BlogHub.Data.Tags.Commands.Create;
 
-public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Guid>
+internal sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Guid>
 {
     private readonly ITagRepository _repository;
 

@@ -1,11 +1,6 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
-using MediatR;
-
 namespace BlogHub.Data.Tags.Commands.Link;
 
-public class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Guid>
+internal sealed class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Guid>
 {
     private readonly ITagRepository _tagRepository;
     private readonly IBlogTagRepository _linkRepository;

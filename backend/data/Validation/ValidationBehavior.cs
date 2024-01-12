@@ -1,9 +1,6 @@
-using FluentValidation;
-using MediatR;
-
 namespace BlogHub.Data.Validation;
 
-public class ValidationBehavior<TRequest, TResponse>
+internal sealed class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse> where TRequest 
     : IRequest<TResponse>
 {

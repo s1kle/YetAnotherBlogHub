@@ -1,4 +1,3 @@
-using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogHub.Data.Interfaces;

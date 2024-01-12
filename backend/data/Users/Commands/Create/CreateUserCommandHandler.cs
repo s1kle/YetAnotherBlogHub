@@ -1,10 +1,6 @@
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
-using MediatR;
-
 namespace BlogHub.Data.Users.Commands.Create;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
+internal sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 {
     private readonly IUserRepository _repository;
 

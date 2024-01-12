@@ -24,8 +24,7 @@ export class AuthService {
     this._userManager.events.addUserUnloaded(() => this.onUserUnloaded());
   }
 
-  getEvents = () =>
-    this._userManager.events;
+  getEvents = () => this._userManager.events;
 
   getUser = () => this._userManager.getUser();
 

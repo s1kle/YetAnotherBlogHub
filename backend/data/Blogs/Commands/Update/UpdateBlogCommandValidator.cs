@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace BlogHub.Data.Blogs.Commands.Update;
 
-public class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
+internal sealed class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
 {
     public UpdateBlogCommandValidator()
     {

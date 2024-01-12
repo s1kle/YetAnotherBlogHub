@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace BlogHub.Data.Blogs.Commands.Create;
 
-public class CreateBlogCommandValidator : AbstractValidator<CreateBlogCommand>
+internal sealed class CreateBlogCommandValidator : AbstractValidator<CreateBlogCommand>
 {
     public CreateBlogCommandValidator()
     {

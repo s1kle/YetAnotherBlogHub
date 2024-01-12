@@ -1,11 +1,6 @@
-using AutoMapper;
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Blogs.Queries.Get;
 
-public class GetBlogQueryHandler : IRequestHandler<GetBlogQuery, BlogVm>
+internal sealed class GetBlogQueryHandler : IRequestHandler<GetBlogQuery, BlogVm>
 {
     private readonly IBlogRepository _repository;
     private readonly IMapper _mapper;

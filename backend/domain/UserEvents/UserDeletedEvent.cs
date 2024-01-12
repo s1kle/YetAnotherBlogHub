@@ -1,6 +1,6 @@
 namespace BlogHub.Domain.UserEvents;
 
-public record UserDeletedEvent()
+public sealed record UserDeletedEvent()
 {
     public required Guid Id { get; init; }
 }

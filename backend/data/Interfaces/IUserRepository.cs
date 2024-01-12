@@ -1,5 +1,3 @@
-using BlogHub.Domain;
-
 namespace BlogHub.Data.Interfaces;
 
 public interface IUserRepository

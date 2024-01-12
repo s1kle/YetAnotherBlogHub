@@ -26,7 +26,7 @@ public class BlogTagRepository : IBlogTagRepository
 
     public async Task<List<BlogTagLink>?> GetAllByBlogIdAsync(Guid blogId, CancellationToken cancellationToken)
     {
-        var key = "Name:BlogTags;Blog:{blogId}";
+        var key = $"Name:BlogTags;Blog:{blogId}";
     
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
             .Links

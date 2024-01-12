@@ -1,8 +1,8 @@
-using MediatR;
+using BlogHub.Data.Tags.Queries.Get;
 
 namespace BlogHub.Data.Tags.Queries.GetList;
 
-public record GetUserTagListQuery : IRequest<TagListVm>
+public sealed record GetUserTagListQuery : IRequest<IReadOnlyList<TagVm>>
 {
     public required Guid UserId { get; init; }
 }

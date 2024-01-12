@@ -1,10 +1,6 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Tags.Commands.Delete;
 
-public class DeleteTagCommandHandler : IRequestHandler<DeleteTagCommand, Guid>
+internal sealed class DeleteTagCommandHandler : IRequestHandler<DeleteTagCommand, Guid>
 {
     private readonly ITagRepository _tagRepository;
     private readonly IBlogTagRepository _blogTagRepository;

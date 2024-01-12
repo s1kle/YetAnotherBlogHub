@@ -1,7 +1,4 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
 using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Domain;
 
 namespace BlogHub.Tests.Requests.Tags;
 

@@ -1,6 +1,8 @@
+using BlogHub.Data.Tags.Queries.Get;
+
 namespace BlogHub.Data.Blogs.Queries.Get;
 
-public record BlogVm
+public sealed record BlogVm
 {
     public required Guid UserId { get; init; }
     public required Guid Id { get; init; }
@@ -8,4 +10,6 @@ public record BlogVm
     public required DateTime CreationDate { get; init; }
     public string? Details { get; init; }
     public DateTime? EditDate { get; init; }
+    public string? Author { get; set; }
+    public IReadOnlyList<TagVm>? Tags { get; set; }
 }

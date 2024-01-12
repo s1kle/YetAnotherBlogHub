@@ -1,11 +1,6 @@
-using AutoMapper;
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Tags.Queries.Get;
 
-public class GetTagQueryHandler : IRequestHandler<GetTagQuery, TagVm>
+internal sealed class GetTagQueryHandler : IRequestHandler<GetTagQuery, TagVm>
 {
     private readonly ITagRepository _repository;
     private readonly IMapper _mapper;

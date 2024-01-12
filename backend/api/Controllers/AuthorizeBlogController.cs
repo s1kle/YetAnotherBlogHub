@@ -2,9 +2,11 @@ using BlogHub.Data.Blogs.Commands.Create;
 using BlogHub.Data.Blogs.Commands.Delete;
 using BlogHub.Data.Blogs.Commands.Update;
 using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.ListAddUser;
+using BlogHub.Data.Blogs.Queries.GetList.User;
 using BlogHub.Data.Blogs.Queries.ListSearch;
 using BlogHub.Data.Blogs.Queries.ListSort;
+using BlogHub.Data.Pipeline;
+using BlogHub.Data.Pipeline.Blogs.List;
 using BlogHub.Data.Tags.Commands.Link;
 using BlogHub.Data.Tags.Commands.Unlink;
 using BlogHub.Data.Tags.Queries.GetList;
@@ -20,21 +22,21 @@ public sealed class AuthorizeBlogController : BaseController
     public AuthorizeBlogController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("my-blogs")]
-    public async Task<ActionResult<BlogListWithAuthorVm>> GetAll([FromQuery] GetListDto dto,
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
         [FromQuery] ListSortDto? sortDto = null, [FromQuery] ListSearchDto? searchDto = null)
     {
-        var query = new GetUserBlogListQuery()
-        {
-            UserId = UserId,
-            Page = dto.Page,
-            Size = dto.Size,
-        };
+        var query = new GetUserBlogListQuery() { Page = dto.Page, Size = dto.Size, UserId = UserId };
 
-        var result = await Mediator.Send(query);
+        var context = await Mediator.Send(query);
 
-        result = await ApplyFilters(result, sortDto, searchDto);
+        var pipeline = new PipelineBuilder<BlogListVm>()
+            .Add(new AddAuthorsStep(Mediator))
+            .Add(new AddTagsToListStep(Mediator))
+            .Add(new SearchStep(searchDto, Mediator))
+            .Add(new SortStep(sortDto, Mediator))
+            .Build();
 
-        var response = await AddAuthors(result);
+        var response = await pipeline(context);
 
         return Ok(response);
     }

@@ -1,5 +1,4 @@
 using BlogHub.Api.Controllers;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlogHub.Tests;

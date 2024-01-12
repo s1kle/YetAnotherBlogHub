@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace BlogHub.Data.Tags.Commands.Link;
 
-public class LinkTagCommandValidator : AbstractValidator<LinkTagCommand>
+internal sealed class LinkTagCommandValidator : AbstractValidator<LinkTagCommand>
 {
     public LinkTagCommandValidator()
     {

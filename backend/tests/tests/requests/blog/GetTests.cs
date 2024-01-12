@@ -1,7 +1,4 @@
 using BlogHub.Data.Blogs.Queries.Get;
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
 
 namespace BlogHub.Tests.Requests.Blogs;
 
@@ -10,10 +7,12 @@ public class GetTests
     [Fact]
     public async Task GetBlog_WithCorrectData_ShouldSuccess()
     {
-        var blog = BlogFactory.CreateBlog("title");
+        var userId = Guid.NewGuid();
+        var blog = BlogFactory.CreateBlog("title", userId);
 
         var expected = new BlogVm()
         {
+            UserId = userId,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
@@ -46,14 +45,7 @@ public class GetTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => mapper.Map<BlogVm>(A<Blog>._))
-            .WhenArgumentsMatch((object arg) =>
-            {
-                var actual = (Blog)arg;
-                actual.Should().BeEquivalentTo(expected);
-                return true;
-            })
-            .MustHaveHappenedOnceExactly();
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Fact]

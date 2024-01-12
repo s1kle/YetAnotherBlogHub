@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace BlogHub.Data.Tags.Commands.Unlink;
 
-public class UnlinkTagCommandValidator : AbstractValidator<UnlinkTagCommand>
+internal sealed class UnlinkTagCommandValidator : AbstractValidator<UnlinkTagCommand>
 {
     public UnlinkTagCommandValidator()
     {

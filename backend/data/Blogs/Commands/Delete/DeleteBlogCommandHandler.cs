@@ -1,10 +1,6 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Blogs.Commands.Delete;
 
-public class DeleteBlogCommandHandler : IRequestHandler<DeleteBlogCommand, Guid>
+internal sealed class DeleteBlogCommandHandler : IRequestHandler<DeleteBlogCommand, Guid>
 {
     private readonly IBlogRepository _repository;
 

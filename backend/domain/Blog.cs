@@ -1,6 +1,6 @@
 ﻿namespace BlogHub.Domain;
 
-public record Blog
+public sealed record Blog
 {
     public required Guid Id { get; init; }
     public required Guid UserId { get; init; }

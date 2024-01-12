@@ -1,10 +1,6 @@
-using BlogHub.Data.Exceptions;
-using BlogHub.Data.Interfaces;
-using MediatR;
-
 namespace BlogHub.Data.Users.Commands.Delete;
 
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Guid>
+internal sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Guid>
 {
     private readonly IUserRepository _repository;
 
