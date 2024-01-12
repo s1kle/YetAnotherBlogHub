@@ -1,8 +1,8 @@
-<div class="h-100 w-100 text-white">
+<div style="min-height: calc(100vh + 200px);" class="h-100 w-100 text-white">
     <div class="main-list d-flex align-items-center">
         <div class="blog-list h-100 container">
             <div class="row">
-                <div *ngFor="let blog of blogWithTags?.blogs">
+                <div *ngFor="let blog of blogList?.blogs">
                     <div class="col-12 blog w-100 container mb-4 p-0 border">
                         <div class="row h-100">
                             <div class="col-2 container border-end">
@@ -27,14 +27,14 @@
                                             <div class="row h-100">
                                                 <div class="col-12 h-75 container">
                                                     <div class="row">
-                                                        <div *ngFor="let tag of blog.tags.tags">
+                                                        <div *ngFor="let tag of blog.tags">
                                                             <div class="col-2 d-flex border justify-content-center align-items-center me-3 mb-2">
                                                                 <div class="h6">{{tag.name}}</div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 h-25 d-flex align-items-center justify-content-end"><a class="text-white pe-4">... read</a></div>
+                                                <div class="col-12 h-25 d-flex align-items-center justify-content-end"><a (click)="goToBlogDetails(blog.id)" class="text-white pe-4">... read</a></div>
                                             </div>
                                         </div>
                                     </div>

@@ -65,9 +65,6 @@ export class ApiService {
   updateBlog = (blogId: string, vm: updateBlogVm) =>
     this._http.put<string>(`${this._api}/blog/${blogId}/update`, vm);
 
-  getBlogTags = (blogId: string) =>
-    this._http.get<tagListVm>(`${this._api}/blog/${blogId}/tags`);
-
   linkTag = (blogId: string, vm: createLinkVm) =>
     this._http.post<string>(`${this._api}/blog/${blogId}/tag/link`, vm);
 
