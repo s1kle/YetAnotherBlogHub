@@ -2,21 +2,19 @@ export interface blogListVm {
     blogs: blogVmForList[];
 }
 
-export interface blogListWithTagsVm {
-    blogs: blogVmForListWithTag[];
-}
-
 export interface tagListVm {
-    tags: tagVmForList[];
+    tags: tagVm[];
 }
 
 export interface detailedBlogVm {
     author: string;
+    userId: string;
     id: string;
     title: string;
     creationDate: Date;
     details: string | null;
     editDate: Date | null;
+    tags: tagVm[]
 }
 
 export interface tagVm {
@@ -26,22 +24,13 @@ export interface tagVm {
 
 export interface blogVmForList {
     author: string;
+    userId: string;
     id: string;
     title: string;
-    creationDate: Date
-}
-
-export interface blogVmForListWithTag {
-    author: string;
-    id: string;
-    title: string;
-    creationDate: Date
-    tags: tagListVm
-}
-
-export interface tagVmForList {
-    id: string;
-    name: string;
+    creationDate: Date;
+    details: string | null;
+    editDate: Date | null;
+    tags: tagVm[]
 }
 
 export interface searchOptions {
