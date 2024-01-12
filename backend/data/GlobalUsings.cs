@@ -1,6 +1,14 @@
 global using MediatR;
 global using AutoMapper;
 global using FluentValidation;
-global using BlogHub.Data.Exceptions;
-global using BlogHub.Data.Interfaces;
+global using BlogHub.Data.Common.Exceptions;
+global using BlogHub.Data.Blogs.Get.Helpers;
+global using BlogHub.Data.Blogs.List.Helpers;
+global using BlogHub.Data.Tags.Get.Helpers;
+global using BlogHub.Data.Comments.List.Helpers;
 global using BlogHub.Domain;
+global using BlogsContext = BlogHub.Data.Common.Interfaces.Blogs;
+global using BlogTagsContext = BlogHub.Data.Common.Interfaces.BlogTags;
+global using TagsContext = BlogHub.Data.Common.Interfaces.Tags;
+global using CommentsContext = BlogHub.Data.Common.Interfaces.Comments;
+global using UsersContext = BlogHub.Data.Common.Interfaces.Users;

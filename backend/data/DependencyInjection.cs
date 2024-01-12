@@ -1,6 +1,6 @@
 using System.Reflection;
-using BlogHub.Data.Logging;
-using BlogHub.Data.Validation;
+using BlogHub.Data.Common.Logging;
+using BlogHub.Data.Common.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlogHub.Data;
