@@ -16,7 +16,7 @@ public sealed class AddTagsStep : IPipelineStep<BlogVm>
     {
         var query = new GetBlogTagListQuery() { BlogId = context.Id };
 
-        context.Tags = await _mediator.Send(query);
+        context = context with { Tags = await _mediator.Send(query) };
 
         return await next(context);
     }

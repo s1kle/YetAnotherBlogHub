@@ -19,8 +19,8 @@ public class CommentRepository : ICommentRepository
         var key = $"Name:Comments;Blog:{blogId}";
         
         var query = _dbContext.Comments
-            .OrderBy(blog => blog.CreationDate)
-            .Where(blog => blog.BlogId.Equals(blogId));
+            .OrderBy(comment => comment.CreationDate)
+            .Where(comment => comment.BlogId.Equals(blogId));
 
         return await _cache.GetOrCreateItemAsync(key, async () => await query
             .ToListAsync(), 
@@ -32,7 +32,7 @@ public class CommentRepository : ICommentRepository
         var key = $"Name:Comment;Entity:{id}";
 
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Comments
-            .FirstOrDefaultAsync(blog => blog.Id.Equals(id), cancellationToken), 
+            .FirstOrDefaultAsync(comment => comment.Id.Equals(id), cancellationToken), 
         cancellationToken);
     }
 

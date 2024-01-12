@@ -1,4 +1,5 @@
 using BlogHub.Data.Blogs.Queries.Get;
+using BlogHub.Data.Comments.Queries.GetList.AddUser;
 using BlogHub.Data.Comments.Queries.GetList.Blog;
 using BlogHub.Data.Tags.Queries.GetList.Blog;
 
@@ -17,7 +18,13 @@ public sealed class AddCommentsStep : IPipelineStep<BlogVm>
     {
         var query = new GetBlogCommentListQuery() { BlogId = context.Id };
 
-        context.Comments = await _mediator.Send(query);
+        var comments = await _mediator.Send(query);
+
+        var authorQuery = new CommentAddUserQueryQuery() { Comments = comments };
+
+        comments = await _mediator.Send(authorQuery);
+
+        context = context with { Comments = comments };
 
         return await next(context);
     }

@@ -14,12 +14,18 @@ public sealed class AddTagsToListStep : IPipelineStep<BlogListVm>
 
     public async Task<BlogListVm> ExecuteAsync(BlogListVm context, Func<BlogListVm, Task<BlogListVm>> next)
     {
-        foreach (var blog in context.Blogs)
-        {
-            var query = new GetBlogTagListQuery() { BlogId = blog.Id };
 
-            blog.Tags = await _mediator.Send(query);
+        var result = context.Blogs.ToList();
+
+        for (var i = 0; i < result.Count; i++)
+        {
+            var blog = result[i];
+            var query = new GetBlogTagListQuery() { BlogId = blog.Id };
+            var tags = await _mediator.Send(query);
+            result[i] = blog with { Tags = tags };
         }
+
+        context = context with { Blogs = result };
 
         return await next(context);
     }

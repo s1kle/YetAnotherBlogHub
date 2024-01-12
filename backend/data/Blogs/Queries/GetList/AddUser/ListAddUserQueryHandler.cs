@@ -11,13 +11,15 @@ internal sealed class ListAddUserQueryHandler : IRequestHandler<ListAddUserQuery
     {
         var blogs = request.Blogs.Blogs;
 
-        foreach(var blog in blogs)
-        {
-            var user = await _repository.GetAsync(blog.UserId, cancellationToken);
+        var result = blogs.ToList();
 
-            blog.Author = user?.Name;
+        for (var i = 0; i < blogs.Count; i++)
+        {
+            var blog = result[i];
+            var user = await _repository.GetAsync(blog.UserId, cancellationToken);
+            result[i] = blog with { Author = user?.Name };
         }
 
-        return new () { Blogs = blogs };
+        return new () { Blogs = result };
     }
 }

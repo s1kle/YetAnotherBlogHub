@@ -26,7 +26,6 @@ public sealed class UnauthorizeBlogController : BaseController
         var pipeline = new PipelineBuilder<BlogListVm>()
             .Add(new AddAuthorsStep(Mediator))
             .Add(new AddTagsToListStep(Mediator))
-            .Add(new AddCommentsToListStep(Mediator))
             .Add(new SearchStep(searchDto, Mediator))
             .Add(new SortStep(sortDto, Mediator))
             .Build();

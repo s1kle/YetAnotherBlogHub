@@ -53,7 +53,6 @@ public class BlogControllerTests
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
                 Tags = Array.Empty<TagVm>(),
-                Comments = Array.Empty<CommentVm>()
             }).ToList()
         });
 
@@ -96,7 +95,6 @@ public class BlogControllerTests
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
                 Tags = Array.Empty<TagVm>(),
-                Comments = Array.Empty<CommentVm>()
             }).ToList()
         });
 
@@ -145,7 +143,6 @@ public class BlogControllerTests
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
                 Tags = Array.Empty<TagVm>(),
-                Comments = Array.Empty<CommentVm>()
             }).OrderByDescending(blog => blog.Title).ToList()
         });
 
@@ -191,7 +188,6 @@ public class BlogControllerTests
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
                 Tags = Array.Empty<TagVm>(),
-                Comments = Array.Empty<CommentVm>()
             }).ToList()
         });
 

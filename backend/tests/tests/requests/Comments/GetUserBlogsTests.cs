@@ -20,7 +20,6 @@ public class GetBlogCommentsTests
         {
             UserId = comment.UserId,
             Id = comment.Id,
-            BlogId = comment.BlogId,
             Content = comment.Content,
             CreationDate = blog.CreationDate
         }).ToList();

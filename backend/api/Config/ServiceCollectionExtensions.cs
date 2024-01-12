@@ -51,11 +51,14 @@ public static class ServiceCollectionExtensions
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
             .AddDbContext<IUserDbContext, UserDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
 
             .AddScoped<IBlogRepository, BlogRepository>()
             .AddScoped<ITagRepository, TagRepository>()
             .AddScoped<IBlogTagRepository, BlogTagRepository>()
             .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<ICommentRepository, CommentRepository>()
             
             .AddStackExchangeRedisCache(options =>
             {
