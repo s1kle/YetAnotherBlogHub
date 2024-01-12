@@ -1,17 +1,16 @@
 using BlogHub.Api.Extensions;
-using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Services.BlogTags;
 
-public class BlogTagRepository : IBlogTagRepository
+public class BlogTagRepository : Interfaces.BlogTags.Repository
 {
     private readonly IDistributedCache _cache;
-    private readonly IBlogTagDbContext _dbContext;
+    private readonly Interfaces.BlogTags.DbContext _dbContext;
 
-    public BlogTagRepository(IDistributedCache cache, IBlogTagDbContext dbContext) =>
+    public BlogTagRepository(IDistributedCache cache, Interfaces.BlogTags.DbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<BlogTagLink>?> GetAllAsync(CancellationToken cancellationToken)

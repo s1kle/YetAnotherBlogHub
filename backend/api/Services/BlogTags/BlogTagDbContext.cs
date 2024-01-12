@@ -1,10 +1,9 @@
 using BlogHub.Domain;
-using BlogHub.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Services.BlogTags;
 
-public class BlogTagDbContext : DbContext, IBlogTagDbContext
+public class BlogTagDbContext : DbContext, Interfaces.BlogTags.DbContext
 {
     public DbSet<BlogTagLink> Links { get; init;}
 

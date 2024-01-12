@@ -1,8 +1,11 @@
 using BlogHub.Api.Middlewares;
 using BlogHub.Api.Services;
+using BlogHub.Api.Services.Blogs;
+using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Comments;
+using BlogHub.Api.Services.Tags;
+using BlogHub.Api.Services.Users;
 using BlogHub.Data;
-using BlogHub.Data.Interfaces;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -43,22 +46,22 @@ public static class ServiceCollectionExtensions
 
             .AddTransient<ExceptionHandlingMiddleware>()
 
-            .AddDbContext<IBlogDbContext, BlogDbContext>(options => options
+            .AddDbContext<Blogs.DbContext, BlogDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<ITagDbContext, TagDbContext>(options => options
+            .AddDbContext<Tags.DbContext, TagDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options => options
+            .AddDbContext<BlogTags.DbContext, BlogTagDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<IUserDbContext, UserDbContext>(options => options
+            .AddDbContext<Users.DbContext, UserDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
+            .AddDbContext<Comments.DbContext, CommentDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
 
-            .AddScoped<IBlogRepository, BlogRepository>()
-            .AddScoped<ITagRepository, TagRepository>()
-            .AddScoped<IBlogTagRepository, BlogTagRepository>()
-            .AddScoped<IUserRepository, UserRepository>()
-            .AddScoped<ICommentRepository, CommentRepository>()
+            .AddScoped<Blogs.Repository, BlogRepository>()
+            .AddScoped<Tags.Repository, TagRepository>()
+            .AddScoped<BlogTags.Repository, BlogTagRepository>()
+            .AddScoped<Users.Repository, UserRepository>()
+            .AddScoped<Comments.Repository, CommentRepository>()
             
             .AddStackExchangeRedisCache(options =>
             {
@@ -88,8 +91,8 @@ public static class ServiceCollectionExtensions
                     {
                         AuthorizationCode = new ()
                         {
-                            AuthorizationUrl = new Uri("https://localhost:7010/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:7010/connect/token"),
+                            AuthorizationUrl = new Uri($"{configuration[Authority]}/connect/authorize"),
+                            TokenUrl = new Uri($"{configuration[Authority]}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
                                 {configuration[Audience]!, "Api"}

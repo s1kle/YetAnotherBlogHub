@@ -1,9 +1,10 @@
-using BlogHub.Data.Tags.Commands.Create;
-using BlogHub.Data.Tags.Commands.Delete;
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList.User;
+using BlogHub.Data.Tags.Get.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TagList = BlogHub.Data.Tags.List.User;
+using CreateTag = BlogHub.Data.Tags.Create;
+using DeleteTag = BlogHub.Data.Tags.Delete;
+using BlogHub.Data.Tags.Create.Helpers;
 
 namespace BlogHub.Api.Controllers;
 
@@ -14,7 +15,7 @@ public class AuthorizeTagController : BaseController
     [HttpGet("my-tags")]
     public async Task<ActionResult<IReadOnlyList<TagVm>>> GetAll()
     {
-        var query = new GetUserTagListQuery()
+        var query = new TagList.Query()
         {
             UserId = UserId
         };
@@ -27,7 +28,7 @@ public class AuthorizeTagController : BaseController
     [HttpPost("tag/create")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateTagDto dto)
     {
-        var command = new CreateTagCommand 
+        var command = new CreateTag.Command 
         { 
             UserId = UserId,
             Name = dto.Name
@@ -41,7 +42,7 @@ public class AuthorizeTagController : BaseController
     [HttpDelete("tag/{id}/delete")]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
-        var command = new DeleteTagCommand
+        var command = new DeleteTag.Command
         {
             Id = id,
             UserId = UserId

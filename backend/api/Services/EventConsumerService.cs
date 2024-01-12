@@ -1,12 +1,12 @@
 using System.Text;
 using System.Text.Json;
-using BlogHub.Data.Users.Commands.Create;
-using BlogHub.Data.Users.Commands.Delete;
 using BlogHub.Domain.UserEvents;
 using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Serilog;
+using CreateUser = BlogHub.Data.Users.Create;
+using DeleteUser = BlogHub.Data.Users.Delete;
 
 namespace BlogHub.Api.Services;
 
@@ -78,7 +78,7 @@ public class EventConsumerService : BackgroundService
 
 			if (userEvent is null) return;
 
-			var command = new CreateUserCommand()
+			var command = new CreateUser.Command()
 			{
 				Id = userEvent.Id,
 				Name = userEvent.Name
@@ -96,7 +96,7 @@ public class EventConsumerService : BackgroundService
 
 			if (userEvent is null) return;
 
-			var command = new DeleteUserCommand()
+			var command = new DeleteUser.Command()
 			{
 				Id = userEvent.Id,
 			};

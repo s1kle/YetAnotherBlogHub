@@ -1,17 +1,16 @@
 using BlogHub.Api.Extensions;
-using BlogHub.Data.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Services.Comments;
 
-public class CommentRepository : ICommentRepository
+public class CommentRepository : Interfaces.Comments.Repository
 {
     private readonly IDistributedCache _cache;
-    private readonly ICommentDbContext _dbContext;
+    private readonly Interfaces.Comments.DbContext _dbContext;
 
-    public CommentRepository(IDistributedCache cache, ICommentDbContext dbContext) =>
+    public CommentRepository(IDistributedCache cache, Interfaces.Comments.DbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<Comment>?> GetAllByBlogIdAsync(Guid blogId, CancellationToken cancellationToken)

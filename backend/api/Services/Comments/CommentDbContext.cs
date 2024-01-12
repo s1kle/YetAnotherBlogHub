@@ -1,10 +1,9 @@
 using BlogHub.Domain;
-using BlogHub.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Services.Comments;
 
-public class CommentDbContext : DbContext, ICommentDbContext
+public class CommentDbContext : DbContext, Interfaces.Comments.DbContext
 {
     public DbSet<Comment> Comments { get; init;}
 

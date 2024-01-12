@@ -1,19 +1,21 @@
-using BlogHub.Data.Blogs.Commands.Create;
-using BlogHub.Data.Blogs.Commands.Delete;
-using BlogHub.Data.Blogs.Commands.Update;
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.GetList.User;
-using BlogHub.Data.Blogs.Queries.ListSearch;
-using BlogHub.Data.Blogs.Queries.ListSort;
-using BlogHub.Data.Comments.Commands.Create;
-using BlogHub.Data.Comments.Commands.Delete;
-using BlogHub.Data.Pipeline;
-using BlogHub.Data.Pipeline.Blogs.List;
-using BlogHub.Data.Tags.Commands.Link;
-using BlogHub.Data.Tags.Commands.Unlink;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UserBlogs = BlogHub.Data.Blogs.List.User;
+using Pipeline = BlogHub.Data.Pipeline.Helpers;
+using Steps = BlogHub.Data.Pipeline.Steps.Blog;
+using BlogHub.Data.Blogs.List.Helpers;
+using CreateBlog = BlogHub.Data.Blogs.Create;
+using UpdateBlog = BlogHub.Data.Blogs.Update;
+using DeleteBlog = BlogHub.Data.Blogs.Delete;
+using CreateComment = BlogHub.Data.Comments.Create;
+using DeleteComment = BlogHub.Data.Comments.Delete;
+using LinkTag = BlogHub.Data.Tags.Link;
+using UnlinkTag = BlogHub.Data.Tags.Unlink;
+using BlogHub.Data.Blogs.Create.Helpers;
+using BlogHub.Data.Blogs.Update.Helpers;
+using BlogHub.Data.Comments.Create;
+using BlogHub.Data.Tags.Link.Helpers;
 
 namespace BlogHub.Api.Controllers;
 
@@ -23,21 +25,20 @@ public sealed class AuthorizeBlogController : BaseController
     public AuthorizeBlogController(IMediator mediator) : base (mediator) { }
 
     [HttpGet("my-blogs")]
-    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
-        [FromQuery] ListSortDto? sortDto = null, [FromQuery] ListSearchDto? searchDto = null)
+    public async Task<ActionResult<ListVm>> GetAll([FromQuery] BlogListDto dto)
     {
-        var query = new GetUserBlogListQuery() { Page = dto.Page, Size = dto.Size, UserId = UserId };
+        var query = new UserBlogs.Query() { Page = dto.List.Page, Size = dto.List.Size, UserId = UserId };
 
         var context = await Mediator.Send(query);
 
-        var pipeline = new PipelineBuilder<BlogListVm>()
-            .Add(new AddAuthorsStep(Mediator))
-            .Add(new AddTagsToListStep(Mediator))
-            .Add(new SearchStep(searchDto, Mediator))
-            .Add(new SortStep(sortDto, Mediator))
+        var pipeline = new Pipeline.Builder<ListVm>()
+            .Add(new Steps.List.Add.Authors.Step(Mediator))
+            .Add(new Steps.List.Add.Tags.Step(Mediator))
+            .Add(new Steps.List.Search.Step(dto.Search, Mediator))
+            .Add(new Steps.List.Sort.Step(dto.Sort, Mediator))
             .Build();
 
-        var response = await pipeline(context);
+        var response = await pipeline.ExecuteAsync(context);
 
         return Ok(response);
     }
@@ -45,7 +46,7 @@ public sealed class AuthorizeBlogController : BaseController
     [HttpPost("blog/create")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateBlogDto dto)
     {
-        var command = new CreateBlogCommand 
+        var command = new CreateBlog.Command 
         { 
             Title = dto.Title,
             Details = dto.Details,
@@ -60,7 +61,7 @@ public sealed class AuthorizeBlogController : BaseController
     [HttpPut("blog/{id}/update")]
     public async Task<ActionResult<Guid>> Update(Guid id, [FromBody] UpdateBlogDto dto)
     {
-        var command = new UpdateBlogCommand 
+        var command = new UpdateBlog.Command 
         { 
             Id = id, 
             UserId = UserId,
@@ -76,7 +77,7 @@ public sealed class AuthorizeBlogController : BaseController
     [HttpDelete("blog/{id}/delete")]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
-        var command = new DeleteBlogCommand
+        var command = new DeleteBlog.Command
         {
             Id = id,
             UserId = UserId
@@ -90,7 +91,7 @@ public sealed class AuthorizeBlogController : BaseController
     [HttpPost("blog/{id}/comment/create")]
     public async Task<ActionResult<Guid>> CreateComment(Guid id, [FromBody] CreateCommentDto dto)
     {
-        var command = new CreateCommentCommand 
+        var command = new CreateComment.Command 
         { 
             UserId = UserId,
             BlogId = id,
@@ -103,9 +104,9 @@ public sealed class AuthorizeBlogController : BaseController
     }
 
     [HttpDelete("blog/{id}/comment/{commentId}/delete")]
-    public async Task<ActionResult<Guid>> CreateComment(Guid id, Guid commentId)
+    public async Task<ActionResult<Guid>> DeleteComment(Guid id, Guid commentId)
     {
-        var command = new DeleteCommentCommand 
+        var command = new DeleteComment.Command 
         { 
             UserId = UserId,
             Id = commentId
@@ -119,7 +120,7 @@ public sealed class AuthorizeBlogController : BaseController
     [HttpPost("blog/{id}/tag/link")]
     public async Task<ActionResult<Guid>> LinkTag(Guid id, [FromBody] LinkTagDto dto)
     {
-        var query = new LinkTagCommand()
+        var query = new LinkTag.Command()
         {
             UserId = UserId,
             BlogId = id,
@@ -134,7 +135,7 @@ public sealed class AuthorizeBlogController : BaseController
     [HttpDelete("blog/{id}/tag/{tagId}/unlink")]
     public async Task<ActionResult<Guid>> UnlinkTag(Guid id, Guid tagId)
     {
-        var query = new UnlinkTagCommand()
+        var query = new UnlinkTag.Command()
         {
             UserId = UserId,
             BlogId = id,

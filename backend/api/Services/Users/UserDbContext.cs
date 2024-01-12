@@ -1,10 +1,9 @@
 using BlogHub.Domain;
-using BlogHub.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Services.Users;
 
-public class UserDbContext : DbContext, IUserDbContext
+public class UserDbContext : DbContext, Interfaces.Users.DbContext
 {
     public DbSet<User> Users { get; init;}
 

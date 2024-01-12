@@ -1,10 +1,9 @@
 using BlogHub.Domain;
-using BlogHub.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogHub.Api.Services;
+namespace BlogHub.Api.Services.Blogs;
 
-public class BlogDbContext : DbContext, IBlogDbContext
+public class BlogDbContext : DbContext, Interfaces.Blogs.DbContext
 {
     public DbSet<Blog> Blogs { get; init;}
 
