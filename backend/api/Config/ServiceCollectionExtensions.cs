@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 namespace BlogHub.Api.Configuration;
@@ -50,11 +51,14 @@ public static class ServiceCollectionExtensions
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
             .AddDbContext<IUserDbContext, UserDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
 
             .AddScoped<IBlogRepository, BlogRepository>()
             .AddScoped<ITagRepository, TagRepository>()
             .AddScoped<IBlogTagRepository, BlogTagRepository>()
             .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<ICommentRepository, CommentRepository>()
             
             .AddStackExchangeRedisCache(options =>
             {
@@ -75,7 +79,42 @@ public static class ServiceCollectionExtensions
                 }))
 
             .AddEndpointsApiExplorer()
-            .AddSwaggerGen();
+            .AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new ()
+                    {
+                        AuthorizationCode = new ()
+                        {
+                            AuthorizationUrl = new Uri("https://localhost:7010/connect/authorize"),
+                            TokenUrl = new Uri("https://localhost:7010/connect/token"),
+                            Scopes = new Dictionary<string, string>()
+                            {
+                                {configuration[Audience]!, "Api"}
+                            }
+                        }
+                    }
+                });
+
+                var requirement = new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "oauth2"
+                            }
+                        },
+                        new[] { configuration[Audience] }
+                    }
+                };
+
+                options.AddSecurityRequirement(requirement);
+            });
 
         services
             .AddControllers();

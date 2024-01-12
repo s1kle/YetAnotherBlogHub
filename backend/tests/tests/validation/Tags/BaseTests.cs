@@ -4,7 +4,9 @@ using BlogHub.Data.Tags.Commands.Delete;
 using BlogHub.Data.Tags.Commands.Link;
 using BlogHub.Data.Tags.Commands.Unlink;
 using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Queries.GetList.All;
+using BlogHub.Data.Tags.Queries.GetList.Blog;
+using BlogHub.Data.Tags.Queries.GetList.User;
 
 namespace BlogHub.Tests.Validation.Tags;
 

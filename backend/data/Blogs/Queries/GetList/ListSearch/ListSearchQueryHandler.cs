@@ -31,7 +31,8 @@ internal sealed class ListSearchQueryHandler : IRequestHandler<ListSearchQuery, 
             : new () 
             {
                 Blogs = blogs
-                    .Where(blog => properties.Any(property => ContainsQuery(blog, property, query)))
+                    .Where(blog => properties
+                        .Any(property => ContainsQuery(blog, property, query)))
                     .ToList()
             };
     }

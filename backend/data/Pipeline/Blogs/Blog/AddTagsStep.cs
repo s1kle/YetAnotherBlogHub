@@ -1,5 +1,5 @@
 using BlogHub.Data.Blogs.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Queries.GetList.Blog;
 
 namespace BlogHub.Data.Pipeline.Blogs.Blog;
 
@@ -16,7 +16,7 @@ public sealed class AddTagsStep : IPipelineStep<BlogVm>
     {
         var query = new GetBlogTagListQuery() { BlogId = context.Id };
 
-        context.Tags = await _mediator.Send(query);
+        context = context with { Tags = await _mediator.Send(query) };
 
         return await next(context);
     }

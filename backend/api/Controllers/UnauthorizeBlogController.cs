@@ -6,8 +6,6 @@ using BlogHub.Data.Blogs.Queries.ListSort;
 using BlogHub.Data.Pipeline;
 using BlogHub.Data.Pipeline.Blogs.Blog;
 using BlogHub.Data.Pipeline.Blogs.List;
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,22 +45,10 @@ public sealed class UnauthorizeBlogController : BaseController
         var pipeline = new PipelineBuilder<BlogVm>()
             .Add(new AddAuthorStep(Mediator))
             .Add(new AddTagsStep(Mediator))
+            .Add(new AddCommentsStep(Mediator))
             .Build();
 
         var response = await pipeline(context);
-
-        return Ok(response);
-    }
-
-    [HttpGet("blog/{id}/tags")]
-    public async Task<ActionResult<IReadOnlyList<TagVm>>> GetTags(Guid id)
-    {
-        var query = new GetBlogTagListQuery()
-        {
-            BlogId = id
-        };
-
-        var response = await Mediator.Send(query);
 
         return Ok(response);
     }

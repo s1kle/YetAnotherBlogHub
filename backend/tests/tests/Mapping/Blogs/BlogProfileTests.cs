@@ -18,7 +18,7 @@ public class BlogProfileTests
             Title = blog.Title,
             CreationDate = blog.CreationDate,
             EditDate = blog.EditDate,
-            Details = blog.Details
+            Details = blog.Details,
         };
         
         var mapper = new MapperConfiguration(config => config.AddProfile<BlogMappingProfile>())
@@ -34,7 +34,7 @@ public class BlogProfileTests
     {
         var userId = Guid.NewGuid();
         var blog = BlogFactory.CreateBlog(userId: userId);
-        var expected = new BlogVm()
+        var expected = new BlogVmForList()
         {
             UserId = userId,
             Id = blog.Id,

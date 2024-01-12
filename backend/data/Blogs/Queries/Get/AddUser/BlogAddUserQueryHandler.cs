@@ -13,9 +13,6 @@ internal sealed class BlogAddUserQueryHandler : IRequestHandler<BlogAddUserQuery
 
         var user = await _repository.GetAsync(request.Blog.UserId, cancellationToken);
 
-        return blog with
-        {
-            Author = user?.Name
-        };
+        return blog with { Author = user?.Name };
     }
 }

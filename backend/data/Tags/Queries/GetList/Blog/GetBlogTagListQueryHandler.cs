@@ -1,6 +1,6 @@
 using BlogHub.Data.Tags.Queries.Get;
 
-namespace BlogHub.Data.Tags.Queries.GetList;
+namespace BlogHub.Data.Tags.Queries.GetList.Blog;
 
 internal sealed class GetBlogTagListQueryHandler : IRequestHandler<GetBlogTagListQuery, IReadOnlyList<TagVm>>
 {

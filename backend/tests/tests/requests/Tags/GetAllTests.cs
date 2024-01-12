@@ -1,5 +1,5 @@
 using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Queries.GetList.All;
 
 namespace BlogHub.Tests.Requests.Tags;
 

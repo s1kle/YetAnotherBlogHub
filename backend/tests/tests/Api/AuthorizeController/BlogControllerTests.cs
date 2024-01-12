@@ -2,6 +2,7 @@ using BlogHub.Api.Controllers;
 using BlogHub.Data.Blogs.Queries.GetList;
 using BlogHub.Data.Blogs.Queries.ListSearch;
 using BlogHub.Data.Blogs.Queries.ListSort;
+using BlogHub.Data.Comments.Queries.GetList;
 using BlogHub.Data.Tags.Queries.Get;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +52,7 @@ public class BlogControllerTests
                 Title = blog.Title,
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
-                Tags = Array.Empty<TagVm>()
+                Tags = Array.Empty<TagVm>(),
             }).ToList()
         });
 
@@ -93,7 +94,7 @@ public class BlogControllerTests
                 Title = blog.Title,
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
-                Tags = Array.Empty<TagVm>()
+                Tags = Array.Empty<TagVm>(),
             }).ToList()
         });
 
@@ -141,7 +142,7 @@ public class BlogControllerTests
                 Title = blog.Title,
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
-                Tags = Array.Empty<TagVm>()
+                Tags = Array.Empty<TagVm>(),
             }).OrderByDescending(blog => blog.Title).ToList()
         });
 
@@ -186,7 +187,7 @@ public class BlogControllerTests
                 Title = blog.Title,
                 Id = blog.Id,
                 CreationDate = blog.CreationDate,
-                Tags = Array.Empty<TagVm>()
+                Tags = Array.Empty<TagVm>(),
             }).ToList()
         });
 

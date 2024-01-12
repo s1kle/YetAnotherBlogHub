@@ -1,7 +1,7 @@
 using BlogHub.Data.Tags.Commands.Create;
 using BlogHub.Data.Tags.Commands.Delete;
 using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Queries.GetList.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
