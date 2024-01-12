@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Queries.GetList;
+namespace BlogHub.Data.Tags.Queries.GetList.Blog;
 
 internal sealed class GetBlogTagListQueryValidator : AbstractValidator<GetBlogTagListQuery>
 {

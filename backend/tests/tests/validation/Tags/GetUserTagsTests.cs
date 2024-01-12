@@ -1,4 +1,4 @@
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Queries.GetList.User;
 
 namespace BlogHub.Tests.Validation.Tags;
 

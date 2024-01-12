@@ -1,13 +1,13 @@
 using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Tags.Queries.GetList.Blog;
+using BlogHub.Data.Comments.Queries.GetList.Blog;
 
 namespace BlogHub.Data.Pipeline.Blogs.List;
 
-public sealed class AddTagsToListStep : IPipelineStep<BlogListVm>
+public sealed class AddCommentsToListStep : IPipelineStep<BlogListVm>
 {
     private readonly IMediator _mediator;
 
-    public AddTagsToListStep(IMediator mediator)
+    public AddCommentsToListStep(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -16,9 +16,9 @@ public sealed class AddTagsToListStep : IPipelineStep<BlogListVm>
     {
         foreach (var blog in context.Blogs)
         {
-            var query = new GetBlogTagListQuery() { BlogId = blog.Id };
+            var query = new GetBlogCommentListQuery() { BlogId = blog.Id };
 
-            blog.Tags = await _mediator.Send(query);
+            blog.Comments = await _mediator.Send(query);
         }
 
         return await next(context);

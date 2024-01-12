@@ -1,27 +1,17 @@
 using System.Reflection;
-using BlogHub.Data.Tags.Commands.Create;
-using BlogHub.Data.Tags.Commands.Delete;
-using BlogHub.Data.Tags.Commands.Link;
-using BlogHub.Data.Tags.Commands.Unlink;
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList.All;
-using BlogHub.Data.Tags.Queries.GetList.Blog;
-using BlogHub.Data.Tags.Queries.GetList.User;
+using BlogHub.Data.Comments.Commands.Create;
+using BlogHub.Data.Comments.Commands.Delete;
+using BlogHub.Data.Comments.Queries.GetList.Blog;
 
-namespace BlogHub.Tests.Validation.Tags;
+namespace BlogHub.Tests.Validation.Comments;
 
 
 public class BaseTests
 {
     [Theory]
-    [InlineData(typeof(CreateTagCommand))]
-    [InlineData(typeof(DeleteTagCommand))]
-    [InlineData(typeof(LinkTagCommand))]
-    [InlineData(typeof(UnlinkTagCommand))]
-    [InlineData(typeof(GetTagQuery))]
-    [InlineData(typeof(GetTagListQuery))]
-    [InlineData(typeof(GetBlogTagListQuery))]
-    [InlineData(typeof(GetUserTagListQuery))]
+    [InlineData(typeof(CreateCommentCommand))]
+    [InlineData(typeof(DeleteCommentCommand))]
+    [InlineData(typeof(GetBlogCommentListQuery))]
     public void ValidRequests_ShouldSuccess(Type type)
     {
         var requestsMethod = typeof(ValidatorFactory)

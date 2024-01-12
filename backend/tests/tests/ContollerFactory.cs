@@ -45,6 +45,10 @@ public class ControllerFactory
             .AddDbContext<IUserDbContext, UserDbContext>(options => options
                 .UseInMemoryDatabase(id))
             .AddScoped<IUserRepository, UserRepository>()
+
+            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
+                .UseInMemoryDatabase(id))
+            .AddScoped<ICommentRepository, CommentRepository>()
             
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddScoped<IDistributedCache, MemoryDistributedCache>()

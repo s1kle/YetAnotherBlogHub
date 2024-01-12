@@ -5,11 +5,12 @@ using BlogHub.Data.Blogs.Queries.GetList;
 using BlogHub.Data.Blogs.Queries.GetList.User;
 using BlogHub.Data.Blogs.Queries.ListSearch;
 using BlogHub.Data.Blogs.Queries.ListSort;
+using BlogHub.Data.Comments.Commands.Create;
+using BlogHub.Data.Comments.Commands.Delete;
 using BlogHub.Data.Pipeline;
 using BlogHub.Data.Pipeline.Blogs.List;
 using BlogHub.Data.Tags.Commands.Link;
 using BlogHub.Data.Tags.Commands.Unlink;
-using BlogHub.Data.Tags.Queries.GetList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ public sealed class AuthorizeBlogController : BaseController
         var pipeline = new PipelineBuilder<BlogListVm>()
             .Add(new AddAuthorsStep(Mediator))
             .Add(new AddTagsToListStep(Mediator))
+            .Add(new AddCommentsToListStep(Mediator))
             .Add(new SearchStep(searchDto, Mediator))
             .Add(new SortStep(sortDto, Mediator))
             .Build();
@@ -79,6 +81,35 @@ public sealed class AuthorizeBlogController : BaseController
         {
             Id = id,
             UserId = UserId
+        };
+
+        var blogId = await Mediator.Send(command);
+
+        return Ok(blogId);
+    }
+
+    [HttpPost("blog/{id}/comment/create")]
+    public async Task<ActionResult<Guid>> CreateComment(Guid id, [FromBody] CreateCommentDto dto)
+    {
+        var command = new CreateCommentCommand 
+        { 
+            UserId = UserId,
+            BlogId = id,
+            Content = dto.Content
+        };
+
+        var blogId = await Mediator.Send(command);
+
+        return Ok(blogId);
+    }
+
+    [HttpDelete("blog/{id}/comment/{commentId}/delete")]
+    public async Task<ActionResult<Guid>> CreateComment(Guid id, Guid commentId)
+    {
+        var command = new DeleteCommentCommand 
+        { 
+            UserId = UserId,
+            Id = commentId
         };
 
         var blogId = await Mediator.Send(command);
