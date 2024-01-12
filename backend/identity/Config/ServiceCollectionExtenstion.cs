@@ -12,15 +12,23 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<AuthorizationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString(IdentityConnectionString)));
-
-        services.AddSingleton<IUserEventService, UserEventService>(provider =>
-            new UserEventService(
+        services
+            .AddDbContext<AuthorizationDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(IdentityConnectionString)))
+            
+            .AddSingleton<IUserEventService, UserEventService>(provider => new UserEventService(
                 configuration["RabbitMQ:Host"]!, 
                 configuration["RabbitMQ:User"]!, 
                 configuration["RabbitMQ:Password"]!,
-                configuration["RabbitMQ:Exchange"]!));
+                configuration["RabbitMQ:Exchange"]!))
+
+            .AddCors(options => options
+                .AddPolicy("All", policy =>
+                {
+                    policy.AllowAnyOrigin();
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                }));
 
         services.AddIdentity<ApplicationUser, IdentityRole>(config =>
         {
@@ -39,6 +47,8 @@ public static class ServiceCollectionExtensions
             config.LoginPath = "/Authorization/Login";
             config.LogoutPath = "/Authorization/Logout";
         });
+
+        
 
         services.AddIdentityServer()
             .AddAspNetIdentity<ApplicationUser>()
