@@ -1,7 +1,6 @@
 using BlogHub.Api.Controllers;
 using BlogHub.Api.Services;
 using BlogHub.Data.Blogs.Commands.Create;
-using BlogHub.Data.Interfaces;
 using BlogHub.Data.Validation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +13,11 @@ public class ControllerFactory
 {
     public static ControllerFixture<T> CreateFixture<T>() where T : BaseController
     {
-        var serviceProvider = CreateServiceProvider();
+        var serviceProvider = CreateServiceProvider(Guid.NewGuid().ToString());
         var controller = serviceProvider.GetRequiredService<T>();
         return new(serviceProvider, controller);
     }
-    private static ServiceProvider CreateServiceProvider()
+    private static ServiceProvider CreateServiceProvider(string id)
     {
         var dataAssembly = typeof(CreateBlogCommand).Assembly;
 
@@ -26,22 +25,26 @@ public class ControllerFactory
 
         services
             .AddAutoMapper(dataAssembly)
-            .AddValidatorsFromAssembly(dataAssembly)
+            .AddValidatorsFromAssembly(dataAssembly, includeInternalTypes: true)
             .AddMediatR(config => config
                 .RegisterServicesFromAssembly(dataAssembly));
 
         services
             .AddDbContext<IBlogDbContext, BlogDbContext>(options => options
-                .UseInMemoryDatabase(nameof(BlogDbContext)))
+                .UseInMemoryDatabase(id))
             .AddScoped<IBlogRepository, BlogRepository>()
             
             .AddDbContext<ITagDbContext, TagDbContext>(options => options
-                .UseInMemoryDatabase(nameof(TagRepository)))
+                .UseInMemoryDatabase(id))
             .AddScoped<ITagRepository, TagRepository>()
             
             .AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options => options
-                .UseInMemoryDatabase(nameof(BlogDbContext)))
+                .UseInMemoryDatabase(id))
             .AddScoped<IBlogTagRepository, BlogTagRepository>()
+
+            .AddDbContext<IUserDbContext, UserDbContext>(options => options
+                .UseInMemoryDatabase(id))
+            .AddScoped<IUserRepository, UserRepository>()
             
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddScoped<IDistributedCache, MemoryDistributedCache>()

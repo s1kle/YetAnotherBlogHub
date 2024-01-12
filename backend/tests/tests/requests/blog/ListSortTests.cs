@@ -12,6 +12,7 @@ public class ListSortTests
 
         var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogVmForList()
         {
+            UserId = Guid.Empty,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
@@ -59,6 +60,7 @@ public class ListSortTests
 
         var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogVmForList()
         {
+            UserId = Guid.Empty,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate

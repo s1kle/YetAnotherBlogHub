@@ -2,7 +2,7 @@ using BlogHub.Api.Controllers;
 using BlogHub.Data.Blogs.Queries.GetList;
 using BlogHub.Data.Blogs.Queries.ListSearch;
 using BlogHub.Data.Blogs.Queries.ListSort;
-using Microsoft.AspNetCore.Http;
+using BlogHub.Data.Tags.Queries.Get;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogHub.Tests.Api.AuthorizeController;
@@ -47,9 +47,11 @@ public class BlogControllerTests
         var expected = new OkObjectResult(new BlogListVm() {
             Blogs = blogs.Select(blog => new BlogVmForList()
             {
+                UserId = fixture.UserId,
                 Title = blog.Title,
                 Id = blog.Id,
-                CreationDate = blog.CreationDate
+                CreationDate = blog.CreationDate,
+                Tags = Array.Empty<TagVm>()
             }).ToList()
         });
 
@@ -87,9 +89,11 @@ public class BlogControllerTests
         var expected = new OkObjectResult(new BlogListVm() {
             Blogs = searchedBlogs.Select(blog => new BlogVmForList()
             {
+                UserId = fixture.UserId,
                 Title = blog.Title,
                 Id = blog.Id,
-                CreationDate = blog.CreationDate
+                CreationDate = blog.CreationDate,
+                Tags = Array.Empty<TagVm>()
             }).ToList()
         });
 
@@ -133,9 +137,11 @@ public class BlogControllerTests
         var expected = new OkObjectResult(new BlogListVm() {
             Blogs = blogs.Select(blog => new BlogVmForList()
             {
+                UserId = fixture.UserId,
                 Title = blog.Title,
                 Id = blog.Id,
-                CreationDate = blog.CreationDate
+                CreationDate = blog.CreationDate,
+                Tags = Array.Empty<TagVm>()
             }).OrderByDescending(blog => blog.Title).ToList()
         });
 
@@ -176,9 +182,11 @@ public class BlogControllerTests
         var expected = new OkObjectResult(new BlogListVm() {
             Blogs = blogs.Select(blog => new BlogVmForList()
             {
+                UserId = fixture.UserId,
                 Title = blog.Title,
                 Id = blog.Id,
-                CreationDate = blog.CreationDate
+                CreationDate = blog.CreationDate,
+                Tags = Array.Empty<TagVm>()
             }).ToList()
         });
 

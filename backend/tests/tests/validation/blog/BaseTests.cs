@@ -3,7 +3,8 @@ using BlogHub.Data.Blogs.Commands.Create;
 using BlogHub.Data.Blogs.Commands.Delete;
 using BlogHub.Data.Blogs.Commands.Update;
 using BlogHub.Data.Blogs.Queries.Get;
-using BlogHub.Data.Blogs.Queries.GetList;
+using BlogHub.Data.Blogs.Queries.GetList.All;
+using BlogHub.Data.Blogs.Queries.GetList.User;
 
 namespace BlogHub.Tests.Validation.Blogs;
 

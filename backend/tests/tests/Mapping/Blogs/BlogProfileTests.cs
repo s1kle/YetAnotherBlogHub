@@ -9,9 +9,11 @@ public class BlogProfileTests
     [Fact]
     public void BlogVmMapping_ShouldSuccess()
     {
-        var blog = BlogFactory.CreateBlog();
+        var userId = Guid.NewGuid();
+        var blog = BlogFactory.CreateBlog(userId: userId);
         var expected = new BlogVm()
         {
+            UserId = userId,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate,
@@ -30,9 +32,11 @@ public class BlogProfileTests
     [Fact]
     public void BlogVmForListMapping_ShouldSuccess()
     {
-        var blog = BlogFactory.CreateBlog();
-        var expected = new BlogVmForList()
+        var userId = Guid.NewGuid();
+        var blog = BlogFactory.CreateBlog(userId: userId);
+        var expected = new BlogVm()
         {
+            UserId = userId,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate

@@ -4,3 +4,6 @@ global using FluentAssertions;
 global using FluentValidation;
 global using AutoFixture;
 global using AutoMapper;
+global using BlogHub.Data.Exceptions;
+global using BlogHub.Data.Interfaces;
+global using BlogHub.Domain;

@@ -1,6 +1,5 @@
-using BlogHub.Data.Interfaces;
+using BlogHub.Data.Tags.Queries.Get;
 using BlogHub.Data.Tags.Queries.GetList;
-using BlogHub.Domain;
 
 namespace BlogHub.Tests.Requests.Tags;
 
@@ -22,7 +21,7 @@ public class GetBlogTagsTests
             .Select(link => temp.FirstOrDefault(tag => tag.Id.Equals(link.TagId)));
 
         var expected = tags
-            .Select(tag => new TagVmForList()
+            .Select(tag => new TagVm()
             {
                 Id = tag?.Id ?? throw new ArgumentNullException("Tag is null"),
                 Name = tag.Name
@@ -41,7 +40,7 @@ public class GetBlogTagsTests
             .ReturnsNextFromSequence(tags.ToArray());
         A.CallTo(() => linkRepository.GetAllByBlogIdAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(links);
-        A.CallTo(() => mapper.Map<TagVmForList>(A<Tag>._))
+        A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
         var handler = new GetBlogTagListQueryHandler(tagRepository, linkRepository, mapper);
@@ -66,7 +65,7 @@ public class GetBlogTagsTests
             })
             .MustHaveHappened(size, Times.Exactly);
 
-        A.CallTo(() => mapper.Map<TagVmForList>(A<Tag>._))
+        A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .WhenArgumentsMatch((object arg) =>
             {
                 var actual = (Tag?)arg;
@@ -75,7 +74,7 @@ public class GetBlogTagsTests
             })
             .MustHaveHappened(size, Times.Exactly);
 
-        var actual = result.Tags;
+        var actual = result;
 
         actual.Should().HaveCount(10);
         actual.Should().BeEquivalentTo(expected);

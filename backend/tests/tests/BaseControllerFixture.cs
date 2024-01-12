@@ -1,14 +1,7 @@
-using System.Linq.Expressions;
 using System.Security.Claims;
-using BlogHub.Api.Extensions;
 using BlogHub.Api.Services;
-using BlogHub.Domain;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace BlogHub.Tests;
 

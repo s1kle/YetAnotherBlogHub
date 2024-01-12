@@ -1,6 +1,5 @@
-using BlogHub.Data.Interfaces;
+using BlogHub.Data.Tags.Queries.Get;
 using BlogHub.Data.Tags.Queries.GetList;
-using BlogHub.Domain;
 
 namespace BlogHub.Tests.Requests.Tags;
 
@@ -13,7 +12,7 @@ public class GetUserTagsTests
 
         var tags = TagFactory.CreateTags(size, Guid.NewGuid());
 
-        var expected = tags.Select(tag => new TagVmForList()
+        var expected = tags.Select(tag => new TagVm()
         {
             Id = tag.Id,
             Name = tag.Name
@@ -30,7 +29,7 @@ public class GetUserTagsTests
         A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tags);
             
-        A.CallTo(() => mapper.Map<TagVmForList>(A<Tag>._))
+        A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
         var handler = new GetUserTagListQueryHandler(repository, mapper);
@@ -46,7 +45,7 @@ public class GetUserTagsTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => mapper.Map<TagVmForList>(A<Tag>._))
+        A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .WhenArgumentsMatch((object arg) =>
             {
                 var actual = (Tag?)arg;
@@ -55,7 +54,7 @@ public class GetUserTagsTests
             })
             .MustHaveHappened(size, Times.Exactly);
 
-        var actual = result.Tags;
+        var actual = result;
 
         actual.Should().HaveCount(10);
         actual.Should().BeEquivalentTo(expected);

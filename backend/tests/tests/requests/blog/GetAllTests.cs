@@ -1,6 +1,5 @@
 using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Interfaces;
-using BlogHub.Domain;
+using BlogHub.Data.Blogs.Queries.GetList.All;
 
 namespace BlogHub.Tests.Requests.Blogs;
 
@@ -15,6 +14,7 @@ public class GetAllTests
 
         var expected = blogs.Select(blog => new BlogVmForList()
         {
+            UserId = Guid.Empty,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
