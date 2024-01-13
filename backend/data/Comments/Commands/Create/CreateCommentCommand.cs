@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Comments.Commands.Create;
+namespace BlogHub.Data.Comments.Create;
 
 public sealed record CreateCommentCommand : IRequest<Guid>
 {

@@ -1,5 +1,9 @@
 using System.Security.Claims;
-using BlogHub.Api.Services;
+using BlogHub.Api.Services.Blogs;
+using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Comments;
+using BlogHub.Api.Services.Tags;
+using BlogHub.Api.Services.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +14,8 @@ public abstract class BaseControllerFixture
     public BlogDbContext BlogDbContext { get; init; }
     public TagDbContext TagDbContext { get; init; }
     public BlogTagDbContext BlogTagDbContext { get; init; }
+    public UserDbContext UserDbContext { get; init; }
+    public CommentDbContext CommentDbContext { get; init; }
     public Guid UserId => _userState
         ? _userId
         : _wrongUserId;
@@ -22,6 +28,8 @@ public abstract class BaseControllerFixture
         BlogDbContext = serviceProvider.GetRequiredService<BlogDbContext>();
         TagDbContext = serviceProvider.GetRequiredService<TagDbContext>();
         BlogTagDbContext = serviceProvider.GetRequiredService<BlogTagDbContext>();
+        UserDbContext = serviceProvider.GetRequiredService<UserDbContext>();
+        CommentDbContext = serviceProvider.GetRequiredService<CommentDbContext>();
 
         _userId = Guid.Parse("681e7e3e-0618-5a0c-a9d2-9cae1397baa4");
         _wrongUserId = Guid.Parse("af59d62a-ed51-5845-b953-d922356e24c2");
@@ -49,12 +57,16 @@ public abstract class BaseControllerFixture
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
             _ when typeof(T).Equals(typeof(BlogTagLink)) => BlogTagDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
+            _ when typeof(T).Equals(typeof(Comment)) => CommentDbContext
+                .AddRangeAsync(entities.Select(entity => (object)entity!)),
+            _ when typeof(T).Equals(typeof(User)) => UserDbContext
+                .AddRangeAsync(entities.Select(entity => (object)entity!)),
             _ => throw new InvalidOperationException()
         };
 
         await task;
 
-        await SaveChangesAsync(); 
+        await SaveChangesAsync();
     }
 
     private async Task SaveChangesAsync()
@@ -62,6 +74,8 @@ public abstract class BaseControllerFixture
         await BlogDbContext.SaveChangesAsync();
         await TagDbContext.SaveChangesAsync();
         await BlogTagDbContext.SaveChangesAsync();
+        await CommentDbContext.SaveChangesAsync();
+        await UserDbContext.SaveChangesAsync();
     }
 
     public abstract void ChangeUser();

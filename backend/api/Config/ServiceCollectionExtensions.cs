@@ -1,8 +1,11 @@
 using BlogHub.Api.Middlewares;
 using BlogHub.Api.Services;
+using BlogHub.Api.Services.Blogs;
+using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Comments;
+using BlogHub.Api.Services.Tags;
+using BlogHub.Api.Services.Users;
 using BlogHub.Data;
-using BlogHub.Data.Interfaces;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -25,18 +28,18 @@ public static class ServiceCollectionExtensions
     private const string RabbitMQUser = "RabbitMQ:User";
     private const string RabbitMQPassword = "RabbitMQ:Password";
     private const string RabbitMQExchange = "RabbitMQ:Exchange";
- 
+
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
-    {   
+    {
         services.AddSerilog(config => config
             .ReadFrom
             .Configuration(configuration));
         services
             .AddDataDependencies()
-        
+
             .AddHostedService(provider => new EventConsumerService(
-                configuration[RabbitMQHost]!, 
-                configuration[RabbitMQUser]!, 
+                configuration[RabbitMQHost]!,
+                configuration[RabbitMQUser]!,
                 configuration[RabbitMQPassword]!,
                 configuration[RabbitMQExchange]!,
                 provider))
@@ -59,7 +62,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IBlogTagRepository, BlogTagRepository>()
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<ICommentRepository, CommentRepository>()
-            
+
             .AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration.GetConnectionString(RedisString);
@@ -72,7 +75,7 @@ public static class ServiceCollectionExtensions
             .AddCors(options => options
                 .AddPolicy(ClientString, policy =>
                 {
-                    policy.WithOrigins(configuration.GetConnectionString(ClientString) 
+                    policy.WithOrigins(configuration.GetConnectionString(ClientString)
                         ?? throw new ArgumentNullException("No connection string for client provided"));
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
@@ -84,12 +87,12 @@ public static class ServiceCollectionExtensions
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new ()
+                    Flows = new()
                     {
-                        AuthorizationCode = new ()
+                        AuthorizationCode = new()
                         {
-                            AuthorizationUrl = new Uri("https://localhost:7010/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:7010/connect/token"),
+                            AuthorizationUrl = new Uri($"{configuration[Authority]}/connect/authorize"),
+                            TokenUrl = new Uri($"{configuration[Authority]}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
                                 {configuration[Audience]!, "Api"}
@@ -126,7 +129,7 @@ public static class ServiceCollectionExtensions
                 options.Authority = configuration[Authority];
                 options.Audience = configuration[Audience];
             });
-            
+
         return services;
     }
 }

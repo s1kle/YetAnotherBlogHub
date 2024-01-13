@@ -1,5 +1,5 @@
-using BlogHub.Data.Mappings;
-using BlogHub.Data.Tags.Queries.Get;
+using BlogHub.Data.Common.Mappings;
+using BlogHub.Data.Tags.Get.Helpers;
 
 namespace BlogHub.Tests.Mapping.Tags;
 
@@ -14,7 +14,7 @@ public class TagProfileTests
             Id = tag.Id,
             Name = tag.Name
         };
-        
+
         var mapper = new MapperConfiguration(config => config.AddProfile<TagMappingProfile>())
             .CreateMapper();
 

@@ -1,5 +1,3 @@
-using BlogHub.Data.Blogs.Commands.Update;
-
 namespace BlogHub.Tests.Validation.Blogs;
 
 public class UpdateTests
@@ -15,7 +13,7 @@ public class UpdateTests
             (c => c.Title, new string('*', 3)));
         var validators = ValidatorFactory.GetValidators<UpdateBlogCommand>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
             var context = new ValidationContext<UpdateBlogCommand>(request);
 

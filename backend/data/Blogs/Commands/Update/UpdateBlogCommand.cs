@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Commands.Update;
+namespace BlogHub.Data.Blogs.Update;
 
 public sealed record UpdateBlogCommand : IRequest<Guid>
 {

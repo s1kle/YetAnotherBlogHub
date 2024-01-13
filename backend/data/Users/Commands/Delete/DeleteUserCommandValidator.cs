@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Users.Commands.Delete;
+namespace BlogHub.Data.Users.Delete;
 
 internal sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 {

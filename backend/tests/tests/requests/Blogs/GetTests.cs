@@ -1,4 +1,4 @@
-using BlogHub.Data.Blogs.Queries.Get;
+using BlogHub.Data.Blogs.Get.Helpers;
 
 namespace BlogHub.Tests.Requests.Blogs;
 

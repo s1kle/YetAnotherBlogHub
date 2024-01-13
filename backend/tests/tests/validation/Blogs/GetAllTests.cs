@@ -1,5 +1,3 @@
-using BlogHub.Data.Blogs.Queries.GetList.All;
-
 namespace BlogHub.Tests.Validation.Blogs;
 
 public class GetAllTests
@@ -7,14 +5,14 @@ public class GetAllTests
     [Fact]
     public void InvalidQueries_ShouldFail()
     {
-        var requests = ValidatorFactory.CreateInvalidRequest<GetBlogListQuery>(
+        var requests = ValidatorFactory.CreateInvalidRequest<GetAllBlogsQuery>(
             (q => q.Page, -1),
             (q => q.Size, 0));
-        var validators = ValidatorFactory.GetValidators<GetBlogListQuery>();
+        var validators = ValidatorFactory.GetValidators<GetAllBlogsQuery>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
-            var context = new ValidationContext<GetBlogListQuery>(request);
+            var context = new ValidationContext<GetAllBlogsQuery>(request);
 
             validators
                 .Select(validator => validator.Validate(context))

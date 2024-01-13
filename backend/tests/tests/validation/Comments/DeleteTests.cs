@@ -1,5 +1,3 @@
-using BlogHub.Data.Comments.Commands.Delete;
-
 namespace BlogHub.Tests.Validation.Comments;
 
 public class DeleteTests
@@ -12,7 +10,7 @@ public class DeleteTests
             (c => c.Id, Guid.Empty));
         var validators = ValidatorFactory.GetValidators<DeleteCommentCommand>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
             var context = new ValidationContext<DeleteCommentCommand>(request);
 

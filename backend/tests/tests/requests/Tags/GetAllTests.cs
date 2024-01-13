@@ -1,5 +1,4 @@
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList.All;
+using BlogHub.Data.Tags.Get.Helpers;
 
 namespace BlogHub.Tests.Requests.Tags;
 
@@ -18,7 +17,7 @@ public class GetAllTests
             Name = tag.Name
         }).ToList();
 
-        var query = new GetTagListQuery();
+        var query = new GetAllTagsQuery();
 
         var repository = A.Fake<ITagRepository>();
         var mapper = A.Fake<IMapper>();
@@ -29,7 +28,7 @@ public class GetAllTests
         A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetTagListQueryHandler(repository, mapper);
+        var handler = new GetAllTagsQueryHandler(repository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

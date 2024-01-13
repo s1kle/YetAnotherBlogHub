@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Create;
+namespace BlogHub.Data.Tags.Create;
 
 public sealed record CreateTagCommand : IRequest<Guid>
 {

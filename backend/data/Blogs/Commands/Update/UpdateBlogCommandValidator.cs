@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Commands.Update;
+namespace BlogHub.Data.Blogs.Update;
 
 internal sealed class UpdateBlogCommandValidator : AbstractValidator<UpdateBlogCommand>
 {

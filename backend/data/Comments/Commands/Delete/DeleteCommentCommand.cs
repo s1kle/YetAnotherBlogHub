@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Comments.Commands.Delete;
+namespace BlogHub.Data.Comments.Delete;
 
 public sealed record DeleteCommentCommand : IRequest<Guid>
 {

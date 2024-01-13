@@ -1,5 +1,5 @@
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.ListSearch;
+using BlogHub.Data.Blogs.List.Helpers;
+using BlogHub.Data.Blogs.List.Helpers.Search;
 
 namespace BlogHub.Tests.Requests.Blogs;
 
@@ -10,24 +10,24 @@ public class ListSearchTests
     {
         var size = 10;
 
-        var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogVmForList()
+        var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogListItemVm()
         {
             UserId = Guid.Empty,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
         });
-        
+
         var expected = blogs.Where(blog => blog.Title.Contains("title", StringComparison.OrdinalIgnoreCase)).ToList();
 
-        var query = new ListSearchQuery()
+        var query = new BlogListSearchQuery()
         {
-            Blogs = new () { Blogs = blogs.ToList() },
+            Blogs = new() { Blogs = blogs.ToList() },
             Query = "title",
-            Properties = new [] { "title" }
+            Properties = new[] { "title" }
         };
 
-        var handler = new ListSearchQueryHandler();
+        var handler = new BlogListSearchQueryHandler();
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -42,24 +42,24 @@ public class ListSearchTests
     {
         var size = 10;
 
-        var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogVmForList()
+        var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogListItemVm()
         {
             UserId = Guid.Empty,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
         });
-        
+
         var expected = blogs.ToList();
 
-        var query = new ListSearchQuery()
+        var query = new BlogListSearchQuery()
         {
-            Blogs = new () { Blogs = blogs.ToList() },
+            Blogs = new() { Blogs = blogs.ToList() },
             Query = "    ",
-            Properties = new [] { "title" }
+            Properties = new[] { "title" }
         };
 
-        var handler = new ListSearchQueryHandler();
+        var handler = new BlogListSearchQueryHandler();
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -74,24 +74,24 @@ public class ListSearchTests
     {
         var size = 10;
 
-        var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogVmForList()
+        var blogs = BlogFactory.CreateBlogs(size).Select(blog => new BlogListItemVm()
         {
             UserId = Guid.Empty,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
         });
-        
+
         var expected = blogs.ToList();
 
-        var query = new ListSearchQuery()
+        var query = new BlogListSearchQuery()
         {
-            Blogs = new () { Blogs = blogs.ToList() },
+            Blogs = new() { Blogs = blogs.ToList() },
             Query = "title",
             Properties = Array.Empty<string>()
         };
 
-        var handler = new ListSearchQueryHandler();
+        var handler = new BlogListSearchQueryHandler();
 
         var result = await handler.Handle(query, CancellationToken.None);
 

@@ -9,7 +9,7 @@ public class ValidatorFactory
         var validators = new List<IValidator>();
 
         typeof(T).Assembly.DefinedTypes
-            .Where(x => 
+            .Where(x =>
                 x.BaseType is not null &&
                 x.BaseType.Equals(typeof(AbstractValidator<>).MakeGenericType(typeof(T))))
             .ToList()

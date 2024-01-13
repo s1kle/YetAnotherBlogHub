@@ -1,7 +1,4 @@
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.GetList.User;
-using BlogHub.Data.Comments.Queries.GetList;
-using BlogHub.Data.Comments.Queries.GetList.Blog;
+using BlogHub.Data.Comments.List.Helpers;
 
 namespace BlogHub.Tests.Requests.Comments;
 
@@ -24,7 +21,7 @@ public class GetBlogCommentsTests
             CreationDate = blog.CreationDate
         }).ToList();
 
-        var query = new GetBlogCommentListQuery()
+        var query = new GetBlogCommentsQuery()
         {
             BlogId = blog.Id
         };
@@ -34,11 +31,11 @@ public class GetBlogCommentsTests
 
         A.CallTo(() => repository.GetAllByBlogIdAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(comments);
-            
+
         A.CallTo(() => mapper.Map<CommentVm>(A<Comment>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetBlogCommentListQueryHandler(repository, mapper);
+        var handler = new GetBlogCommentsQueryHandler(repository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

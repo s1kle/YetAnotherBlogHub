@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Comments.Commands.Create;
+namespace BlogHub.Data.Comments.Create;
 
 internal sealed class CreateCommentCommandValidator : AbstractValidator<CreateCommentCommand>
 {
@@ -6,7 +6,7 @@ internal sealed class CreateCommentCommandValidator : AbstractValidator<CreateCo
     {
         RuleFor(command => command.BlogId)
             .NotEmpty();
-            
+
         RuleFor(command => command.UserId)
             .NotEmpty();
 

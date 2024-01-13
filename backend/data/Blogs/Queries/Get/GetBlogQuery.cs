@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Queries.Get;
+namespace BlogHub.Data.Blogs.Get;
 
 public sealed record GetBlogQuery : IRequest<BlogVm>
 {

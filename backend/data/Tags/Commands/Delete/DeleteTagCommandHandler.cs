@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Delete;
+namespace BlogHub.Data.Tags.Delete;
 
 internal sealed class DeleteTagCommandHandler : IRequestHandler<DeleteTagCommand, Guid>
 {
@@ -15,7 +15,7 @@ internal sealed class DeleteTagCommandHandler : IRequestHandler<DeleteTagCommand
         if (tag is null || tag.UserId != request.UserId)
             throw new NotFoundException(nameof(tag));
 
-        var blogTags = await _blogTagRepository.GetAllAsync(cancellationToken) ?? new ();
+        var blogTags = await _blogTagRepository.GetAllAsync(cancellationToken) ?? new();
 
         foreach (var blogTag in blogTags
             .Where(blogTag => blogTag.TagId.Equals(tag.Id)))
