@@ -5,18 +5,18 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace BlogHub.Api.Services.Blogs;
 
-public class BlogRepository : Interfaces.Blogs.Repository
+public class BlogRepository : IBlogRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly Interfaces.Blogs.DbContext _dbContext;
+    private readonly IBlogDbContext _dbContext;
 
-    public BlogRepository(IDistributedCache cache, Interfaces.Blogs.DbContext dbContext) =>
+    public BlogRepository(IDistributedCache cache, IBlogDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<Blog>?> GetAllAsync(int page, int size, CancellationToken cancellationToken)
     {
         var key = $"Name:Blogs;Page:{page}";
-        
+
         var blogsQuery = _dbContext.Blogs.OrderBy(blog => blog.CreationDate);
 
         await CacheBlogsPageAsync(page + 1, size, null, blogsQuery, cancellationToken);
@@ -25,14 +25,14 @@ public class BlogRepository : Interfaces.Blogs.Repository
         return await _cache.GetOrCreateItemAsync(key, async () => await blogsQuery
             .Skip(page * size)
             .Take(size)
-            .ToListAsync(), 
+            .ToListAsync(),
         cancellationToken);
     }
 
     public async Task<List<Blog>?> GetAllByUserIdAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
     {
         var key = $"Name:Blogs;Page:{page};User:{userId}";
-        
+
         var blogsQuery = _dbContext.Blogs
             .OrderBy(blog => blog.CreationDate)
             .Where(blog => blog.UserId.Equals(userId));
@@ -43,7 +43,7 @@ public class BlogRepository : Interfaces.Blogs.Repository
         return await _cache.GetOrCreateItemAsync(key, async () => await blogsQuery
             .Skip(page * size)
             .Take(size)
-            .ToListAsync(), 
+            .ToListAsync(),
         cancellationToken);
     }
 
@@ -52,7 +52,7 @@ public class BlogRepository : Interfaces.Blogs.Repository
         var key = $"Name:Blog;Entity:{blogId}";
 
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Blogs
-            .FirstOrDefaultAsync(blog => blog.Id.Equals(blogId), cancellationToken), 
+            .FirstOrDefaultAsync(blog => blog.Id.Equals(blogId), cancellationToken),
         cancellationToken);
     }
 

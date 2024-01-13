@@ -1,6 +1,3 @@
-using BlogHub.Data.Blogs.Commands.Create;
-using BlogHub.Data.Comments.Commands.Create;
-
 namespace BlogHub.Tests.Requests.Comments;
 
 public class CreateTests
@@ -20,11 +17,14 @@ public class CreateTests
         };
 
         var repository = A.Fake<ICommentRepository>();
-    
+        var blogRepository = A.Fake<IBlogRepository>();
+
         A.CallTo(() => repository.CreateAsync(A<Comment>._, A<CancellationToken>._))
             .Returns(expected.Id);
+        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(blog);
 
-        var handler = new CreateCommentCommandHandler(repository);
+        var handler = new CreateCommentCommandHandler(repository, blogRepository);
 
         var result = await handler.Handle(command, CancellationToken.None);
 

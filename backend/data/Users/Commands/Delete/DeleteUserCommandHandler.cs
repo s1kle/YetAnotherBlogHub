@@ -2,9 +2,9 @@ namespace BlogHub.Data.Users.Delete;
 
 internal sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Guid>
 {
-    private readonly UserRepository _repository;
+    private readonly IUserRepository _repository;
 
-    public DeleteUserCommandHandler(UserRepository repository) =>
+    public DeleteUserCommandHandler(IUserRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(DeleteUserCommand request, CancellationToken cancellationToken)

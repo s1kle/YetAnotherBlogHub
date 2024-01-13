@@ -11,7 +11,7 @@ internal sealed class BlogListSearchQueryHandler : IRequestHandler<BlogListSearc
     {
         var blogs = await Task.FromResult(request.Blogs.Blogs);
 
-        var filter = request.Filter;
+        var filter = request.Query;
         var properties = request.Properties;
 
         if (string.IsNullOrWhiteSpace(filter)) return request.Blogs;

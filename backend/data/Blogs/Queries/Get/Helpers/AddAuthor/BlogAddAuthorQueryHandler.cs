@@ -2,9 +2,9 @@ namespace BlogHub.Data.Blogs.Get.Helpers.AddAuthor;
 
 internal sealed class BlogAddAuthorQueryHandler : IRequestHandler<BlogAddAuthorQuery, BlogVm>
 {
-    private readonly UserRepository _repository;
+    private readonly IUserRepository _repository;
 
-    public BlogAddAuthorQueryHandler(UserRepository repository) =>
+    public BlogAddAuthorQueryHandler(IUserRepository repository) =>
         _repository = repository;
 
     public async Task<BlogVm> Handle(BlogAddAuthorQuery request, CancellationToken cancellationToken)

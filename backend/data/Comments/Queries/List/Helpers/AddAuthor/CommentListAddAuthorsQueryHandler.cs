@@ -2,9 +2,9 @@ namespace BlogHub.Data.Comments.List.Helpers.AddAuthor;
 
 internal sealed class CommentListAddAuthorsQueryHandler : IRequestHandler<CommentListAddAuthorsQuery, IReadOnlyList<CommentVm>>
 {
-    private readonly UserRepository _repository;
+    private readonly IUserRepository _repository;
 
-    public CommentListAddAuthorsQueryHandler(UserRepository repository) =>
+    public CommentListAddAuthorsQueryHandler(IUserRepository repository) =>
         _repository = repository;
 
     public async Task<IReadOnlyList<CommentVm>> Handle(CommentListAddAuthorsQuery request, CancellationToken cancellationToken)

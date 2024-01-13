@@ -16,14 +16,14 @@ public sealed class BlogListSearchStep : IPipelineStep<BlogListVm>
 
     public async Task<BlogListVm> ExecuteAsync(BlogListVm context, Func<BlogListVm, Task<BlogListVm>> next)
     {
-        if (_dto is null || _dto.SearchQuery is null)
+        if (_dto is null || _dto.Query is null)
             return await next(context);
 
         var query = new BlogListSearchQuery()
         {
             Blogs = context,
-            Filter = _dto.SearchQuery,
-            Properties = _dto.SearchProperties?.Split(' ') ?? Array.Empty<string>()
+            Query = _dto.Query,
+            Properties = _dto.Properties?.Split(' ') ?? Array.Empty<string>()
         };
 
         context = await _mediator.Send(query);

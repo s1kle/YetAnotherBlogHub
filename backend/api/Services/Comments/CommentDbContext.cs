@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogHub.Api.Services.Comments;
 
-public class CommentDbContext : DbContext, Interfaces.Comments.DbContext
+public class CommentDbContext : DbContext, ICommentDbContext
 {
     public DbSet<Comment> Comments { get; init;}
 

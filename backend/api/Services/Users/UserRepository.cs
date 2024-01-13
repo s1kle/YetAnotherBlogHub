@@ -5,12 +5,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace BlogHub.Api.Services.Users;
 
-public class UserRepository : Interfaces.Users.Repository
+public class UserRepository : IUserRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly Interfaces.Users.DbContext _dbContext;
+    private readonly IUserDbContext _dbContext;
 
-    public UserRepository(IDistributedCache cache, Interfaces.Users.DbContext dbContext) =>
+    public UserRepository(IDistributedCache cache, IUserDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<User?> GetAsync(Guid id, CancellationToken cancellationToken)

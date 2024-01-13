@@ -2,11 +2,11 @@ namespace BlogHub.Data.Tags.List.Blog;
 
 internal sealed class GetBlogTagsQueryHandler : IRequestHandler<GetBlogTagsQuery, IReadOnlyList<TagVm>>
 {
-    private readonly TagRepository _tagRepository;
-    private readonly BlogTagRepository _linkRepository;
+    private readonly ITagRepository _tagRepository;
+    private readonly IBlogTagRepository _linkRepository;
     private readonly IMapper _mapper;
 
-    public GetBlogTagsQueryHandler(TagRepository tagRepository, BlogTagRepository linkRepository, IMapper mapper) =>
+    public GetBlogTagsQueryHandler(ITagRepository tagRepository, IBlogTagRepository linkRepository, IMapper mapper) =>
         (_tagRepository, _linkRepository, _mapper) = (tagRepository, linkRepository, mapper);
 
     public async Task<IReadOnlyList<TagVm>> Handle(GetBlogTagsQuery request, CancellationToken cancellationToken)

@@ -2,10 +2,10 @@ namespace BlogHub.Data.Blogs.List.User;
 
 internal sealed class GetUserBlogsQueryHandler : IRequestHandler<GetUserBlogsQuery, BlogListVm>
 {
-    private readonly BlogRepository _repository;
+    private readonly IBlogRepository _repository;
     private readonly IMapper _mapper;
 
-    public GetUserBlogsQueryHandler(BlogRepository repository, IMapper mapper) =>
+    public GetUserBlogsQueryHandler(IBlogRepository repository, IMapper mapper) =>
         (_repository, _mapper) = (repository, mapper);
 
     public async Task<BlogListVm> Handle(GetUserBlogsQuery request, CancellationToken cancellationToken)

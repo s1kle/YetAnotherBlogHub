@@ -2,9 +2,9 @@ namespace BlogHub.Data.Comments.Delete;
 
 internal sealed class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand, Guid>
 {
-    private readonly CommentRepository _repository;
+    private readonly ICommentRepository _repository;
 
-    public DeleteCommentCommandHandler(CommentRepository repository) =>
+    public DeleteCommentCommandHandler(ICommentRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)

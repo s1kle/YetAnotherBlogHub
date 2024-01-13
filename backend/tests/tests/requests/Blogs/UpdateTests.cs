@@ -1,5 +1,3 @@
-using BlogHub.Data.Blogs.Commands.Update;
-
 namespace BlogHub.Tests.Requests.Blogs;
 
 public class UpdateTests

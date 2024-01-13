@@ -1,5 +1,4 @@
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.GetList.User;
+using BlogHub.Data.Blogs.List.Helpers;
 
 namespace BlogHub.Tests.Requests.Blogs;
 
@@ -12,7 +11,7 @@ public class GetUserBlogsTests
 
         var blogs = BlogFactory.CreateBlogs(size, Guid.NewGuid());
 
-        var expected = blogs.Select(blog => new BlogVmForList()
+        var expected = blogs.Select(blog => new BlogListItemVm()
         {
             UserId = Guid.Empty,
             Id = blog.Id,
@@ -20,7 +19,7 @@ public class GetUserBlogsTests
             CreationDate = blog.CreationDate
         }).ToList();
 
-        var query = new GetUserBlogListQuery()
+        var query = new GetUserBlogsQuery()
         {
             UserId = blogs[0].UserId,
             Page = 0,
@@ -32,11 +31,11 @@ public class GetUserBlogsTests
 
         A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
             .Returns(blogs);
-            
-        A.CallTo(() => mapper.Map<BlogVmForList>(A<Blog>._))
+
+        A.CallTo(() => mapper.Map<BlogListItemVm>(A<Blog>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetUserBlogListQueryHandler(repository, mapper);
+        var handler = new GetUserBlogsQueryHandler(repository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -51,7 +50,7 @@ public class GetUserBlogsTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => mapper.Map<BlogVmForList>(A<Blog>._))
+        A.CallTo(() => mapper.Map<BlogListItemVm>(A<Blog>._))
             .WhenArgumentsMatch((object arg) =>
             {
                 var actual = (Blog?)arg;

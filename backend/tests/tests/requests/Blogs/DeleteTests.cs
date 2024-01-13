@@ -1,5 +1,3 @@
-using BlogHub.Data.Blogs.Commands.Delete;
-
 namespace BlogHub.Tests.Requests.Blogs;
 
 public class DeleteTests
@@ -16,7 +14,7 @@ public class DeleteTests
         };
 
         var repository = A.Fake<IBlogRepository>();
-        
+
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         A.CallTo(() => repository.RemoveAsync(A<Blog>._, A<CancellationToken>._))
@@ -56,7 +54,7 @@ public class DeleteTests
         };
 
         var repository = A.Fake<IBlogRepository>();
-        
+
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(blog);
 
@@ -86,7 +84,7 @@ public class DeleteTests
         };
 
         var repository = A.Fake<IBlogRepository>();
-        
+
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(blog);
 

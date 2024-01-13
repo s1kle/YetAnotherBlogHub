@@ -1,5 +1,3 @@
-using BlogHub.Data.Tags.Commands.Link;
-
 namespace BlogHub.Tests.Validation.Tags;
 
 public class LinkTests

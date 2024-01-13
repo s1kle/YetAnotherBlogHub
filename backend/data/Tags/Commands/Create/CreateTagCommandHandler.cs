@@ -2,9 +2,9 @@ namespace BlogHub.Data.Tags.Create;
 
 internal sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Guid>
 {
-    private readonly TagRepository _repository;
+    private readonly ITagRepository _repository;
 
-    public CreateTagCommandHandler(TagRepository repository) =>
+    public CreateTagCommandHandler(ITagRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(CreateTagCommand request, CancellationToken cancellationToken)

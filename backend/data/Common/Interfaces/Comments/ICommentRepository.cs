@@ -1,6 +1,6 @@
 namespace BlogHub.Data.Common.Interfaces.Comments;
 
-public interface CommentRepository
+public interface ICommentRepository
 {
     Task<List<Comment>?> GetAllByBlogIdAsync(Guid blogId, CancellationToken cancellationToken);
     Task<Comment?> GetAsync(Guid id, CancellationToken cancellationToken);

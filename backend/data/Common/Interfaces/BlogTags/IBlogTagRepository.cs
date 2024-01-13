@@ -1,6 +1,6 @@
 namespace BlogHub.Data.Common.Interfaces.BlogTags;
 
-public interface BlogTagRepository
+public interface IBlogTagRepository
 {
     Task<List<BlogTagLink>?> GetAllByBlogIdAsync(Guid blogId, CancellationToken cancellationToken);
     Task<List<BlogTagLink>?> GetAllAsync(CancellationToken cancellationToken);

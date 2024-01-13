@@ -1,5 +1,3 @@
-using BlogHub.Data.Blogs.Commands.Create;
-
 namespace BlogHub.Tests.Requests.Blogs;
 
 public class CreateTests
@@ -16,7 +14,7 @@ public class CreateTests
         };
 
         var repository = A.Fake<IBlogRepository>();
-    
+
         A.CallTo(() => repository.CreateAsync(A<Blog>._, A<CancellationToken>._))
             .Returns(expected.Id);
 

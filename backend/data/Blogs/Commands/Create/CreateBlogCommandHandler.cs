@@ -2,9 +2,9 @@ namespace BlogHub.Data.Blogs.Create;
 
 internal sealed class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
 {
-    private readonly BlogRepository _repository;
+    private readonly IBlogRepository _repository;
 
-    public CreateBlogCommandHandler(BlogRepository repository) =>
+    public CreateBlogCommandHandler(IBlogRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(CreateBlogCommand request, CancellationToken cancellationToken)

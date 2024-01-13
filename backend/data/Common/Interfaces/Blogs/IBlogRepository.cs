@@ -1,6 +1,6 @@
 namespace BlogHub.Data.Common.Interfaces.Blogs;
 
-public interface BlogRepository
+public interface IBlogRepository
 {
     Task<List<Blog>?> GetAllByUserIdAsync(Guid userId, int page, int size, CancellationToken cancellationToken);
     Task<List<Blog>?> GetAllAsync(int page, int size, CancellationToken cancellationToken);

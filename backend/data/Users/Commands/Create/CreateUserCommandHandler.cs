@@ -2,9 +2,9 @@ namespace BlogHub.Data.Users.Create;
 
 internal sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 {
-    private readonly UserRepository _repository;
+    private readonly IUserRepository _repository;
 
-    public CreateUserCommandHandler(UserRepository repository) =>
+    public CreateUserCommandHandler(IUserRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)

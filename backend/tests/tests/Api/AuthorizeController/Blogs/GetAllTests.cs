@@ -1,14 +1,11 @@
 using BlogHub.Api.Controllers;
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.ListSearch;
-using BlogHub.Data.Blogs.Queries.ListSort;
-using BlogHub.Data.Comments.Queries.GetList;
-using BlogHub.Data.Tags.Queries.Get;
+using BlogHub.Data.Blogs.List.Helpers;
+using BlogHub.Data.Tags.Get.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlogHub.Tests.Api.AuthorizeController;
+namespace BlogHub.Tests.Api.AuthorizeController.Blogs;
 
-public class BlogControllerTests
+public class GetAllTests
 {
     [Fact]
     public async void GetAll_Empty_ShouldSuccess()
@@ -16,17 +13,17 @@ public class BlogControllerTests
         var fixture = ControllerFactory.CreateFixture<AuthorizeBlogController>();
         fixture.EnsureCreated();
 
-        var expected = new OkObjectResult(new BlogListVm() {
-            Blogs = Array.Empty<BlogVmForList>()
+        var expected = new OkObjectResult(new BlogListVm()
+        {
+            Blogs = Array.Empty<BlogListItemVm>()
         });
 
-        var query = new GetListDto()
+        var dto = new BlogListDto()
         {
-            Page = 0,
-            Size = 10
+            List = new() { Page = 0, Size = 10 }
         };
 
-        var temp = await fixture.Controller.GetAll(query);
+        var temp = await fixture.Controller.GetAll(dto);
 
         var result = temp.Result as OkObjectResult;
 
@@ -45,8 +42,9 @@ public class BlogControllerTests
 
         var blogs = BlogFactory.CreateBlogs(size, fixture.UserId);
 
-        var expected = new OkObjectResult(new BlogListVm() {
-            Blogs = blogs.Select(blog => new BlogVmForList()
+        var expected = new OkObjectResult(new BlogListVm()
+        {
+            Blogs = blogs.Select(blog => new BlogListItemVm()
             {
                 UserId = fixture.UserId,
                 Title = blog.Title,
@@ -58,13 +56,12 @@ public class BlogControllerTests
 
         await fixture.AddRangeAsync(blogs);
 
-        var query = new GetListDto()
+        var dto = new BlogListDto()
         {
-            Page = 0,
-            Size = 10
+            List = new() { Page = 0, Size = 10 }
         };
 
-        var temp = await fixture.Controller.GetAll(query);
+        var temp = await fixture.Controller.GetAll(dto);
 
         var result = temp.Result as OkObjectResult;
 
@@ -87,8 +84,9 @@ public class BlogControllerTests
         var searchedBlogs = BlogFactory.CreateBlogs(size, fixture.UserId, searchQuery);
         var blogs = BlogFactory.CreateBlogs(size, fixture.UserId);
 
-        var expected = new OkObjectResult(new BlogListVm() {
-            Blogs = searchedBlogs.Select(blog => new BlogVmForList()
+        var expected = new OkObjectResult(new BlogListVm()
+        {
+            Blogs = searchedBlogs.Select(blog => new BlogListItemVm()
             {
                 UserId = fixture.UserId,
                 Title = blog.Title,
@@ -101,19 +99,17 @@ public class BlogControllerTests
         await fixture.AddRangeAsync(blogs);
         await fixture.AddRangeAsync(searchedBlogs);
 
-        var queryDto = new GetListDto()
+        var dto = new BlogListDto()
         {
-            Page = 0,
-            Size = 10
+            List = new() { Page = 0, Size = 10 },
+            Search = new()
+            {
+                Query = searchQuery,
+                Properties = searchProperties
+            }
         };
 
-        var searchDto = new ListSearchDto()
-        {
-            SearchQuery = searchQuery,
-            SearchProperties = searchProperties
-        };
-
-        var temp = await fixture.Controller.GetAll(queryDto, searchDto: searchDto);
+        var temp = await fixture.Controller.GetAll(dto);
 
         var result = temp.Result as OkObjectResult;
 
@@ -135,8 +131,9 @@ public class BlogControllerTests
 
         var blogs = BlogFactory.CreateBlogs(size, fixture.UserId);
 
-        var expected = new OkObjectResult(new BlogListVm() {
-            Blogs = blogs.Select(blog => new BlogVmForList()
+        var expected = new OkObjectResult(new BlogListVm()
+        {
+            Blogs = blogs.Select(blog => new BlogListItemVm()
             {
                 UserId = fixture.UserId,
                 Title = blog.Title,
@@ -148,19 +145,17 @@ public class BlogControllerTests
 
         await fixture.AddRangeAsync(blogs);
 
-        var queryDto = new GetListDto()
+        var dto = new BlogListDto()
         {
-            Page = 0,
-            Size = 10
+            List = new() { Page = 0, Size = 10 },
+            Sort = new()
+            {
+                Property = sortProperty,
+                Direction = sortDirection
+            }
         };
 
-        var sortDto = new ListSortDto()
-        {
-            SortProperty = sortProperty,
-            SortDirection = sortDirection
-        };
-
-        var temp = await fixture.Controller.GetAll(queryDto, sortDto: sortDto);
+        var temp = await fixture.Controller.GetAll(dto);
 
         var result = temp.Result as OkObjectResult;
 
@@ -180,8 +175,9 @@ public class BlogControllerTests
         var blogs = BlogFactory.CreateBlogs(size, fixture.UserId);
         var extraBlogs = BlogFactory.CreateBlogs(size, Guid.NewGuid());
 
-        var expected = new OkObjectResult(new BlogListVm() {
-            Blogs = blogs.Select(blog => new BlogVmForList()
+        var expected = new OkObjectResult(new BlogListVm()
+        {
+            Blogs = blogs.Select(blog => new BlogListItemVm()
             {
                 UserId = fixture.UserId,
                 Title = blog.Title,
@@ -194,13 +190,12 @@ public class BlogControllerTests
         await fixture.AddRangeAsync(blogs);
         await fixture.AddRangeAsync(extraBlogs);
 
-        var query = new GetListDto()
+        var dto = new BlogListDto()
         {
-            Page = 0,
-            Size = 10
+            List = new() { Page = 0, Size = 10 }
         };
 
-        var temp = await fixture.Controller.GetAll(query);
+        var temp = await fixture.Controller.GetAll(dto);
 
         var result = temp.Result as OkObjectResult;
 
@@ -215,26 +210,24 @@ public class BlogControllerTests
         var fixture = ControllerFactory.CreateFixture<AuthorizeBlogController>();
         fixture.EnsureCreated();
 
-        var query = new GetListDto()
+        var dto = new BlogListDto()
         {
-            Page = 0,
-            Size = 0
+            List = new() { Page = 0, Size = 0 }
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await fixture.Controller.GetAll(query);
+            var result = await fixture.Controller.GetAll(dto);
         });
 
-        query = new GetListDto()
+        dto = new BlogListDto()
         {
-            Page = -1,
-            Size = 10
+            List = new() { Page = -1, Size = 10 }
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () =>
         {
-            var result = await fixture.Controller.GetAll(query);
+            var result = await fixture.Controller.GetAll(dto);
         });
 
         fixture.EnsureDeleted();

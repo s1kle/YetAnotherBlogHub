@@ -5,32 +5,32 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace BlogHub.Api.Services;
 
-public class TagRepository : Interfaces.Tags.Repository
+public class TagRepository : ITagRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly Interfaces.Tags.DbContext _dbContext;
+    private readonly ITagDbContext _dbContext;
 
-    public TagRepository(IDistributedCache cache, Interfaces.Tags.DbContext dbContext) =>
+    public TagRepository(IDistributedCache cache, ITagDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<Tag>?> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
         var key = $"Name:Tags;User:{userId}";
-    
+
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
             .Tags
             .Where(tag => tag.UserId.Equals(userId))
-            .ToListAsync(), 
+            .ToListAsync(),
         cancellationToken);
     }
 
     public async Task<List<Tag>?> GetAllAsync(CancellationToken cancellationToken)
     {
         var key = "Name:Tags";
-    
+
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
             .Tags
-            .ToListAsync(), 
+            .ToListAsync(),
         cancellationToken);
     }
 
@@ -40,7 +40,7 @@ public class TagRepository : Interfaces.Tags.Repository
 
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
             .Tags
-            .FirstOrDefaultAsync(tag => tag.Id.Equals(id), cancellationToken), 
+            .FirstOrDefaultAsync(tag => tag.Id.Equals(id), cancellationToken),
         cancellationToken);
     }
 

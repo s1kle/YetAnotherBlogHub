@@ -16,14 +16,14 @@ public sealed class BlogListSortStep : IPipelineStep<BlogListVm>
 
     public async Task<BlogListVm> ExecuteAsync(BlogListVm context, Func<BlogListVm, Task<BlogListVm>> next)
     {
-        if (_dto is null || _dto.SortProperty is null)
+        if (_dto is null || _dto.Property is null)
             return await next(context);
 
         var query = new BlogListSortQuery()
         {
             Blogs = context,
-            Property = _dto.SortProperty,
-            Descending = _dto.SortDirection switch
+            Property = _dto.Property,
+            Descending = _dto.Direction switch
             {
                 "desc" => true,
                 _ => false

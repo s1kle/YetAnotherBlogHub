@@ -1,5 +1,3 @@
-using BlogHub.Data.Comments.Commands.Create;
-
 namespace BlogHub.Tests.Validation.Comments;
 
 public class CreateTests
@@ -14,7 +12,7 @@ public class CreateTests
             (c => c.Content, new string(' ', 10)));
         var validators = ValidatorFactory.GetValidators<CreateCommentCommand>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
             var context = new ValidationContext<CreateCommentCommand>(request);
 

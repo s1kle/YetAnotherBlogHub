@@ -2,9 +2,9 @@ namespace BlogHub.Data.Blogs.List.Helpers.AddAuthors;
 
 internal sealed class BlogListAddAuthorsQueryHandler : IRequestHandler<BlogListAddAuthorsQuery, BlogListVm>
 {
-    private readonly UserRepository _repository;
+    private readonly IUserRepository _repository;
 
-    public BlogListAddAuthorsQueryHandler(UserRepository repository) =>
+    public BlogListAddAuthorsQueryHandler(IUserRepository repository) =>
         _repository = repository;
 
     public async Task<BlogListVm> Handle(BlogListAddAuthorsQuery request, CancellationToken cancellationToken)

@@ -2,10 +2,10 @@ namespace BlogHub.Data.Tags.Delete;
 
 internal sealed class DeleteTagCommandHandler : IRequestHandler<DeleteTagCommand, Guid>
 {
-    private readonly TagRepository _tagRepository;
-    private readonly BlogTagRepository _blogTagRepository;
+    private readonly ITagRepository _tagRepository;
+    private readonly IBlogTagRepository _blogTagRepository;
 
-    public DeleteTagCommandHandler(TagRepository repository, BlogTagRepository blogTagRepository) =>
+    public DeleteTagCommandHandler(ITagRepository repository, IBlogTagRepository blogTagRepository) =>
         (_tagRepository, _blogTagRepository) = (repository, blogTagRepository);
 
     public async Task<Guid> Handle(DeleteTagCommand request, CancellationToken cancellationToken)

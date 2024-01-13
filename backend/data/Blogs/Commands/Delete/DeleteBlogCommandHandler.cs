@@ -2,9 +2,9 @@ namespace BlogHub.Data.Blogs.Delete;
 
 internal sealed class DeleteBlogCommandHandler : IRequestHandler<DeleteBlogCommand, Guid>
 {
-    private readonly BlogRepository _repository;
+    private readonly IBlogRepository _repository;
 
-    public DeleteBlogCommandHandler(BlogRepository repository) =>
+    public DeleteBlogCommandHandler(IBlogRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(DeleteBlogCommand request, CancellationToken cancellationToken)

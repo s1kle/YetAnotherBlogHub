@@ -2,9 +2,9 @@ namespace BlogHub.Data.Blogs.Update;
 
 internal sealed class UpdateBlogCommandHandler : IRequestHandler<UpdateBlogCommand, Guid>
 {
-    private readonly BlogRepository _repository;
+    private readonly IBlogRepository _repository;
 
-    public UpdateBlogCommandHandler(BlogRepository repository) =>
+    public UpdateBlogCommandHandler(IBlogRepository repository) =>
         _repository = repository;
 
     public async Task<Guid> Handle(UpdateBlogCommand request, CancellationToken cancellationToken)

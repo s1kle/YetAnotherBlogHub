@@ -1,5 +1,3 @@
-using BlogHub.Data.Tags.Commands.Create;
-
 namespace BlogHub.Tests.Validation.Tags;
 
 public class CreateTests

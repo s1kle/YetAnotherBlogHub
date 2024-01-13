@@ -3,10 +3,10 @@ namespace BlogHub.Data.Comments.List.Blog;
 
 internal sealed class GetBlogCommentsQueryHandler : IRequestHandler<GetBlogCommentsQuery, IReadOnlyList<CommentVm>>
 {
-    private readonly CommentRepository _repository;
+    private readonly ICommentRepository _repository;
     private readonly IMapper _mapper;
 
-    public GetBlogCommentsQueryHandler(CommentRepository repository, IMapper mapper) =>
+    public GetBlogCommentsQueryHandler(ICommentRepository repository, IMapper mapper) =>
         (_repository, _mapper) = (repository, mapper);
 
     public async Task<IReadOnlyList<CommentVm>> Handle(GetBlogCommentsQuery request, CancellationToken cancellationToken)

@@ -1,5 +1,4 @@
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList.Blog;
+using BlogHub.Data.Tags.Get.Helpers;
 
 namespace BlogHub.Tests.Requests.Tags;
 
@@ -27,7 +26,7 @@ public class GetBlogTagsTests
                 Name = tag.Name
             }).ToList();
 
-        var query = new GetBlogTagListQuery()
+        var query = new GetBlogTagsQuery()
         {
             BlogId = blog.Id
         };
@@ -43,7 +42,7 @@ public class GetBlogTagsTests
         A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetBlogTagListQueryHandler(tagRepository, linkRepository, mapper);
+        var handler = new GetBlogTagsQueryHandler(tagRepository, linkRepository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

@@ -1,6 +1,6 @@
-using BlogHub.Data.Blogs.Queries.Get;
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Mappings;
+using BlogHub.Data.Blogs.Get.Helpers;
+using BlogHub.Data.Blogs.List.Helpers;
+using BlogHub.Data.Common.Mappings;
 
 namespace BlogHub.Tests.Mapping.Blogs;
 
@@ -20,7 +20,7 @@ public class BlogProfileTests
             EditDate = blog.EditDate,
             Details = blog.Details,
         };
-        
+
         var mapper = new MapperConfiguration(config => config.AddProfile<BlogMappingProfile>())
             .CreateMapper();
 
@@ -30,22 +30,22 @@ public class BlogProfileTests
     }
 
     [Fact]
-    public void BlogVmForListMapping_ShouldSuccess()
+    public void BlogListItemVmMapping_ShouldSuccess()
     {
         var userId = Guid.NewGuid();
         var blog = BlogFactory.CreateBlog(userId: userId);
-        var expected = new BlogVmForList()
+        var expected = new BlogListItemVm()
         {
             UserId = userId,
             Id = blog.Id,
             Title = blog.Title,
             CreationDate = blog.CreationDate
         };
-        
+
         var mapper = new MapperConfiguration(config => config.AddProfile<BlogMappingProfile>())
             .CreateMapper();
 
-        var actual = mapper.Map<BlogVmForList>(blog);
+        var actual = mapper.Map<BlogListItemVm>(blog);
 
         actual.Should().BeEquivalentTo(expected);
     }

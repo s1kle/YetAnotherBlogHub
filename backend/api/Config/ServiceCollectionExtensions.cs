@@ -28,41 +28,41 @@ public static class ServiceCollectionExtensions
     private const string RabbitMQUser = "RabbitMQ:User";
     private const string RabbitMQPassword = "RabbitMQ:Password";
     private const string RabbitMQExchange = "RabbitMQ:Exchange";
- 
+
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
-    {   
+    {
         services.AddSerilog(config => config
             .ReadFrom
             .Configuration(configuration));
         services
             .AddDataDependencies()
-        
+
             .AddHostedService(provider => new EventConsumerService(
-                configuration[RabbitMQHost]!, 
-                configuration[RabbitMQUser]!, 
+                configuration[RabbitMQHost]!,
+                configuration[RabbitMQUser]!,
                 configuration[RabbitMQPassword]!,
                 configuration[RabbitMQExchange]!,
                 provider))
 
             .AddTransient<ExceptionHandlingMiddleware>()
 
-            .AddDbContext<Blogs.DbContext, BlogDbContext>(options => options
+            .AddDbContext<IBlogDbContext, BlogDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<Tags.DbContext, TagDbContext>(options => options
+            .AddDbContext<ITagDbContext, TagDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<BlogTags.DbContext, BlogTagDbContext>(options => options
+            .AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<Users.DbContext, UserDbContext>(options => options
+            .AddDbContext<IUserDbContext, UserDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<Comments.DbContext, CommentDbContext>(options => options
+            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(BlogsString)))
 
-            .AddScoped<Blogs.Repository, BlogRepository>()
-            .AddScoped<Tags.Repository, TagRepository>()
-            .AddScoped<BlogTags.Repository, BlogTagRepository>()
-            .AddScoped<Users.Repository, UserRepository>()
-            .AddScoped<Comments.Repository, CommentRepository>()
-            
+            .AddScoped<IBlogRepository, BlogRepository>()
+            .AddScoped<ITagRepository, TagRepository>()
+            .AddScoped<IBlogTagRepository, BlogTagRepository>()
+            .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<ICommentRepository, CommentRepository>()
+
             .AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration.GetConnectionString(RedisString);
@@ -75,7 +75,7 @@ public static class ServiceCollectionExtensions
             .AddCors(options => options
                 .AddPolicy(ClientString, policy =>
                 {
-                    policy.WithOrigins(configuration.GetConnectionString(ClientString) 
+                    policy.WithOrigins(configuration.GetConnectionString(ClientString)
                         ?? throw new ArgumentNullException("No connection string for client provided"));
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
@@ -87,9 +87,9 @@ public static class ServiceCollectionExtensions
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new ()
+                    Flows = new()
                     {
-                        AuthorizationCode = new ()
+                        AuthorizationCode = new()
                         {
                             AuthorizationUrl = new Uri($"{configuration[Authority]}/connect/authorize"),
                             TokenUrl = new Uri($"{configuration[Authority]}/connect/token"),
@@ -129,7 +129,7 @@ public static class ServiceCollectionExtensions
                 options.Authority = configuration[Authority];
                 options.Audience = configuration[Audience];
             });
-            
+
         return services;
     }
 }

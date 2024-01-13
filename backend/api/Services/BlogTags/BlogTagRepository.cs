@@ -5,12 +5,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace BlogHub.Api.Services.BlogTags;
 
-public class BlogTagRepository : Interfaces.BlogTags.Repository
+public class BlogTagRepository : IBlogTagRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly Interfaces.BlogTags.DbContext _dbContext;
+    private readonly IBlogTagDbContext _dbContext;
 
-    public BlogTagRepository(IDistributedCache cache, Interfaces.BlogTags.DbContext dbContext) =>
+    public BlogTagRepository(IDistributedCache cache, IBlogTagDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<BlogTagLink>?> GetAllAsync(CancellationToken cancellationToken)

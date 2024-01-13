@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogHub.Api.Services.BlogTags;
 
-public class BlogTagDbContext : DbContext, Interfaces.BlogTags.DbContext
+public class BlogTagDbContext : DbContext, IBlogTagDbContext
 {
     public DbSet<BlogTagLink> Links { get; init;}
 
