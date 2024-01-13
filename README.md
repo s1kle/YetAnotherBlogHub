@@ -3,10 +3,8 @@
 >[!NOTE]
 >*Swagger*:
 >
->![swagger screen](https://i.imgur.com/JH0RYGe.png)
->![swagger screen](https://i.imgur.com/p0aZS8w.png)
->![swagger screen](https://i.imgur.com/NAMqseP.png)
->![swagger screen](https://i.imgur.com/iQQOqhN.png)
+>![swagger screen](https://i.imgur.com/JNa96XP.png)
+>![swagger screen](https://i.imgur.com/GPxMCVj.png)
 >
 ><hr>
 >
@@ -16,15 +14,24 @@
 >
 >*Tag ERD*:
 >
->![Blog ERD screen](https://i.imgur.com/tcdxquB.png)
+>![Tag ERD screen](https://i.imgur.com/tcdxquB.png)
 >
 >*Link ERD*:
 >
->![Blog ERD screen](https://i.imgur.com/0lwIunM.png)
+>![Link ERD screen](https://i.imgur.com/0lwIunM.png)
 >
 >*User ERD*:
 >
->![Blog ERD screen](https://i.imgur.com/T2yI1bV.png)
+>![User ERD screen](https://i.imgur.com/T2yI1bV.png)
+>
+>*Сomment ERD*:
+>
+>![Сomment ERD screen](https://i.imgur.com/nBEzIeS.png)
+>
+>Client
+>
+>![BlogList Page](https://i.imgur.com/DMxFKB2.jpg)
+>![Blog Page](https://i.imgur.com/tCXV8fd.jpg)
 
 >[!IMPORTANT]
 >### This is my pet-project to show my skills in c# w/ asp.net (and some ts w/ angular) 
@@ -52,17 +59,12 @@
       - Swagger
     - identity:
       - IdentityServer4
+      - RabbitMQ.Client
 3. *Functionality*:
   - Frontend:
     - Communicates with backend APIs to perform CRUD operations on blogs, user authentication flows for login/register using IdentityServer, basic UI with Bootstrap
   - Backend:
     - Domain layer with blog entity, CQRS implementation for data layer to handle queries and commands, Input validation and mapping, ASP.NET Core Web API with blog controller, IdentityServer4 for authentication and authorization, Integration testing using xUnit
-4. *Future Scope*:
-  - [x] add: sorting
-  - [x] add: tags
-  - [x] add: search by title/tag
-  - [ ] add: comments
-  - [ ] enhance ui/ux
 
 >[!WARNING]
 >If you want to start app:
