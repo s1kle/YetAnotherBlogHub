@@ -1,5 +1,4 @@
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Get.Helpers;
 
 namespace BlogHub.Tests.Requests.Tags;
 
@@ -18,7 +17,7 @@ public class GetUserTagsTests
             Name = tag.Name
         }).ToList();
 
-        var query = new GetUserTagListQuery()
+        var query = new GetUserTagsQuery()
         {
             UserId = tags[0].UserId,
         };
@@ -28,11 +27,11 @@ public class GetUserTagsTests
 
         A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tags);
-            
+
         A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetUserTagListQueryHandler(repository, mapper);
+        var handler = new GetUserTagsQueryHandler(repository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

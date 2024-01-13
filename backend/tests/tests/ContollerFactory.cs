@@ -1,7 +1,11 @@
 using BlogHub.Api.Controllers;
 using BlogHub.Api.Services;
-using BlogHub.Data.Blogs.Commands.Create;
-using BlogHub.Data.Validation;
+using BlogHub.Api.Services.Blogs;
+using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Comments;
+using BlogHub.Api.Services.Tags;
+using BlogHub.Api.Services.Users;
+using BlogHub.Data.Common.Validation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -45,6 +49,10 @@ public class ControllerFactory
             .AddDbContext<IUserDbContext, UserDbContext>(options => options
                 .UseInMemoryDatabase(id))
             .AddScoped<IUserRepository, UserRepository>()
+
+            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
+                .UseInMemoryDatabase(id))
+            .AddScoped<ICommentRepository, CommentRepository>()
             
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddScoped<IDistributedCache, MemoryDistributedCache>()

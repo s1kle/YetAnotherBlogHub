@@ -1,20 +1,21 @@
-using BlogHub.Data.Tags.Commands.Create;
-using BlogHub.Data.Tags.Commands.Delete;
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Tags.Get.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using BlogHub.Data.Tags.Create.Helpers;
+using BlogHub.Data.Tags.List.User;
+using BlogHub.Data.Tags.Create;
+using BlogHub.Data.Tags.Delete;
 
 namespace BlogHub.Api.Controllers;
 
 public class AuthorizeTagController : BaseController
 {
-    public AuthorizeTagController(IMediator mediator) : base (mediator) { }
+    public AuthorizeTagController(IMediator mediator) : base(mediator) { }
 
     [HttpGet("my-tags")]
     public async Task<ActionResult<IReadOnlyList<TagVm>>> GetAll()
     {
-        var query = new GetUserTagListQuery()
+        var query = new GetUserTagsQuery()
         {
             UserId = UserId
         };
@@ -27,8 +28,8 @@ public class AuthorizeTagController : BaseController
     [HttpPost("tag/create")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateTagDto dto)
     {
-        var command = new CreateTagCommand 
-        { 
+        var command = new CreateTagCommand
+        {
             UserId = UserId,
             Name = dto.Name
         };

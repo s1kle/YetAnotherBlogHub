@@ -1,13 +1,15 @@
-using BlogHub.Data.Blogs.Queries.Get;
-using BlogHub.Data.Blogs.Queries.GetList;
-using BlogHub.Data.Blogs.Queries.GetList.All;
-using BlogHub.Data.Blogs.Queries.ListSearch;
-using BlogHub.Data.Blogs.Queries.ListSort;
-using BlogHub.Data.Pipeline;
-using BlogHub.Data.Pipeline.Blogs.Blog;
-using BlogHub.Data.Pipeline.Blogs.List;
-using BlogHub.Data.Tags.Queries.Get;
-using BlogHub.Data.Tags.Queries.GetList;
+using BlogHub.Data.Blogs.Get;
+using BlogHub.Data.Blogs.Get.Helpers;
+using BlogHub.Data.Blogs.List.All;
+using BlogHub.Data.Blogs.List.Helpers;
+using BlogHub.Data.Pipeline.Helpers;
+using BlogHub.Data.Pipeline.Steps.Blog.Add.Author;
+using BlogHub.Data.Pipeline.Steps.Blog.Add.Comments;
+using BlogHub.Data.Pipeline.Steps.Blog.Add.Tags;
+using BlogHub.Data.Pipeline.Steps.Blog.List.Add.Authors;
+using BlogHub.Data.Pipeline.Steps.Blog.List.Add.Tags;
+using BlogHub.Data.Pipeline.Steps.Blog.List.Search;
+using BlogHub.Data.Pipeline.Steps.Blog.List.Sort;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,24 +17,23 @@ namespace BlogHub.Api.Controllers;
 
 public sealed class UnauthorizeBlogController : BaseController
 {
-    public UnauthorizeBlogController(IMediator mediator) : base (mediator) { }
+    public UnauthorizeBlogController(IMediator mediator) : base(mediator) { }
 
     [HttpGet("blogs")]
-    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] GetListDto dto,
-        [FromQuery] ListSortDto? sortDto = null, [FromQuery] ListSearchDto? searchDto = null)
+    public async Task<ActionResult<BlogListVm>> GetAll([FromQuery] BlogListDto dto)
     {
-        var query = new GetBlogListQuery() { Page = dto.Page, Size = dto.Size };
+        var query = new GetAllBlogsQuery() { Page = dto.List.Page, Size = dto.List.Size };
 
         var context = await Mediator.Send(query);
 
         var pipeline = new PipelineBuilder<BlogListVm>()
-            .Add(new AddAuthorsStep(Mediator))
-            .Add(new AddTagsToListStep(Mediator))
-            .Add(new SearchStep(searchDto, Mediator))
-            .Add(new SortStep(sortDto, Mediator))
+            .Add(new BlogListAddAuthorsStep(Mediator))
+            .Add(new BlogListAddTagsStep(Mediator))
+            .Add(new BlogListSearchStep(dto.Search, Mediator))
+            .Add(new BlogListSortStep(dto.Sort, Mediator))
             .Build();
 
-        var response = await pipeline(context);
+        var response = await pipeline.ExecuteAsync(context);
 
         return Ok(response);
     }
@@ -45,24 +46,12 @@ public sealed class UnauthorizeBlogController : BaseController
         var context = await Mediator.Send(query);
 
         var pipeline = new PipelineBuilder<BlogVm>()
-            .Add(new AddAuthorStep(Mediator))
-            .Add(new AddTagsStep(Mediator))
+            .Add(new BlogAddAuthorStep(Mediator))
+            .Add(new BlogAddTagsStep(Mediator))
+            .Add(new BlogAddCommentsStep(Mediator))
             .Build();
 
-        var response = await pipeline(context);
-
-        return Ok(response);
-    }
-
-    [HttpGet("blog/{id}/tags")]
-    public async Task<ActionResult<IReadOnlyList<TagVm>>> GetTags(Guid id)
-    {
-        var query = new GetBlogTagListQuery()
-        {
-            BlogId = id
-        };
-
-        var response = await Mediator.Send(query);
+        var response = await pipeline.ExecuteAsync(context);
 
         return Ok(response);
     }

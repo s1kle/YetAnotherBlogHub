@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Queries.Get;
+namespace BlogHub.Data.Blogs.Get;
 
 internal sealed class GetBlogQueryHandler : IRequestHandler<GetBlogQuery, BlogVm>
 {

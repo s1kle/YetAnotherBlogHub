@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Delete;
+namespace BlogHub.Data.Tags.Delete;
 
 internal sealed class DeleteTagCommandValidator : AbstractValidator<DeleteTagCommand>
 {

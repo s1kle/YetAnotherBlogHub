@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Users.Commands.Delete;
+namespace BlogHub.Data.Users.Delete;
 
 public sealed record DeleteUserCommand : IRequest<Guid>
 {

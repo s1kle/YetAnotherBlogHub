@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Users.Commands.Create;
+namespace BlogHub.Data.Users.Create;
 
 internal sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {

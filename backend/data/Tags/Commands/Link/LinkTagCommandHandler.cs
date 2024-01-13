@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Link;
+namespace BlogHub.Data.Tags.Link;
 
 internal sealed class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Guid>
 {
@@ -7,8 +7,8 @@ internal sealed class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Gu
     private readonly IBlogRepository _blogRepository;
 
     public LinkTagCommandHandler(ITagRepository tagRepository,
-                                 IBlogTagRepository linkRepository,
-                                 IBlogRepository blogRepository)
+        IBlogTagRepository linkRepository,
+        IBlogRepository blogRepository)
     {
         _tagRepository = tagRepository;
         _linkRepository = linkRepository;

@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Commands.Delete;
+namespace BlogHub.Data.Blogs.Delete;
 
 internal sealed class DeleteBlogCommandHandler : IRequestHandler<DeleteBlogCommand, Guid>
 {

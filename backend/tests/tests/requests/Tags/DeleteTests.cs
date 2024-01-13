@@ -1,5 +1,3 @@
-using BlogHub.Data.Tags.Commands.Delete;
-
 namespace BlogHub.Tests.Requests.Tags;
 
 public class DeleteTests

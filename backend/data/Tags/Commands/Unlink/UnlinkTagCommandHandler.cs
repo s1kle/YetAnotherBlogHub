@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Unlink;
+namespace BlogHub.Data.Tags.Unlink;
 
 internal sealed class UnlinkTagCommandHandler : IRequestHandler<UnlinkTagCommand, Guid>
 {
@@ -7,8 +7,8 @@ internal sealed class UnlinkTagCommandHandler : IRequestHandler<UnlinkTagCommand
     private readonly IBlogRepository _blogRepository;
 
     public UnlinkTagCommandHandler(ITagRepository tagRepository,
-                                 IBlogTagRepository linkRepository,
-                                 IBlogRepository blogRepository)
+        IBlogTagRepository linkRepository,
+        IBlogRepository blogRepository)
     {
         _tagRepository = tagRepository;
         _linkRepository = linkRepository;

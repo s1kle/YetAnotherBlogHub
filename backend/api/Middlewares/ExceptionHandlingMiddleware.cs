@@ -1,5 +1,5 @@
 using System.Text.Json;
-using BlogHub.Data.Exceptions;
+using BlogHub.Data.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;

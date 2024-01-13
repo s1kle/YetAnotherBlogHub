@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Create;
+namespace BlogHub.Data.Tags.Create;
 
 internal sealed class CreateTagCommandValidator : AbstractValidator<CreateTagCommand>
 {

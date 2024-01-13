@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Delete;
+namespace BlogHub.Data.Tags.Delete;
 
 public sealed record DeleteTagCommand : IRequest<Guid>
 {

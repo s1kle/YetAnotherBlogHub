@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Link;
+namespace BlogHub.Data.Tags.Link;
 
 internal sealed class LinkTagCommandValidator : AbstractValidator<LinkTagCommand>
 {

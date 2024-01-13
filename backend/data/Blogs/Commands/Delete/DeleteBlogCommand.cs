@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Commands.Delete;
+namespace BlogHub.Data.Blogs.Delete;
 
 public sealed record DeleteBlogCommand : IRequest<Guid>
 {

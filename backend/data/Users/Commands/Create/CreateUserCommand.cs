@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Users.Commands.Create;
+namespace BlogHub.Data.Users.Create;
 
 public sealed record CreateUserCommand : IRequest<Guid>
 {

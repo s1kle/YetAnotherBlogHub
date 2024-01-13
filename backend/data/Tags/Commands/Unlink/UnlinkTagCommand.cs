@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Tags.Commands.Unlink;
+namespace BlogHub.Data.Tags.Unlink;
 
 public sealed class UnlinkTagCommand : IRequest<Guid>
 {

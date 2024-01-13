@@ -1,4 +1,4 @@
-namespace BlogHub.Data.Blogs.Commands.Create;
+namespace BlogHub.Data.Blogs.Create;
 
 internal sealed class CreateBlogCommandHandler : IRequestHandler<CreateBlogCommand, Guid>
 {
