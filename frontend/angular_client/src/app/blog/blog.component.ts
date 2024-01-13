@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../shared/services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { detailedBlogVm, updateBlogVm } from '../shared/entities';
+import { detailedBlogVm, tagVm, updateBlogVm } from '../shared/entities';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../shared/services/auth.service';
+import { User } from 'oidc-client-ts';
+import { response } from 'express';
 
 @Component({
   selector: 'app-blog',
@@ -13,39 +16,43 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './blog.component.css'
 })
 export class BlogComponent {
+  user: User | null = null;
   isEditMode = false;
+  isCommentMode = false;
   blog: detailedBlogVm | null = null;
+  content: string = '';
+  name: string = '';
+  tags: tagVm[] | undefined;
 
-  constructor(private _api: ApiService, private _activatedRoute: ActivatedRoute, private _router: Router) { }
+  constructor(private _api: ApiService,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private _auth: AuthService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = await this._auth.getUser();
+    console.log(this.user);
+
     this._activatedRoute.params.subscribe(params => {
       const id = params['id'];
 
-      console.log('Getting blog ', id);
-
       this._api.getBlog(id).subscribe(
-        response => this.blog = response, 
+        response => this.blog = response,
         error => {
           console.log(error);
           this._router.navigate(['']);
-      })
+        })
     })
   }
 
-  delete = () => {
-    const id = this.blog?.id ?? '';
+  commentStart = () =>
+    this.isCommentMode = true;
+  commentCancel = () =>
+    this.isCommentMode = false;
 
-    this._api.deleteBlog(id).subscribe(
-      () => this._router.navigate(['']).then(() => window.location.reload()),
-      error => console.log(error)
-    );
-  }
-
-  edit = () =>
+  editStart = () =>
     this.isEditMode = true;
-
-  cancel = () =>
+  editCancel = () =>
     this.isEditMode = false;
 
   update = () => {
@@ -60,7 +67,66 @@ export class BlogComponent {
       () => window.location.reload(),
       error => console.log(error));
   }
+  delete = () => {
+    const id = this.blog?.id ?? '';
 
-  goBack = () => 
+    this._api.deleteBlog(id).subscribe(
+      () => this._router.navigate(['']).then(() => window.location.reload()),
+      error => console.log(error)
+    );
+  }
+
+  createComment = () => {
+    const id = this.blog?.id ?? '';
+
+    this._api.createComment(id, { content: this.content }).subscribe(
+      () => window.location.reload(),
+      error => console.log(error));
+  }
+
+  addTag = (tagId: string) => {
+    const id = this.blog?.id ?? '';
+
+    this._api.linkTag(id, { tagId: tagId }).subscribe(
+      () => window.location.reload(),
+      error => console.log(error));
+  }
+
+  removeTag = (tagId: string) => {
+    const id = this.blog?.id ?? '';
+
+    this._api.unlinkTag(id, tagId).subscribe(
+      () => window.location.reload(),
+      error => console.log(error));
+  }
+
+  createTag = () => {
+    this._api.createTag({ name: this.name }).subscribe(
+      () => window.location.reload(),
+      error => console.log(error));
+  }
+
+  deleteTag = (tagId: string) => {
+    this._api.deleteTag(tagId).subscribe(
+      () => window.location.reload(),
+      error => console.log(error));
+  }
+
+  deleteComment = (commentId: string) => {
+    const id = this.blog?.id ?? '';
+
+    this._api.deleteComment(id, commentId).subscribe(
+      () => window.location.reload(),
+      error => console.log(error));
+  }
+
+  getTags = () => {
+    this._api.getAllTags().subscribe(
+      (response) => this.tags = response,
+      (error) => console.log(error)
+    );
+  }
+
+  goBack = () =>
     this._router.navigate(['']);
 }
