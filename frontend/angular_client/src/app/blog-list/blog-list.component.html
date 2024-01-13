@@ -1,45 +1,34 @@
-<div style="min-height: calc(100vh + 200px);" class="h-100 w-100 text-white">
-    <div class="main-list d-flex align-items-center">
-        <div class="blog-list h-100 container">
+<div class="container text-white" style="padding-top: 20px;">
+    <div class="row">
+        <div class="col-12 mb-4" *ngFor="let blog of blogList?.blogs">
             <div class="row">
-                <div *ngFor="let blog of blogList?.blogs">
-                    <div class="col-12 blog w-100 container mb-4 p-0 border">
-                        <div class="row h-100">
-                            <div class="col-2 container border-end">
-                                <div class="row h-100">
-                                    <div class="col-12 h-25 d-flex justify-content-end p-0">
-                                        <div class="h3 pe-1">
-                                            {{blog.creationDate | date: 'd MMM'}}
-                                        </div>
-                                    </div>
-                                    <div class="col-12 h-75 d-flex justify-content-end align-items-center p-0">
-                                        <div class="rotated">{{blog.author}}</div>
-                                    </div>
-                                </div>
+                <div class="col-3 border text-primary">
+                    <div class="h4" *ngIf="!blog.editDate">{{blog.creationDate | date: 'd MMM'}}</div>
+                    <div class="h4" *ngIf="blog.editDate">{{blog.creationDate | date: 'd MMM'}} |
+                        {{blog.editDate | date:'d MMM'}}</div>
+                </div>
+                <div class="col-9 border text-break text-primary">
+                    <div class="h3">{{blog.title}}</div>
+                </div>
+                <div class="col-3 border text-end">
+                    <div class="h3">{{blog.author}}</div>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <div class="col-12 border-end text-break">
+                            <div class="h6">{{blog.details}}</div>
+                        </div>
+                        <div class="col-12 border-end">
+                            <div class="text-end">
+                                <button class="h6 border-1 bg-transparent rounded-0"
+                                    (click)="goToBlogDetails(blog.id)">...read more</button>
                             </div>
-                            <div class="col-10">
-                                <div class="col-2 h-100 w-100 container">
-                                    <div class="row h-100">
-                                        <div class="col-12 h-25 d-flex justify-content-start align-items-center p-0">
-                                            <div class="h3">{{blog.title}}</div>
-                                        </div>
-                                        <div class="col-12 h-75 containter">
-                                            <div class="row h-100">
-                                                <div class="col-12 h-75 container">
-                                                    <div class="row">
-                                                        <div *ngFor="let tag of blog.tags">
-                                                            <div class="col-2 d-flex border justify-content-center align-items-center me-3 mb-2">
-                                                                <div class="h6">{{tag.name}}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 h-25 d-flex align-items-center justify-content-end"><a (click)="goToBlogDetails(blog.id)" class="text-white pe-4">... read</a></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="col-12 d-flex flex-wrap border-end">
+                            <div *ngFor="let tag of blog?.tags" class="h6 m-2">#{{tag.name}}</div>
+                        </div>
+                        <div class="col-12 border-bottom">
+
                         </div>
                     </div>
                 </div>
@@ -47,7 +36,6 @@
         </div>
     </div>
 </div>
-
 
 <div *ngIf="page > 0">
     <button (click)="goToPreviousPage()" class="btn btn-outline-dark">Previous</button>

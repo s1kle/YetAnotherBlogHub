@@ -1,32 +1,132 @@
 <div *ngIf="!blog">Loading...</div>
-<div>
-    <div *ngIf="!isEditMode" class="d-flex justify-content-center">
-        <div *ngIf="blog" class="row row-cols-2">
-            <div class="col-12 p-3 border bg-transparent text-center text-info h1">{{blog.title}}</div>
-            <div class="col-12"></div>
-            <div class="col-12 p-3 border bg-transparent text-center text-danger h3">{{blog.details}}</div>
-            <div class="col-12"></div>
-            <div class="col-6 p-3 border bg-transparent text-center text-warning h6">Create: {{blog.creationDate | date:'dd.MM.yyyy'}}</div>
-            <div *ngIf="blog.editDate" class="col-6 p-3 border bg-transparent text-center text-warning h6">Edit: {{blog.editDate | date:'dd.MM.yyyy'}}</div>
-            <div *ngIf="!blog.editDate" class="col-6 p-3 border bg-transparent text-center text-warning h6">Edit: nope</div>
-            <div class="col-12"></div>
-            <button class="col-3 p-3 border rounded-0 btn btn-success" (click)="edit()">Edit</button>
-            <div class="col-6"></div>
-            <button class="col-3 p-3 border rounded-0 btn btn-danger" (click)="delete()">Delete</button>
+<div class="container text-white" style="padding-top: 20px;">
+    <div class="row" *ngIf="blog && !isEditMode">
+        <div class="col-12 mb-4">
+            <div class="row">
+                <div class="col-3 border text-end text-primary">
+                    <div class="h4" *ngIf="!blog.editDate">{{blog.creationDate | date: 'd MMM'}}</div>
+                    <div class="h4" *ngIf="blog.editDate">{{blog.creationDate | date: 'd MMM'}} |
+                        {{blog.editDate | date:'d MMM'}}</div>
+                </div>
+                <div class="col-9 border text-break text-primary">
+                    <div class="h3">{{blog.title}}</div>
+                </div>
+                <div class="col-3 border text-end">
+                    <div class="h3">{{blog.author}}</div>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <div class="col-12 border-end text-break">
+                            <div class="h6">{{blog.details}}</div>
+                        </div>
+                        <div class="col-12 d-flex flex-wrap border-end">
+                            <div *ngFor="let tag of blog?.tags" class="h6 m-2">#{{tag.name}}</div>
+                        </div>
+                        <div class="col-12 border-bottom">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-success" (click)="editStart()">Edit</button>
+        </div>
+        <div class="col-6 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-danger" (click)="delete()">Delete</button>
+        </div>
+        <div class="col-12 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-warning" (click)="goBack()">Back</button>
+        </div>
+        <div class="col-12 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-light" (click)="commentStart()">New comment</button>
+        </div>
+        <div class="p-0 m-0" *ngIf="isCommentMode">
+            <div class="col-12 mb-2">
+                <div class="col-12 border text-break h6">
+                    <input type="text" class="w-100 text-white bg-transparent  border-0" [(ngModel)]="content">
+                </div>
+            </div>
+            <div class="row p-0 m-0">
+
+                <div class="col-6 p-0 mb-4">
+                    <button class="col w-100 rounded-0 btn btn-outline-success"
+                        (click)="createComment()">Comment</button>
+                </div>
+                <div class="col-6 p-0 mb-4">
+                    <button class="col w-100 rounded-0 btn btn-outline-danger" (click)="commentCancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mb-2" *ngFor="let comment of blog?.comments">
+            <div class="row">
+                <div class="col-12 border text-break h6">
+                    {{comment.content}}
+                </div>
+                <div class="col-4 h6">{{comment.author}}</div>
+                <div class="col-8 text-end h6">{{comment.creationDate | date: 'dd.MM.YY'}}</div>
+            </div>
         </div>
     </div>
-    <div *ngIf="isEditMode" class="d-flex justify-content-center">
-        <div *ngIf="blog" class="row row-cols-2">
-            <input class="col-12 p-3 border bg-transparent text-center text-info h1" [(ngModel)]="blog.title">
-            <div class="col-12"></div>
-            <input class="col-12 p-3 border bg-transparent text-center text-danger h1" [(ngModel)]="blog.details">
-            <button class="col-3 p-3 border rounded-0 btn btn-success" (click)="update()">Update</button>
-            <div class="col-6"></div>
-            <button class="col-3 p-3 border rounded-0 btn btn-danger" (click)="cancel()">Cancel</button>
+    <div class="row" *ngIf="blog && isEditMode">
+        <div class="col-12 mb-4">
+            <div class="row">
+                <div class="col-3 border text-end text-primary">
+                    <div class="h4" *ngIf="!blog.editDate">{{blog.creationDate | date: 'd MMM'}}</div>
+                    <div class="h4" *ngIf="blog.editDate">{{blog.creationDate | date: 'd MMM'}} |
+                        {{blog.editDate | date:'d MMM'}}</div>
+                </div>
+                <div class="col-9 border text-break text-primary">
+                    <div class="h3">
+                        <input class="w-100 h-100 bg-transparent border-0 text-white" type="text"
+                            [(ngModel)]="blog.title">
+                    </div>
+                </div>
+                <div class="col-3 border text-end">
+                    <div class="h3">{{blog.author}}</div>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <div class="col-12 border-end text-break">
+                            <div class="h6">
+                                <input class="w-100 h-100 bg-transparent border-0 text-white" type="text"
+                                    [(ngModel)]="blog.details">
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex flex-wrap border-end">
+                            <div *ngFor="let tag of blog?.tags" class="h6 m-2">#{{tag.name}}</div>
+                        </div>
+                        <div class="col-12 d-flex border-end">
+                            <div class="h6 m-2">
+                                <label for="tags" (click)="getTags()">AddTag</label>
+                            </div>
+                            <input type="checkbox" id="tags" style="display: none">
+                            <ul>
+                                <li *ngFor="let newTag of tags" (click)="addTag(newTag.id)">
+                                    <div>#{{newTag.name}}</div>
+                                    <div class="text-danger" (click)="deleteTag(newTag.id)">delete</div>
+                                </li>
+                                <li>
+                                    <input type="text" [(ngModel)]="name">
+                                    <div class="text-success" (click)="createTag()">Create</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12 border-bottom">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-success" (click)="update()">Edit</button>
+        </div>
+        <div class="col-6 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-danger" (click)="editCancel()">Cancel</button>
+        </div>
+        <div class="col-12 p-0 mb-4">
+            <button class="col w-100 rounded-0 btn btn-outline-warning" (click)="goBack()">Back</button>
         </div>
     </div>
-</div>
-<p></p>
-<div class="row">
-    <button class="col btn btn-outline-warning" (click)="goBack()">Back</button>
 </div>

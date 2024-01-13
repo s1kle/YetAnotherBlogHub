@@ -1,3 +1,7 @@
-.rotated {
-    transform: rotate(-90deg);
+ul {
+    display: none;
+}
+
+#tags:checked+ul {
+    display: block;
 }

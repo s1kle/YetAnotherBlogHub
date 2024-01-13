@@ -2,10 +2,6 @@ export interface blogListVm {
     blogs: blogVmForList[];
 }
 
-export interface tagListVm {
-    tags: tagVm[];
-}
-
 export interface detailedBlogVm {
     author: string;
     userId: string;
@@ -15,11 +11,20 @@ export interface detailedBlogVm {
     details: string | null;
     editDate: Date | null;
     tags: tagVm[]
+    comments: commentVm[]
 }
 
 export interface tagVm {
     id: string;
     name: string;
+}
+
+export interface commentVm {
+    author: string;
+    id: string;
+    userId: string;
+    creationDate: Date;
+    content: string;
 }
 
 export interface blogVmForList {
@@ -50,6 +55,10 @@ export interface createBlogVm {
 
 export interface createTagVm {
     name: string;
+}
+
+export interface createCommentVm {
+    content: string;
 }
 
 export interface updateBlogVm {
