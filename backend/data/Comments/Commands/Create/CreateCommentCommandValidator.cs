@@ -4,7 +4,7 @@ internal sealed class CreateCommentCommandValidator : AbstractValidator<CreateCo
 {
     public CreateCommentCommandValidator()
     {
-        RuleFor(command => command.BlogId)
+        RuleFor(command => command.ArticleId)
             .NotEmpty();
 
         RuleFor(command => command.UserId)

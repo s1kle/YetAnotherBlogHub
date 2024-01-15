@@ -1,4 +1,5 @@
 using BlogHub.Api.Extensions;
+using BlogHub.Data.Common.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -8,18 +9,18 @@ namespace BlogHub.Api.Services.Comments;
 public class CommentRepository : ICommentRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly ICommentDbContext _dbContext;
+    private readonly IBlogHubDbContext _dbContext;
 
-    public CommentRepository(IDistributedCache cache, ICommentDbContext dbContext) =>
+    public CommentRepository(IDistributedCache cache, IBlogHubDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
-    public async Task<List<Comment>?> GetAllByBlogIdAsync(Guid blogId, CancellationToken cancellationToken)
+    public async Task<List<Comment>?> GetAllByArticleIdAsync(Guid articleId, CancellationToken cancellationToken)
     {
-        var key = $"Name:Comments;Blog:{blogId}";
+        var key = $"Name:Comments;Article:{ArticleId}";
 
         var query = _dbContext.Comments
             .OrderBy(comment => comment.CreationDate)
-            .Where(comment => comment.BlogId.Equals(blogId));
+            .Where(comment => comment.ArticleId.Equals(ArticleId));
 
         return await _cache.GetOrCreateItemAsync(key, async () => await query
             .ToListAsync(),

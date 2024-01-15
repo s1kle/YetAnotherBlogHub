@@ -1,7 +1,7 @@
 namespace BlogHub.Data.Common.Validation;
 
 internal sealed class ValidationBehavior<TRequest, TResponse>
-    : IPipelineBehavior<TRequest, TResponse> where TRequest 
+    : IPipelineBehavior<TRequest, TResponse> where TRequest
     : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;

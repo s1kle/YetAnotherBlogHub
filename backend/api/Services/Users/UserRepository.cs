@@ -1,4 +1,5 @@
 using BlogHub.Api.Extensions;
+using BlogHub.Data.Common.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -8,9 +9,9 @@ namespace BlogHub.Api.Services.Users;
 public class UserRepository : IUserRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly IUserDbContext _dbContext;
+    private readonly IBlogHubDbContext _dbContext;
 
-    public UserRepository(IDistributedCache cache, IUserDbContext dbContext) =>
+    public UserRepository(IDistributedCache cache, IBlogHubDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<User?> GetAsync(Guid id, CancellationToken cancellationToken)
@@ -19,7 +20,7 @@ public class UserRepository : IUserRepository
 
         return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
             .Users
-            .FirstOrDefaultAsync(user => user.Id.Equals(id), cancellationToken), 
+            .FirstOrDefaultAsync(user => user.Id.Equals(id), cancellationToken),
         cancellationToken);
     }
 

@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BlogHub.Tests;
 
-public class ControllerFixture<T> : BaseControllerFixture where T: BaseController
+public class ControllerFixture<T> : BaseControllerFixture where T : BaseController
 {
     public T Controller { get; init; }
-    public ControllerFixture(ServiceProvider serviceProvider, T controller) 
+    public ControllerFixture(ServiceProvider serviceProvider, T controller)
         : base(serviceProvider)
     {
         Controller = controller;

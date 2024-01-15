@@ -1,7 +1,7 @@
 using BlogHub.Api.Controllers;
 using BlogHub.Api.Services;
-using BlogHub.Api.Services.Blogs;
-using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Articles;
+using BlogHub.Api.Services.ArticleTags;
 using BlogHub.Api.Services.Comments;
 using BlogHub.Api.Services.Tags;
 using BlogHub.Api.Services.Users;
@@ -23,7 +23,7 @@ public class ControllerFactory
     }
     private static ServiceProvider CreateServiceProvider(string id)
     {
-        var dataAssembly = typeof(CreateBlogCommand).Assembly;
+        var dataAssembly = typeof(CreateArticleCommand).Assembly;
 
         var services = new ServiceCollection();
 
@@ -34,17 +34,17 @@ public class ControllerFactory
                 .RegisterServicesFromAssembly(dataAssembly));
 
         services
-            .AddDbContext<IBlogDbContext, BlogDbContext>(options => options
+            .AddDbContext<IArticleDbContext, ArticleDbContext>(options => options
                 .UseInMemoryDatabase(id))
-            .AddScoped<IBlogRepository, BlogRepository>()
-            
+            .AddScoped<IArticleRepository, ArticleRepository>()
+
             .AddDbContext<ITagDbContext, TagDbContext>(options => options
                 .UseInMemoryDatabase(id))
             .AddScoped<ITagRepository, TagRepository>()
-            
-            .AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options => options
+
+            .AddDbContext<IArticleTagDbContext, ArticleTagDbContext>(options => options
                 .UseInMemoryDatabase(id))
-            .AddScoped<IBlogTagRepository, BlogTagRepository>()
+            .AddScoped<IArticleTagRepository, ArticleTagRepository>()
 
             .AddDbContext<IUserDbContext, UserDbContext>(options => options
                 .UseInMemoryDatabase(id))
@@ -53,13 +53,13 @@ public class ControllerFactory
             .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
                 .UseInMemoryDatabase(id))
             .AddScoped<ICommentRepository, CommentRepository>()
-            
+
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddScoped<IDistributedCache, MemoryDistributedCache>()
 
-            .AddScoped<AuthorizeBlogController>()
+            .AddScoped<AuthorizeArticleController>()
             .AddScoped<AuthorizeTagController>()
-            .AddScoped<UnauthorizeBlogController>()
+            .AddScoped<UnauthorizeArticleController>()
             .AddScoped<UnauthorizeTagController>();
 
         return services.BuildServiceProvider();

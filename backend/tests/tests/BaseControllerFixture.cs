@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using BlogHub.Api.Services.Blogs;
-using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Articles;
+using BlogHub.Api.Services.ArticleTags;
 using BlogHub.Api.Services.Comments;
 using BlogHub.Api.Services.Tags;
 using BlogHub.Api.Services.Users;
@@ -11,9 +11,9 @@ namespace BlogHub.Tests;
 
 public abstract class BaseControllerFixture
 {
-    public BlogDbContext BlogDbContext { get; init; }
+    public ArticleDbContext ArticleDbContext { get; init; }
     public TagDbContext TagDbContext { get; init; }
-    public BlogTagDbContext BlogTagDbContext { get; init; }
+    public ArticleTagDbContext ArticleTagDbContext { get; init; }
     public UserDbContext UserDbContext { get; init; }
     public CommentDbContext CommentDbContext { get; init; }
     public Guid UserId => _userState
@@ -25,9 +25,9 @@ public abstract class BaseControllerFixture
 
     public BaseControllerFixture(ServiceProvider serviceProvider)
     {
-        BlogDbContext = serviceProvider.GetRequiredService<BlogDbContext>();
+        ArticleDbContext = serviceProvider.GetRequiredService<ArticleDbContext>();
         TagDbContext = serviceProvider.GetRequiredService<TagDbContext>();
-        BlogTagDbContext = serviceProvider.GetRequiredService<BlogTagDbContext>();
+        ArticleTagDbContext = serviceProvider.GetRequiredService<ArticleTagDbContext>();
         UserDbContext = serviceProvider.GetRequiredService<UserDbContext>();
         CommentDbContext = serviceProvider.GetRequiredService<CommentDbContext>();
 
@@ -51,11 +51,11 @@ public abstract class BaseControllerFixture
     {
         var task = entities.GetType() switch
         {
-            _ when typeof(T).Equals(typeof(Blog)) => BlogDbContext
+            _ when typeof(T).Equals(typeof(Article)) => ArticleDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
             _ when typeof(T).Equals(typeof(Tag)) => TagDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
-            _ when typeof(T).Equals(typeof(BlogTagLink)) => BlogTagDbContext
+            _ when typeof(T).Equals(typeof(ArticleTagLink)) => ArticleTagDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
             _ when typeof(T).Equals(typeof(Comment)) => CommentDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
@@ -71,9 +71,9 @@ public abstract class BaseControllerFixture
 
     private async Task SaveChangesAsync()
     {
-        await BlogDbContext.SaveChangesAsync();
+        await ArticleDbContext.SaveChangesAsync();
         await TagDbContext.SaveChangesAsync();
-        await BlogTagDbContext.SaveChangesAsync();
+        await ArticleTagDbContext.SaveChangesAsync();
         await CommentDbContext.SaveChangesAsync();
         await UserDbContext.SaveChangesAsync();
     }
@@ -82,16 +82,16 @@ public abstract class BaseControllerFixture
 
     public void EnsureCreated()
     {
-        BlogDbContext.Database.EnsureCreated();
+        ArticleDbContext.Database.EnsureCreated();
         TagDbContext.Database.EnsureCreated();
-        BlogTagDbContext.Database.EnsureCreated();
+        ArticleTagDbContext.Database.EnsureCreated();
     }
 
     public void EnsureDeleted()
     {
-        BlogDbContext.Database.EnsureDeleted();
+        ArticleDbContext.Database.EnsureDeleted();
         TagDbContext.Database.EnsureDeleted();
-        BlogTagDbContext.Database.EnsureDeleted();
+        ArticleTagDbContext.Database.EnsureDeleted();
     }
 
     private ClaimsPrincipal GetUser() =>

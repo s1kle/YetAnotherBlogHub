@@ -13,11 +13,11 @@ public class DeleteTests
             Id = expected.Id
         };
 
-        List<BlogTagLink>? links = null;
+        List<ArticleTagLink>? links = null;
 
         var tagRepository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        
+        var linkRepository = A.Fake<IArticleTagRepository>();
+
         A.CallTo(() => linkRepository.GetAllAsync(A<CancellationToken>._))
             .Returns(links);
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
@@ -59,10 +59,10 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        
+        var linkRepository = A.Fake<IArticleTagRepository>();
+
         A.CallTo(() => linkRepository.GetAllAsync(A<CancellationToken>._))
-            .Returns(new List<BlogTagLink>());
+            .Returns(new List<ArticleTagLink>());
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
 
@@ -92,10 +92,10 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        
+        var linkRepository = A.Fake<IArticleTagRepository>();
+
         A.CallTo(() => linkRepository.GetAllAsync(A<CancellationToken>._))
-            .Returns(new List<BlogTagLink>());
+            .Returns(new List<ArticleTagLink>());
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
 

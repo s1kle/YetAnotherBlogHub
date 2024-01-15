@@ -15,10 +15,10 @@ public static class ServiceCollectionExtensions
         services
             .AddDbContext<AuthorizationDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(IdentityConnectionString)))
-            
+
             .AddSingleton<IUserEventService, UserEventService>(provider => new UserEventService(
-                configuration["RabbitMQ:Host"]!, 
-                configuration["RabbitMQ:User"]!, 
+                configuration["RabbitMQ:Host"]!,
+                configuration["RabbitMQ:User"]!,
                 configuration["RabbitMQ:Password"]!,
                 configuration["RabbitMQ:Exchange"]!))
 
@@ -48,7 +48,7 @@ public static class ServiceCollectionExtensions
             config.LogoutPath = "/Authorization/Logout";
         });
 
-        
+
 
         services.AddIdentityServer()
             .AddAspNetIdentity<ApplicationUser>()

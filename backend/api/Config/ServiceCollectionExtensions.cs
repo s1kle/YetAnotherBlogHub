@@ -1,11 +1,11 @@
 using BlogHub.Api.Middlewares;
 using BlogHub.Api.Services;
-using BlogHub.Api.Services.Blogs;
-using BlogHub.Api.Services.BlogTags;
+using BlogHub.Api.Services.Articles;
+using BlogHub.Api.Services.ArticleTags;
 using BlogHub.Api.Services.Comments;
-using BlogHub.Api.Services.Tags;
 using BlogHub.Api.Services.Users;
 using BlogHub.Data;
+using BlogHub.Data.Common.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -18,7 +18,7 @@ namespace BlogHub.Api.Configuration;
 
 public static class ServiceCollectionExtensions
 {
-    private const string BlogsString = "Blogs";
+    private const string ArticlesString = "Articles";
     private const string RedisString = "Redis";
     private const string ClientString = "Client";
     private const string RedisInstanceName = "Redis:InstanceName";
@@ -46,20 +46,12 @@ public static class ServiceCollectionExtensions
 
             .AddTransient<ExceptionHandlingMiddleware>()
 
-            .AddDbContext<IBlogDbContext, BlogDbContext>(options => options
-                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<ITagDbContext, TagDbContext>(options => options
-                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<IBlogTagDbContext, BlogTagDbContext>(options => options
-                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<IUserDbContext, UserDbContext>(options => options
-                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
-            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
-                .UseNpgsql(configuration.GetConnectionString(BlogsString)))
+            .AddDbContext<IBlogHubDbContext, BlogHubDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(ArticlesString)))
 
-            .AddScoped<IBlogRepository, BlogRepository>()
+            .AddScoped<IArticleRepository, ArticleRepository>()
             .AddScoped<ITagRepository, TagRepository>()
-            .AddScoped<IBlogTagRepository, BlogTagRepository>()
+            .AddScoped<IArticleTagRepository, ArticleTagRepository>()
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<ICommentRepository, CommentRepository>()
 

@@ -1,5 +1,5 @@
 using BlogHub.Api.Controllers;
-using BlogHub.Data.Blogs.Create.Helpers;
+using BlogHub.Data.Articles.Create.Helpers;
 using BlogHub.Data.Tags.Create.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

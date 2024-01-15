@@ -1,4 +1,5 @@
 using BlogHub.Api.Extensions;
+using BlogHub.Data.Common.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -8,9 +9,9 @@ namespace BlogHub.Api.Services;
 public class TagRepository : ITagRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly ITagDbContext _dbContext;
+    private readonly IBlogHubDbContext _dbContext;
 
-    public TagRepository(IDistributedCache cache, ITagDbContext dbContext) =>
+    public TagRepository(IDistributedCache cache, IBlogHubDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<List<Tag>?> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken)
@@ -22,6 +23,11 @@ public class TagRepository : ITagRepository
             .Where(tag => tag.UserId.Equals(userId))
             .ToListAsync(),
         cancellationToken);
+    }
+
+    public Task<List<Tag>?> GetAllByArticleIdAsync(Guid articleId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<List<Tag>?> GetAllAsync(CancellationToken cancellationToken)

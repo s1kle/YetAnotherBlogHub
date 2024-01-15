@@ -31,15 +31,15 @@ public class UserEventService : IUserEventService, IDisposable
 
         _channel.QueueDeclare(
                 queue: _eventCreatedKey,
-                durable: false,  
-                exclusive: false, 
+                durable: false,
+                exclusive: false,
                 autoDelete: false,
                 arguments: null);
 
         _channel.QueueDeclare(
                 queue: _eventDeletedKey,
-                durable: false,  
-                exclusive: false, 
+                durable: false,
+                exclusive: false,
                 autoDelete: false,
                 arguments: null);
 
@@ -49,13 +49,13 @@ public class UserEventService : IUserEventService, IDisposable
 
     public void Publish(UserCreatedEvent userCreatedEvent)
     {
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userCreatedEvent)); 
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userCreatedEvent));
         Publish(body, _createdKey);
     }
 
     public void Publish(UserDeletedEvent userDeletedEvent)
     {
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userDeletedEvent)); 
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userDeletedEvent));
         Publish(body, _deletedKey);
     }
 

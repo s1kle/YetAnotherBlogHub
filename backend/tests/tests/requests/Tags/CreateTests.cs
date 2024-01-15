@@ -14,7 +14,7 @@ public class CreateTests
         };
 
         var repository = A.Fake<ITagRepository>();
-    
+
         A.CallTo(() => repository.CreateAsync(A<Tag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 

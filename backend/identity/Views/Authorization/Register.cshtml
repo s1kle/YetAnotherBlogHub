@@ -19,16 +19,14 @@
               </div>
               <div class="col-12 h-25 d-flex align-items-center">
                 <div class="h-50 w-100 container border border-main-color p-0">
-                  <input class="w-100 h-100 bg-transparent border-0 text-white h5 p-2" 
-                    placeholder="Enter your username"
+                  <input class="w-100 h-100 bg-transparent border-0 text-white h5 p-2" placeholder="Enter your username"
                     asp-for="Username">
                   <span class="text-white" asp-validation-for="Username"></span>
                 </div>
               </div>
               <div class="col-12 h-25 d-flex align-items-center">
                 <div class="h-50 w-100 container border border-main-color p-0">
-                  <input class="w-100 h-100 bg-transparent border-0 text-white h5 p-2" 
-                    placeholder="Enter your password"
+                  <input class="w-100 h-100 bg-transparent border-0 text-white h5 p-2" placeholder="Enter your password"
                     asp-for="Password">
                   <span class="text-white" asp-validation-for="Password"></span>
                 </div>
@@ -37,30 +35,29 @@
                 <div class="w-100 h-50 container p-0">
                   <div class="row w-100 h-100 m-0">
                     <div class="col-4 container p-0">
-                      <button class="h-100 w-100 d-flex justify-content-center align-items-center bg-transparent border border-main-color">
-                          <div class="h5 text-white-50 m-0">Register</div>
+                      <button
+                        class="h-100 w-100 d-flex justify-content-center align-items-center bg-transparent border border-main-color">
+                        <div class="h5 text-white-50 m-0">Register</div>
                       </button>
                     </div>
                     <div class="col-1"></div>
                     <div class="col-7 container">
                       <div class="row">
-                      <div class="col-12 d-flex justify-content-end">
+                        <div class="col-12 d-flex justify-content-end">
                           <div class="h6">already have an account?</div>
                         </div>
                         <div class="col-12 d-flex justify-content-end">
                           <div class="h6">
-                            <a asp-controller="Authorization" 
-                               asp-action="Login"
-                               asp-route-returnUrl="@Model.ReturnUrl" 
-                               class="main-color">
-                               sign-in
+                            <a asp-controller="Authorization" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl"
+                              class="main-color">
+                              sign-in
                             </a>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
           </form>

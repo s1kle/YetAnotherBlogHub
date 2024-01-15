@@ -7,11 +7,11 @@ public class UnlinkTests
     {
         var requests = ValidatorFactory.CreateInvalidRequest<UnlinkTagCommand>(
             (c => c.TagId, Guid.Empty),
-            (c => c.BlogId, Guid.Empty),
+            (c => c.ArticleId, Guid.Empty),
             (c => c.UserId, Guid.Empty));
         var validators = ValidatorFactory.GetValidators<UnlinkTagCommand>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
             var context = new ValidationContext<UnlinkTagCommand>(request);
 

@@ -24,7 +24,7 @@ public class GetAllTests
 
         A.CallTo(() => repository.GetAllAsync(A<CancellationToken>._))
             .Returns(tags);
-            
+
         A.CallTo(() => mapper.Map<TagVm>(A<Tag>._))
             .ReturnsNextFromSequence(expected.ToArray());
 

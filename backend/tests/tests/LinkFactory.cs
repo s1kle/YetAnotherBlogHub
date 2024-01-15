@@ -2,10 +2,10 @@ namespace BlogHub.Tests;
 
 public class LinkFactory
 {
-    public static BlogTagLink CreateBlogTagLink(Blog blog, Tag tag) => new BlogTagLink()
+    public static ArticleTagLink CreateArticleTagLink(Article Article, Tag tag) => new ArticleTagLink()
     {
         Id = Guid.NewGuid(),
         TagId = tag.Id,
-        BlogId = blog.Id
+        ArticleId = Article.Id
     };
 }
