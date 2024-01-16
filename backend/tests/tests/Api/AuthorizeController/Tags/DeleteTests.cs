@@ -23,7 +23,7 @@ public class DeleteTests
 
         result.Should().BeEquivalentTo(expected);
 
-        fixture.TagDbContext.Tags.Should().BeEmpty();
+        fixture.BlogHubDbContext.Tags.Should().BeEmpty();
 
         fixture.EnsureDeleted();
     }

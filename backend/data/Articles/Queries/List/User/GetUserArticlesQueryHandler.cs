@@ -43,6 +43,6 @@ internal sealed class GetUserArticlesQueryHandler : IRequestHandler<GetUserArtic
             });
         }
 
-        return new() { Articles = temp.Select(_mapper.Map<ArticleListItemVm>).ToList() };
+        return new() { Articles = articles };
     }
 }

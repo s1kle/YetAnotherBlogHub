@@ -23,7 +23,7 @@ public class CreateCommentTests
 
         result.Should().NotBeNull();
 
-        var created = await fixture.CommentDbContext.Comments.FirstOrDefaultAsync();
+        var created = await fixture.BlogHubDbContext.Comments.FirstOrDefaultAsync();
 
         created.Should().NotBeNull();
 

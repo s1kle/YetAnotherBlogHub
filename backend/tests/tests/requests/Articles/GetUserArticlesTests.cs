@@ -9,40 +9,49 @@ public class GetUserArticlesTests
     {
         var size = 10;
 
-        var Articles = ArticleFactory.CreateArticles(size, Guid.NewGuid());
+        var articles = ArticleFactory.CreateArticles(size, Guid.NewGuid());
 
-        var expected = Articles.Select(Article => new ArticleListItemVm()
+        var expected = articles.Select(Article => new ArticleListItemVm()
         {
-            UserId = Guid.Empty,
             Id = Article.Id,
             Title = Article.Title,
-            CreationDate = Article.CreationDate
+            CreationDate = Article.CreationDate,
+            Author = "null"
         }).ToList();
 
         var query = new GetUserArticlesQuery()
         {
-            UserId = Articles[0].UserId,
+            UserId = articles[0].UserId,
             Page = 0,
             Size = 10
         };
 
+        User? user = null;
+        List<Tag>? tags = null;
+
         var repository = A.Fake<IArticleRepository>();
+        var tagRepository = A.Fake<ITagRepository>();
+        var userRepository = A.Fake<IUserRepository>();
         var mapper = A.Fake<IMapper>();
 
         A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
-            .Returns(Articles);
+            .Returns(articles);
+        A.CallTo(() => userRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(user);
+        A.CallTo(() => tagRepository.GetAllByArticleIdAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(tags);
 
         A.CallTo(() => mapper.Map<ArticleListItemVm>(A<Article>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetUserArticlesQueryHandler(repository, mapper);
+        var handler = new GetUserArticlesQueryHandler(repository, userRepository, tagRepository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
         A.CallTo(() => repository.GetAllByUserIdAsync(A<Guid>._, A<int>._, A<int>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Guid userId, int page, int size, CancellationToken token) =>
             {
-                userId.Should().Be(Articles[0].UserId);
+                userId.Should().Be(articles[0].UserId);
                 page.Should().Be(query.Page);
                 size.Should().Be(query.Size);
                 token.Should().Be(CancellationToken.None);
@@ -54,7 +63,7 @@ public class GetUserArticlesTests
             .WhenArgumentsMatch((object arg) =>
             {
                 var actual = (Article?)arg;
-                Articles.IndexOf(actual!).Should().NotBe(-1);
+                articles.IndexOf(actual!).Should().NotBe(-1);
                 return true;
             })
             .MustHaveHappened(size, Times.Exactly);

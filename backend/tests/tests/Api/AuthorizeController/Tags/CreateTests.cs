@@ -27,7 +27,7 @@ public class CreateTests
 
         result.Should().NotBeNull();
 
-        var actual = await fixture.TagDbContext.Tags.FirstOrDefaultAsync();
+        var actual = await fixture.BlogHubDbContext.Tags.FirstOrDefaultAsync();
 
         actual.Should().NotBeNull();
         actual!.Name.Should().BeEquivalentTo(expected.Name);

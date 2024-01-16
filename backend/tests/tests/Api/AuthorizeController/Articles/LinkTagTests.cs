@@ -27,7 +27,7 @@ public class LinkTagTests
 
         temp.Should().NotBeNull();
 
-        var linkedTag = await fixture.ArticleTagDbContext.Links.FirstOrDefaultAsync();
+        var linkedTag = await fixture.BlogHubDbContext.ArticleTags.FirstOrDefaultAsync();
 
         linkedTag.Should().NotBeNull();
 

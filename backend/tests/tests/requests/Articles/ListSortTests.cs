@@ -12,7 +12,6 @@ public class ListSortTests
 
         var Articles = ArticleFactory.CreateArticles(size).Select(Article => new ArticleListItemVm()
         {
-            UserId = Guid.Empty,
             Id = Article.Id,
             Title = Article.Title,
             CreationDate = Article.CreationDate
@@ -60,7 +59,6 @@ public class ListSortTests
 
         var Articles = ArticleFactory.CreateArticles(size).Select(Article => new ArticleListItemVm()
         {
-            UserId = Guid.Empty,
             Id = Article.Id,
             Title = Article.Title,
             CreationDate = Article.CreationDate

@@ -2,7 +2,7 @@ namespace BlogHub.Tests;
 
 public class LinkFactory
 {
-    public static ArticleTagLink CreateArticleTagLink(Article Article, Tag tag) => new ArticleTagLink()
+    public static ArticleTag CreateArticleTagLink(Article Article, Tag tag) => new ArticleTag()
     {
         Id = Guid.NewGuid(),
         TagId = tag.Id,

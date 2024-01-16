@@ -13,10 +13,10 @@ public class GetAllTests
 
         var expected = Articles.Select(Article => new ArticleListItemVm()
         {
-            UserId = Guid.Empty,
             Id = Article.Id,
             Title = Article.Title,
-            CreationDate = Article.CreationDate
+            CreationDate = Article.CreationDate,
+            Author = "null"
         }).ToList();
 
         var query = new GetAllArticlesQuery()
@@ -25,16 +25,25 @@ public class GetAllTests
             Size = 10
         };
 
+        User? user = null;
+        List<Tag>? tags = null;
+
         var repository = A.Fake<IArticleRepository>();
+        var tagRepository = A.Fake<ITagRepository>();
+        var userRepository = A.Fake<IUserRepository>();
         var mapper = A.Fake<IMapper>();
 
         A.CallTo(() => repository.GetAllAsync(A<int>._, A<int>._, A<CancellationToken>._))
             .Returns(Articles);
+        A.CallTo(() => userRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(user);
+        A.CallTo(() => tagRepository.GetAllByArticleIdAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(tags);
 
         A.CallTo(() => mapper.Map<ArticleListItemVm>(A<Article>._))
             .ReturnsNextFromSequence(expected.ToArray());
 
-        var handler = new GetAllArticlesQueryHandler(repository, mapper);
+        var handler = new GetAllArticlesQueryHandler(repository, userRepository, tagRepository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 

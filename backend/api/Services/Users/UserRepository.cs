@@ -10,28 +10,33 @@ public class UserRepository : IUserRepository
 {
     private readonly IDistributedCache _cache;
     private readonly IBlogHubDbContext _dbContext;
+    private readonly string _prefix = "user";
 
     public UserRepository(IDistributedCache cache, IBlogHubDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
     public async Task<User?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        var key = $"Name:User;Entity:{id}";
+        var key = $"{_prefix}:user{id}";
 
-        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
-            .Users
-            .FirstOrDefaultAsync(user => user.Id.Equals(id), cancellationToken),
+        var query =
+            from user in _dbContext.Users
+            where user.Id.Equals(id)
+            select user;
+
+        return await _cache.GetOrCreateItemAsync(key, async () => await query
+            .FirstOrDefaultAsync(cancellationToken),
         cancellationToken);
     }
 
     public async Task<Guid> CreateAsync(User user, CancellationToken cancellationToken)
     {
-        var key = $"Name:User;Entity:{user.Id}";
+        var key = $"{_prefix}:user{user.Id}";
 
         await _dbContext.Users.AddAsync(user, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.ClearAsync(cancellationToken);
+        await _cache.ClearAsync(_prefix, cancellationToken);
         await _cache.SetItemAsync(key, user, cancellationToken);
 
         return user.Id;
@@ -42,7 +47,7 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Remove(user);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.ClearAsync(cancellationToken);
+        await _cache.ClearAsync(_prefix, cancellationToken);
 
         return user.Id;
     }

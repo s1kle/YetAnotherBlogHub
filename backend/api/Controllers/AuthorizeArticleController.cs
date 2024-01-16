@@ -24,7 +24,7 @@ public sealed class AuthorizeArticleController : BaseController
 {
     public AuthorizeArticleController(IMediator mediator) : base(mediator) { }
 
-    [HttpGet("my-Articles")]
+    [HttpGet("my-articles")]
     public async Task<ActionResult<ArticleListVm>> GetAll([FromQuery] ArticleListDto dto)
     {
         var query = new GetUserArticlesQuery() { Page = dto.List.Page, Size = dto.List.Size, UserId = UserId };
@@ -41,7 +41,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(response);
     }
 
-    [HttpPost("Article/create")]
+    [HttpPost("article/create")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateArticleDto dto)
     {
         var command = new CreateArticleCommand
@@ -56,7 +56,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(ArticleId);
     }
 
-    [HttpPut("Article/{id}/update")]
+    [HttpPut("article/{id}/update")]
     public async Task<ActionResult<Guid>> Update(Guid id, [FromBody] UpdateArticleDto dto)
     {
         var command = new UpdateArticleCommand
@@ -72,7 +72,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(ArticleId);
     }
 
-    [HttpDelete("Article/{id}/delete")]
+    [HttpDelete("article/{id}/delete")]
     public async Task<ActionResult<Guid>> Delete(Guid id)
     {
         var command = new DeleteArticleCommand
@@ -86,7 +86,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(ArticleId);
     }
 
-    [HttpPost("Article/{id}/comment/create")]
+    [HttpPost("article/{id}/comment/create")]
     public async Task<ActionResult<Guid>> CreateComment(Guid id, [FromBody] CreateCommentDto dto)
     {
         var command = new CreateCommentCommand
@@ -101,7 +101,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(ArticleId);
     }
 
-    [HttpDelete("Article/{id}/comment/{commentId}/delete")]
+    [HttpDelete("article/{id}/comment/{commentId}/delete")]
     public async Task<ActionResult<Guid>> DeleteComment(Guid id, Guid commentId)
     {
         var command = new DeleteCommentCommand
@@ -115,7 +115,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(ArticleId);
     }
 
-    [HttpPost("Article/{id}/tag/link")]
+    [HttpPost("article/{id}/tag/link")]
     public async Task<ActionResult<Guid>> LinkTag(Guid id, [FromBody] LinkTagDto dto)
     {
         var query = new LinkTagCommand
@@ -130,7 +130,7 @@ public sealed class AuthorizeArticleController : BaseController
         return Ok(response);
     }
 
-    [HttpDelete("Article/{id}/tag/{tagId}/unlink")]
+    [HttpDelete("article/{id}/tag/{tagId}/unlink")]
     public async Task<ActionResult<Guid>> UnlinkTag(Guid id, Guid tagId)
     {
         var query = new UnlinkTagCommand

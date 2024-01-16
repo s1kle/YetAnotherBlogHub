@@ -46,8 +46,8 @@ public class GetAllTests
         {
             Articles = Articles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
+                Author = "null",
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
                 Tags = Array.Empty<TagVm>(),
@@ -88,8 +88,8 @@ public class GetAllTests
         {
             Articles = searchedArticles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
+                Author = "null",
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
                 Tags = Array.Empty<TagVm>(),
@@ -135,8 +135,8 @@ public class GetAllTests
         {
             Articles = Articles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
+                Author = "null",
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
                 Tags = Array.Empty<TagVm>(),

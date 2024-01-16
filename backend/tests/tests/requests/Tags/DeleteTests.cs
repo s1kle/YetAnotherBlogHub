@@ -13,19 +13,14 @@ public class DeleteTests
             Id = expected.Id
         };
 
-        List<ArticleTagLink>? links = null;
-
         var tagRepository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IArticleTagRepository>();
 
-        A.CallTo(() => linkRepository.GetAllAsync(A<CancellationToken>._))
-            .Returns(links);
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         A.CallTo(() => tagRepository.RemoveAsync(A<Tag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
-        var handler = new DeleteTagCommandHandler(tagRepository, linkRepository);
+        var handler = new DeleteTagCommandHandler(tagRepository);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
@@ -59,14 +54,11 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IArticleTagRepository>();
 
-        A.CallTo(() => linkRepository.GetAllAsync(A<CancellationToken>._))
-            .Returns(new List<ArticleTagLink>());
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
 
-        var handler = new DeleteTagCommandHandler(repository, linkRepository);
+        var handler = new DeleteTagCommandHandler(repository);
 
         await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
@@ -92,14 +84,11 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IArticleTagRepository>();
 
-        A.CallTo(() => linkRepository.GetAllAsync(A<CancellationToken>._))
-            .Returns(new List<ArticleTagLink>());
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
 
-        var handler = new DeleteTagCommandHandler(repository, linkRepository);
+        var handler = new DeleteTagCommandHandler(repository);
 
         await Assert.ThrowsAsync<NotFoundException>(async () =>
         {

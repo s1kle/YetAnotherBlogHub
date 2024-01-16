@@ -14,7 +14,7 @@ public sealed class UnauthorizeArticleController : BaseController
 {
     public UnauthorizeArticleController(IMediator mediator) : base(mediator) { }
 
-    [HttpGet("Articles")]
+    [HttpGet("articles")]
     public async Task<ActionResult<ArticleListVm>> GetAll([FromQuery] ArticleListDto dto)
     {
         var query = new GetAllArticlesQuery() { Page = dto.List.Page, Size = dto.List.Size };
@@ -31,7 +31,7 @@ public sealed class UnauthorizeArticleController : BaseController
         return Ok(response);
     }
 
-    [HttpGet("Article/{id}")]
+    [HttpGet("article/{id}")]
     public async Task<ActionResult<ArticleVm>> Get(Guid id)
     {
         var query = new GetArticleQuery() { Id = id };

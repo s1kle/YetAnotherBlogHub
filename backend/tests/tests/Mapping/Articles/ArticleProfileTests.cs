@@ -13,7 +13,6 @@ public class ArticleProfileTests
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var expected = new ArticleVm()
         {
-            UserId = userId,
             Id = Article.Id,
             Title = Article.Title,
             CreationDate = Article.CreationDate,
@@ -36,7 +35,6 @@ public class ArticleProfileTests
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var expected = new ArticleListItemVm()
         {
-            UserId = userId,
             Id = Article.Id,
             Title = Article.Title,
             CreationDate = Article.CreationDate

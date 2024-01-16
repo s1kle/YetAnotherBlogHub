@@ -10,61 +10,44 @@ public class ArticleTagRepository : IArticleTagRepository
 {
     private readonly IDistributedCache _cache;
     private readonly IBlogHubDbContext _dbContext;
+    private readonly string _prefix = "articleTag";
 
     public ArticleTagRepository(IDistributedCache cache, IBlogHubDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
-    public async Task<List<ArticleTagLink>?> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<ArticleTag?> GetAsync(Guid articleId, Guid tagId, CancellationToken cancellationToken)
     {
-        var key = "Name:ArticleTags";
+        var key = $"{_prefix}:aricle{articleId},tag{tagId}";
 
-        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
-            .Links
-            .ToListAsync(),
+        var query =
+            from link in _dbContext.ArticleTags
+            where link.TagId.Equals(tagId) && link.ArticleId.Equals(articleId)
+            select link;
+
+        return await _cache.GetOrCreateItemAsync(key, async () => await query
+            .FirstOrDefaultAsync(cancellationToken),
         cancellationToken);
     }
 
-    public async Task<List<ArticleTagLink>?> GetAllByArticleIdAsync(Guid articleId, CancellationToken cancellationToken)
+    public async Task<Guid> CreateAsync(ArticleTag link, CancellationToken cancellationToken)
     {
-        var key = $"Name:ArticleTags;Article:{ArticleId}";
+        var key = $"{_prefix}:link{link.Id}";
 
-        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
-            .Links
-            .Where(link => link.ArticleId.Equals(ArticleId))
-            .ToListAsync(),
-        cancellationToken);
-    }
-
-    public async Task<ArticleTagLink?> GetAsync(Guid articleId, Guid tagId, CancellationToken cancellationToken)
-    {
-        var key = $"Name:ArticleTag;Article:{ArticleId};Tag:{tagId}";
-
-        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext
-            .Links
-            .FirstOrDefaultAsync(link => link.ArticleId.Equals(ArticleId) &&
-                link.TagId.Equals(tagId), cancellationToken),
-        cancellationToken);
-    }
-
-    public async Task<Guid> CreateAsync(ArticleTagLink link, CancellationToken cancellationToken)
-    {
-        var key = $"Name:ArticleTag;Entity:{link.Id}";
-
-        await _dbContext.Links.AddAsync(link, cancellationToken);
+        await _dbContext.ArticleTags.AddAsync(link, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.ClearAsync(cancellationToken);
+        await _cache.ClearAsync(_prefix, cancellationToken);
         await _cache.SetItemAsync(key, link, cancellationToken);
 
         return link.Id;
     }
 
-    public async Task<Guid> RemoveAsync(ArticleTagLink link, CancellationToken cancellationToken)
+    public async Task<Guid> RemoveAsync(ArticleTag link, CancellationToken cancellationToken)
     {
-        _dbContext.Links.Remove(link);
+        _dbContext.ArticleTags.Remove(link);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.ClearAsync(cancellationToken);
+        await _cache.ClearAsync(_prefix, cancellationToken);
 
         return link.Id;
     }

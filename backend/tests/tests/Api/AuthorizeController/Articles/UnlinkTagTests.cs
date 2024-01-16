@@ -21,7 +21,7 @@ public class UnlinkTagTests
 
         await fixture.Controller.UnlinkTag(Article.Id, tag.Id);
 
-        var ArticleTag = await fixture.ArticleTagDbContext.Links.FirstOrDefaultAsync();
+        var ArticleTag = await fixture.BlogHubDbContext.ArticleTags.FirstOrDefaultAsync();
 
         ArticleTag.Should().BeNull();
 

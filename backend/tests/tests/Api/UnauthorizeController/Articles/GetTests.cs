@@ -15,21 +15,21 @@ public class GetTests
         var fixture = ControllerFactory.CreateFixture<UnauthorizeArticleController>();
         fixture.EnsureCreated();
 
-        var Article = ArticleFactory.CreateArticle(userId: fixture.UserId);
-        await fixture.AddRangeAsync(new[] { Article });
+        var article = ArticleFactory.CreateArticle(userId: fixture.UserId);
+        await fixture.AddRangeAsync(new[] { article });
 
         var expected = new OkObjectResult(new ArticleVm()
         {
-            UserId = Article.UserId,
-            Title = Article.Title,
-            Details = Article.Details,
-            Id = Article.Id,
-            CreationDate = Article.CreationDate,
+            Title = article.Title,
+            Details = article.Details,
+            Id = article.Id,
+            CreationDate = article.CreationDate,
+            Author = "null",
             Tags = Array.Empty<TagVm>(),
             Comments = Array.Empty<CommentVm>()
         });
 
-        var temp = await fixture.Controller.Get(Article.Id);
+        var temp = await fixture.Controller.Get(article.Id);
 
         var result = temp.Result as OkObjectResult;
 

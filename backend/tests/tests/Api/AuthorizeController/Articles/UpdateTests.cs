@@ -34,7 +34,7 @@ public class UpdateTests
 
         result.Should().NotBeNull();
 
-        var actual = await fixture.ArticleDbContext.Articles.FirstOrDefaultAsync();
+        var actual = await fixture.BlogHubDbContext.Articles.FirstOrDefaultAsync();
 
         actual.Should().NotBeNull();
         actual!.Id.Should().Be(expected.Id);

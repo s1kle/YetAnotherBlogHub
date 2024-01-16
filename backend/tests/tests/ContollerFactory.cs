@@ -3,13 +3,15 @@ using BlogHub.Api.Services;
 using BlogHub.Api.Services.Articles;
 using BlogHub.Api.Services.ArticleTags;
 using BlogHub.Api.Services.Comments;
-using BlogHub.Api.Services.Tags;
 using BlogHub.Api.Services.Users;
+using BlogHub.Data.Common.Interfaces;
 using BlogHub.Data.Common.Validation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace BlogHub.Tests;
 
@@ -34,28 +36,17 @@ public class ControllerFactory
                 .RegisterServicesFromAssembly(dataAssembly));
 
         services
-            .AddDbContext<IArticleDbContext, ArticleDbContext>(options => options
+            .AddDbContext<IBlogHubDbContext, BlogHubDbContext>(options => options
                 .UseInMemoryDatabase(id))
+
             .AddScoped<IArticleRepository, ArticleRepository>()
-
-            .AddDbContext<ITagDbContext, TagDbContext>(options => options
-                .UseInMemoryDatabase(id))
             .AddScoped<ITagRepository, TagRepository>()
-
-            .AddDbContext<IArticleTagDbContext, ArticleTagDbContext>(options => options
-                .UseInMemoryDatabase(id))
             .AddScoped<IArticleTagRepository, ArticleTagRepository>()
-
-            .AddDbContext<IUserDbContext, UserDbContext>(options => options
-                .UseInMemoryDatabase(id))
             .AddScoped<IUserRepository, UserRepository>()
-
-            .AddDbContext<ICommentDbContext, CommentDbContext>(options => options
-                .UseInMemoryDatabase(id))
             .AddScoped<ICommentRepository, CommentRepository>()
 
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
-            .AddScoped<IDistributedCache, MemoryDistributedCache>()
+            .AddTransient<IDistributedCache, MemoryDistributedCache>()
 
             .AddScoped<AuthorizeArticleController>()
             .AddScoped<AuthorizeTagController>()

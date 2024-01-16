@@ -29,7 +29,7 @@ internal sealed class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Gu
 
         if (link is not null) return link.Id;
 
-        link = new ArticleTagLink()
+        link = new ArticleTag()
         {
             Id = Guid.NewGuid(),
             ArticleId = Article.Id,

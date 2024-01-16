@@ -46,11 +46,11 @@ public class GetAllTests
         {
             Articles = Articles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
-                Tags = Array.Empty<TagVm>(),
+                Author = "null",
+                Tags = Array.Empty<TagVm>()
             }).ToList()
         });
 
@@ -88,11 +88,11 @@ public class GetAllTests
         {
             Articles = searchedArticles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
+                Author = "null",
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
-                Tags = Array.Empty<TagVm>(),
+                Tags = Array.Empty<TagVm>()
             }).ToList()
         });
 
@@ -135,11 +135,11 @@ public class GetAllTests
         {
             Articles = Articles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
+                Author = "null",
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
-                Tags = Array.Empty<TagVm>(),
+                Tags = Array.Empty<TagVm>()
             }).OrderByDescending(Article => Article.Title).ToList()
         });
 
@@ -179,11 +179,11 @@ public class GetAllTests
         {
             Articles = Articles.Select(Article => new ArticleListItemVm()
             {
-                UserId = fixture.UserId,
                 Title = Article.Title,
+                Author = "null",
                 Id = Article.Id,
                 CreationDate = Article.CreationDate,
-                Tags = Array.Empty<TagVm>(),
+                Tags = Array.Empty<TagVm>()
             }).ToList()
         });
 

@@ -24,7 +24,7 @@ public class DeleteCommentTests
 
         result.Should().NotBeNull();
 
-        var deletedComment = await fixture.CommentDbContext.Comments.FirstOrDefaultAsync();
+        var deletedComment = await fixture.BlogHubDbContext.Comments.FirstOrDefaultAsync();
 
         deletedComment.Should().BeNull();
 

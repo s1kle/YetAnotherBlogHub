@@ -27,7 +27,7 @@ public class UninkTests
             .Returns(tag);
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new UnlinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -60,8 +60,8 @@ public class UninkTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
-            .WhenArgumentsMatch((ArticleTagLink actual, CancellationToken token) =>
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
+            .WhenArgumentsMatch((ArticleTag actual, CancellationToken token) =>
             {
                 actual.Should().BeEquivalentTo(expected);
                 token.Should().Be(CancellationToken.None);
@@ -79,7 +79,7 @@ public class UninkTests
         var userId = Guid.NewGuid();
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        ArticleTagLink? temp = null;
+        ArticleTag? temp = null;
         var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new UnlinkTagCommand()
@@ -102,7 +102,7 @@ public class UninkTests
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new UnlinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -125,7 +125,7 @@ public class UninkTests
             .MustNotHaveHappened();
         A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
@@ -135,7 +135,7 @@ public class UninkTests
         var userId = Guid.NewGuid();
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        ArticleTagLink? temp = null;
+        ArticleTag? temp = null;
         var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new UnlinkTagCommand()
@@ -158,7 +158,7 @@ public class UninkTests
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new UnlinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -188,7 +188,7 @@ public class UninkTests
 
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
@@ -219,7 +219,7 @@ public class UninkTests
             .Returns(tag);
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(Guid.Empty);
 
         var handler = new UnlinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -257,7 +257,7 @@ public class UninkTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.RemoveAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 }

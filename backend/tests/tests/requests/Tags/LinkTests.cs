@@ -8,7 +8,7 @@ public class LinkTests
         var userId = Guid.NewGuid();
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        ArticleTagLink? temp = null;
+        ArticleTag? temp = null;
         var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
@@ -29,7 +29,7 @@ public class LinkTests
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -62,8 +62,8 @@ public class LinkTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
-            .WhenArgumentsMatch((ArticleTagLink actual, CancellationToken token) =>
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
+            .WhenArgumentsMatch((ArticleTag actual, CancellationToken token) =>
             {
                 actual.ArticleId.Should().Be(expected.ArticleId);
                 actual.TagId.Should().Be(expected.TagId);
@@ -81,7 +81,7 @@ public class LinkTests
         var userId = Guid.NewGuid();
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        ArticleTagLink? temp = null;
+        ArticleTag? temp = null;
         var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
@@ -104,7 +104,7 @@ public class LinkTests
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -127,7 +127,7 @@ public class LinkTests
             .MustNotHaveHappened();
         A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
@@ -137,7 +137,7 @@ public class LinkTests
         var userId = Guid.NewGuid();
         var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        ArticleTagLink? temp = null;
+        ArticleTag? temp = null;
         var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
@@ -160,7 +160,7 @@ public class LinkTests
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -190,7 +190,7 @@ public class LinkTests
 
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
@@ -220,7 +220,7 @@ public class LinkTests
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
 
         var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
@@ -255,7 +255,7 @@ public class LinkTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
 
         result.Should().Be(expected.Id);

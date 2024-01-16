@@ -17,7 +17,7 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<List<Article>?> GetAllAsync(int page, int size, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix},page{page},size{size}";
+        var key = $"{_prefix}:page{page},size{size}";
 
         var query =
             from article in _dbContext.Articles
@@ -36,7 +36,7 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<List<Article>?> GetAllByUserIdAsync(Guid userId, int page, int size, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix},page{page},size{size},user{userId}";
+        var key = $"{_prefix}:page{page},size{size},user{userId}";
 
         var query =
             from article in _dbContext.Articles
@@ -56,7 +56,7 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<Article?> GetAsync(Guid articleId, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix},{articleId}";
+        var key = $"{_prefix}:article{articleId}";
 
         var query =
             from article in _dbContext.Articles
@@ -70,7 +70,7 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<Guid> CreateAsync(Article article, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix},{article.Id}";
+        var key = $"{_prefix}:article{article.Id}";
 
         await _dbContext.Articles.AddAsync(article, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -83,7 +83,7 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<Guid> UpdateAsync(Article original, Article updated, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix},{original.Id}";
+        var key = $"{_prefix}:article{original.Id}";
 
         _dbContext.Articles.Remove(original);
         await _dbContext.Articles.AddAsync(updated, cancellationToken);
@@ -110,8 +110,8 @@ public class ArticleRepository : IArticleRepository
         if (page < 0) return;
 
         var key = userId is null
-            ? $"{_prefix},page{page},size{size}"
-            : $"{_prefix},page{page},size{size},user{userId}";
+            ? $"{_prefix}:page{page},size{size}"
+            : $"{_prefix}:page{page},size{size},user{userId}";
 
         if (await _cache.ContainsAsync(key, cancellationToken)) return;
 

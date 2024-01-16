@@ -12,10 +12,10 @@ public class GetTests
 
         var expected = new ArticleVm()
         {
-            UserId = userId,
             Id = Article.Id,
             Title = Article.Title,
-            CreationDate = Article.CreationDate
+            CreationDate = Article.CreationDate,
+            Author = "null"
         };
 
         var query = new GetArticleQuery()
@@ -23,16 +23,29 @@ public class GetTests
             Id = Article.Id
         };
 
+        User? user = null;
+        List<Tag>? tags = null;
+        List<Comment>? comments = null;
+
         var repository = A.Fake<IArticleRepository>();
+        var tagRepository = A.Fake<ITagRepository>();
+        var userRepository = A.Fake<IUserRepository>();
+        var commentRepository = A.Fake<ICommentRepository>();
         var mapper = A.Fake<IMapper>();
 
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(Article);
+        A.CallTo(() => userRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+        .Returns(user);
+        A.CallTo(() => tagRepository.GetAllByArticleIdAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(tags);
+        A.CallTo(() => commentRepository.GetAllByArticleIdAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(comments);
 
         A.CallTo(() => mapper.Map<ArticleVm>(A<Article>._))
             .Returns(expected);
 
-        var handler = new GetArticleQueryHandler(repository, mapper);
+        var handler = new GetArticleQueryHandler(repository, userRepository, commentRepository, tagRepository, mapper);
 
         var result = await handler.Handle(query, CancellationToken.None);
 
@@ -59,12 +72,15 @@ public class GetTests
         };
 
         var repository = A.Fake<IArticleRepository>();
+        var tagRepository = A.Fake<ITagRepository>();
+        var userRepository = A.Fake<IUserRepository>();
+        var commentRepository = A.Fake<ICommentRepository>();
         var mapper = A.Fake<IMapper>();
 
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(Article);
 
-        var handler = new GetArticleQueryHandler(repository, mapper);
+        var handler = new GetArticleQueryHandler(repository, userRepository, commentRepository, tagRepository, mapper);
 
         await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
