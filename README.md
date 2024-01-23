@@ -8,25 +8,9 @@
 >
 ><hr>
 >
->*Blog ERD*:
+>*Data ERD*:
 >
->![Blog ERD screen](https://i.imgur.com/BAOtdam.png)
->
->*Tag ERD*:
->
->![Tag ERD screen](https://i.imgur.com/tcdxquB.png)
->
->*Link ERD*:
->
->![Link ERD screen](https://i.imgur.com/0lwIunM.png)
->
->*User ERD*:
->
->![User ERD screen](https://i.imgur.com/T2yI1bV.png)
->
->*Сomment ERD*:
->
->![Сomment ERD screen](https://i.imgur.com/nBEzIeS.png)
+>![Blog ERD screen](https://i.imgur.com/zyix2a4.png)
 >
 >Client
 >
@@ -36,7 +20,7 @@
 >[!IMPORTANT]
 >### This is my pet-project to show my skills in c# w/ asp.net (and some ts w/ angular) 
 1. *Idea*:
-  - Fullstack application for working with blogs
+  - Fullstack application for working with articles
 2. *Tech stack*:
   - Frontend:
     - Angular
@@ -67,10 +51,16 @@
     - Domain layer with blog entity, CQRS implementation for data layer to handle queries and commands, Input validation and mapping, ASP.NET Core Web API with blog controller, IdentityServer4 for authentication and authorization, Integration testing using xUnit
 
 >[!WARNING]
->If you want to start app:
->
->1. ***Rename*** ***appsettings.template.json*** to ***appsettings.json*** (api/identity) and provide your configuration
+>Requirements: Docker
+>If you want to start backend:
 >
 >1. ***Configure*** IdentityServer by providing your own details in the configuration class at ***Config/IdentityServerConfiguration.cs*** file (Template available in ***Config/IdentityServerConfiguration-Template.cs***)
 > 
->1. No ***entry point*** yet, so you have to build/start projects (***frontend/angular_client*** | ***backend/api*** | ***backend/identity***) and setup database manually
+>1. Go to the ***backend*** directory and run the PowerShell (.ps1) or Bash (.sh) script.
+>- For regular use: run `.\up.ps1` or `.\up.sh`
+>- For development (rebuilding api/identity containers on host file save): run `.\watch.ps1` or `.\watch.sh`
+>- To initialize the database context, run:
+>```
+>docker exec -it api dotnet ef database update
+>docker exec -it identity dotnet ef database update
+>```
