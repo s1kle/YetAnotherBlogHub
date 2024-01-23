@@ -34,9 +34,9 @@ public class AuthorizeTagController : BaseController
             Name = dto.Name
         };
 
-        var blogId = await Mediator.Send(command);
+        var ArticleId = await Mediator.Send(command);
 
-        return Ok(blogId);
+        return Ok(ArticleId);
     }
 
     [HttpDelete("tag/{id}/delete")]
@@ -48,8 +48,8 @@ public class AuthorizeTagController : BaseController
             UserId = UserId
         };
 
-        var blogId = await Mediator.Send(command);
+        var ArticleId = await Mediator.Send(command);
 
-        return Ok(blogId);
+        return Ok(ArticleId);
     }
 }

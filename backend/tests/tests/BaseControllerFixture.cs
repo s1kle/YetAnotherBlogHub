@@ -1,21 +1,16 @@
 using System.Security.Claims;
-using BlogHub.Api.Services.Blogs;
-using BlogHub.Api.Services.BlogTags;
-using BlogHub.Api.Services.Comments;
-using BlogHub.Api.Services.Tags;
-using BlogHub.Api.Services.Users;
+using BlogHub.Api.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace BlogHub.Tests;
 
 public abstract class BaseControllerFixture
 {
-    public BlogDbContext BlogDbContext { get; init; }
-    public TagDbContext TagDbContext { get; init; }
-    public BlogTagDbContext BlogTagDbContext { get; init; }
-    public UserDbContext UserDbContext { get; init; }
-    public CommentDbContext CommentDbContext { get; init; }
+    public BlogHubDbContext BlogHubDbContext { get; init; }
     public Guid UserId => _userState
         ? _userId
         : _wrongUserId;
@@ -25,11 +20,7 @@ public abstract class BaseControllerFixture
 
     public BaseControllerFixture(ServiceProvider serviceProvider)
     {
-        BlogDbContext = serviceProvider.GetRequiredService<BlogDbContext>();
-        TagDbContext = serviceProvider.GetRequiredService<TagDbContext>();
-        BlogTagDbContext = serviceProvider.GetRequiredService<BlogTagDbContext>();
-        UserDbContext = serviceProvider.GetRequiredService<UserDbContext>();
-        CommentDbContext = serviceProvider.GetRequiredService<CommentDbContext>();
+        BlogHubDbContext = serviceProvider.GetRequiredService<BlogHubDbContext>();
 
         _userId = Guid.Parse("681e7e3e-0618-5a0c-a9d2-9cae1397baa4");
         _wrongUserId = Guid.Parse("af59d62a-ed51-5845-b953-d922356e24c2");
@@ -51,15 +42,15 @@ public abstract class BaseControllerFixture
     {
         var task = entities.GetType() switch
         {
-            _ when typeof(T).Equals(typeof(Blog)) => BlogDbContext
+            _ when typeof(T).Equals(typeof(Article)) => BlogHubDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
-            _ when typeof(T).Equals(typeof(Tag)) => TagDbContext
+            _ when typeof(T).Equals(typeof(Tag)) => BlogHubDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
-            _ when typeof(T).Equals(typeof(BlogTagLink)) => BlogTagDbContext
+            _ when typeof(T).Equals(typeof(ArticleTag)) => BlogHubDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
-            _ when typeof(T).Equals(typeof(Comment)) => CommentDbContext
+            _ when typeof(T).Equals(typeof(Comment)) => BlogHubDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
-            _ when typeof(T).Equals(typeof(User)) => UserDbContext
+            _ when typeof(T).Equals(typeof(User)) => BlogHubDbContext
                 .AddRangeAsync(entities.Select(entity => (object)entity!)),
             _ => throw new InvalidOperationException()
         };
@@ -71,27 +62,19 @@ public abstract class BaseControllerFixture
 
     private async Task SaveChangesAsync()
     {
-        await BlogDbContext.SaveChangesAsync();
-        await TagDbContext.SaveChangesAsync();
-        await BlogTagDbContext.SaveChangesAsync();
-        await CommentDbContext.SaveChangesAsync();
-        await UserDbContext.SaveChangesAsync();
+        await BlogHubDbContext.SaveChangesAsync();
     }
 
     public abstract void ChangeUser();
 
     public void EnsureCreated()
     {
-        BlogDbContext.Database.EnsureCreated();
-        TagDbContext.Database.EnsureCreated();
-        BlogTagDbContext.Database.EnsureCreated();
+        BlogHubDbContext.Database.EnsureCreated();
     }
 
     public void EnsureDeleted()
     {
-        BlogDbContext.Database.EnsureDeleted();
-        TagDbContext.Database.EnsureDeleted();
-        BlogTagDbContext.Database.EnsureDeleted();
+        BlogHubDbContext.Database.EnsureDeleted();
     }
 
     private ClaimsPrincipal GetUser() =>

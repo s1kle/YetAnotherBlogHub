@@ -1,5 +1,5 @@
 using BlogHub.Api.Controllers;
-using BlogHub.Data.Blogs.Create.Helpers;
+using BlogHub.Data.Articles.Create.Helpers;
 using BlogHub.Data.Tags.Create.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,7 @@ public class CreateTests
 
         result.Should().NotBeNull();
 
-        var actual = await fixture.TagDbContext.Tags.FirstOrDefaultAsync();
+        var actual = await fixture.BlogHubDbContext.Tags.FirstOrDefaultAsync();
 
         actual.Should().NotBeNull();
         actual!.Name.Should().BeEquivalentTo(expected.Name);

@@ -1,4 +1,5 @@
 using BlogHub.Api.Extensions;
+using BlogHub.Data.Common.Interfaces;
 using BlogHub.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -8,18 +9,21 @@ namespace BlogHub.Api.Services.Comments;
 public class CommentRepository : ICommentRepository
 {
     private readonly IDistributedCache _cache;
-    private readonly ICommentDbContext _dbContext;
+    private readonly IBlogHubDbContext _dbContext;
+    private readonly string _prefix = "comment";
 
-    public CommentRepository(IDistributedCache cache, ICommentDbContext dbContext) =>
+    public CommentRepository(IDistributedCache cache, IBlogHubDbContext dbContext) =>
         (_cache, _dbContext) = (cache, dbContext);
 
-    public async Task<List<Comment>?> GetAllByBlogIdAsync(Guid blogId, CancellationToken cancellationToken)
+    public async Task<List<Comment>?> GetAllByArticleIdAsync(Guid articleId, CancellationToken cancellationToken)
     {
-        var key = $"Name:Comments;Blog:{blogId}";
+        var key = $"{_prefix}:commentfromarticle{articleId}";
 
-        var query = _dbContext.Comments
-            .OrderBy(comment => comment.CreationDate)
-            .Where(comment => comment.BlogId.Equals(blogId));
+        var query =
+            from comment in _dbContext.Comments
+            orderby comment.CreationDate
+            where comment.ArticleId.Equals(articleId)
+            select comment;
 
         return await _cache.GetOrCreateItemAsync(key, async () => await query
             .ToListAsync(),
@@ -28,21 +32,26 @@ public class CommentRepository : ICommentRepository
 
     public async Task<Comment?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        var key = $"Name:Comment;Entity:{id}";
+        var key = $"{_prefix}:comment{id}";
 
-        return await _cache.GetOrCreateItemAsync(key, async () => await _dbContext.Comments
-            .FirstOrDefaultAsync(comment => comment.Id.Equals(id), cancellationToken),
+        var query =
+            from comment in _dbContext.Comments
+            where comment.Id.Equals(id)
+            select comment;
+
+        return await _cache.GetOrCreateItemAsync(key, async () => await query
+            .FirstOrDefaultAsync(cancellationToken),
         cancellationToken);
     }
 
     public async Task<Guid> CreateAsync(Comment comment, CancellationToken cancellationToken)
     {
-        var key = $"Name:Comment;Entity:{comment.Id}";
+        var key = $"{_prefix}:comment{comment.Id}";
 
         await _dbContext.Comments.AddAsync(comment, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.ClearAsync(cancellationToken);
+        await _cache.ClearAsync(_prefix, cancellationToken);
         await _cache.SetItemAsync(key, comment, cancellationToken);
 
         return comment.Id;
@@ -53,7 +62,7 @@ public class CommentRepository : ICommentRepository
         _dbContext.Comments.Remove(comment);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _cache.ClearAsync(cancellationToken);
+        await _cache.ClearAsync(_prefix, cancellationToken);
 
         return comment.Id;
     }

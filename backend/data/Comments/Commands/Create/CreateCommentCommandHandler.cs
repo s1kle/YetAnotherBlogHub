@@ -4,22 +4,22 @@ namespace BlogHub.Data.Comments.Create;
 internal sealed class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, Guid>
 {
     private readonly ICommentRepository _repository;
-    private readonly IBlogRepository _blogRepository;
+    private readonly IArticleRepository _ArticleRepository;
 
-    public CreateCommentCommandHandler(ICommentRepository repository, IBlogRepository blogRepository) =>
-        (_repository, _blogRepository) = (repository, blogRepository);
+    public CreateCommentCommandHandler(ICommentRepository repository, IArticleRepository ArticleRepository) =>
+        (_repository, _ArticleRepository) = (repository, ArticleRepository);
 
     public async Task<Guid> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
     {
-        var blog = await _blogRepository.GetAsync(request.BlogId, cancellationToken);
+        var Article = await _ArticleRepository.GetAsync(request.ArticleId, cancellationToken);
 
-        if (blog is null) throw new NotFoundException(nameof(blog));
+        if (Article is null) throw new NotFoundException(nameof(Article));
 
         var comment = new Comment()
         {
             Id = Guid.NewGuid(),
             UserId = request.UserId,
-            BlogId = request.BlogId,
+            ArticleId = request.ArticleId,
             CreationDate = DateTime.UtcNow,
             Content = request.Content
         };

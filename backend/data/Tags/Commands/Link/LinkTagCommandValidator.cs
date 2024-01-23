@@ -7,7 +7,7 @@ internal sealed class LinkTagCommandValidator : AbstractValidator<LinkTagCommand
         RuleFor(command => command.UserId)
             .NotEmpty();
 
-        RuleFor(command => command.BlogId)
+        RuleFor(command => command.ArticleId)
             .NotEmpty();
 
         RuleFor(command => command.TagId)

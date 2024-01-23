@@ -3,16 +3,16 @@ namespace BlogHub.Data.Tags.Link;
 internal sealed class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Guid>
 {
     private readonly ITagRepository _tagRepository;
-    private readonly IBlogTagRepository _linkRepository;
-    private readonly IBlogRepository _blogRepository;
+    private readonly IArticleTagRepository _linkRepository;
+    private readonly IArticleRepository _ArticleRepository;
 
     public LinkTagCommandHandler(ITagRepository tagRepository,
-        IBlogTagRepository linkRepository,
-        IBlogRepository blogRepository)
+        IArticleTagRepository linkRepository,
+        IArticleRepository ArticleRepository)
     {
         _tagRepository = tagRepository;
         _linkRepository = linkRepository;
-        _blogRepository = blogRepository;
+        _ArticleRepository = ArticleRepository;
     }
 
     public async Task<Guid> Handle(LinkTagCommand request, CancellationToken cancellationToken)
@@ -21,18 +21,18 @@ internal sealed class LinkTagCommandHandler : IRequestHandler<LinkTagCommand, Gu
 
         if (tag is null) throw new NotFoundException(nameof(tag));
 
-        var blog = await _blogRepository.GetAsync(request.BlogId, cancellationToken);
+        var Article = await _ArticleRepository.GetAsync(request.ArticleId, cancellationToken);
 
-        if (blog is null || blog.UserId != request.UserId) throw new NotFoundException(nameof(blog));
+        if (Article is null || Article.UserId != request.UserId) throw new NotFoundException(nameof(Article));
 
-        var link = await _linkRepository.GetAsync(blog.Id, tag.Id, cancellationToken);
+        var link = await _linkRepository.GetAsync(Article.Id, tag.Id, cancellationToken);
 
         if (link is not null) return link.Id;
 
-        link = new BlogTagLink()
+        link = new ArticleTag()
         {
             Id = Guid.NewGuid(),
-            BlogId = blog.Id,
+            ArticleId = Article.Id,
             TagId = tag.Id
         };
 
