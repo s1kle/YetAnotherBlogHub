@@ -1,0 +1,33 @@
+services:
+  api:
+    container_name: api
+    build:
+      dockerfile: api.dockerfile
+      target: development
+
+    networks:
+      api-identity:
+      api-db:
+      api-cache:
+      api-rabbit:
+    ports:
+      - 8080:8080
+
+    depends_on:
+      db:
+        condition: service_healthy
+      identity:
+        condition: service_started
+      cache:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080

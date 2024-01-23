@@ -6,34 +6,34 @@ public class LinkTests
     public async Task LinkTag_ShouldSuccess()
     {
         var userId = Guid.NewGuid();
-        var blog = BlogFactory.CreateBlog(userId: userId);
+        var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        BlogTagLink? temp = null;
-        var expected = LinkFactory.CreateBlogTagLink(blog, tag);
+        ArticleTag? temp = null;
+        var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
         {
             UserId = userId,
             TagId = tag.Id,
-            BlogId = blog.Id
+            ArticleId = Article.Id
         };
 
         var tagRepository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        var blogRepository = A.Fake<IBlogRepository>();
+        var linkRepository = A.Fake<IArticleTagRepository>();
+        var ArticleRepository = A.Fake<IArticleRepository>();
 
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(blog);
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(Article);
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
-    
-        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, blogRepository);
-    
+
+        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
+
         var result = await handler.Handle(command, CancellationToken.None);
 
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
@@ -45,27 +45,27 @@ public class LinkTests
             })
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
-            .WhenArgumentsMatch((Guid blogId, Guid tagId, CancellationToken token) =>
+            .WhenArgumentsMatch((Guid ArticleId, Guid tagId, CancellationToken token) =>
             {
                 tagId.Should().Be(tag.Id);
-                blogId.Should().Be(blog.Id);
+                ArticleId.Should().Be(Article.Id);
                 token.Should().Be(CancellationToken.None);
                 return true;
             })
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Guid id, CancellationToken token) =>
             {
-                id.Should().Be(blog.Id);
+                id.Should().Be(Article.Id);
                 token.Should().Be(CancellationToken.None);
                 return true;
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
-            .WhenArgumentsMatch((BlogTagLink actual, CancellationToken token) =>
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
+            .WhenArgumentsMatch((ArticleTag actual, CancellationToken token) =>
             {
-                actual.BlogId.Should().Be(expected.BlogId);
+                actual.ArticleId.Should().Be(expected.ArticleId);
                 actual.TagId.Should().Be(expected.TagId);
 
                 token.Should().Be(CancellationToken.None);
@@ -79,36 +79,36 @@ public class LinkTests
     public async Task LinkTag_WithIncorrectTagId_ShouldSuccess()
     {
         var userId = Guid.NewGuid();
-        var blog = BlogFactory.CreateBlog(userId: userId);
+        var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        BlogTagLink? temp = null;
-        var expected = LinkFactory.CreateBlogTagLink(blog, tag);
+        ArticleTag? temp = null;
+        var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
         {
             UserId = userId,
             TagId = Guid.NewGuid(),
-            BlogId = blog.Id
+            ArticleId = Article.Id
         };
 
         tag = null;
 
         var tagRepository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        var blogRepository = A.Fake<IBlogRepository>();
+        var linkRepository = A.Fake<IArticleTagRepository>();
+        var ArticleRepository = A.Fake<IArticleRepository>();
 
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(blog);
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(Article);
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
-    
-        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, blogRepository);
-        
+
+        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
+
         await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(command, CancellationToken.None);
@@ -125,46 +125,46 @@ public class LinkTests
 
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
     [Fact]
-    public async Task LinkTag_WithIncorrectBlogId_ShouldSuccess()
+    public async Task LinkTag_WithIncorrectArticleId_ShouldSuccess()
     {
         var userId = Guid.NewGuid();
-        var blog = BlogFactory.CreateBlog(userId: userId);
+        var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        BlogTagLink? temp = null;
-        var expected = LinkFactory.CreateBlogTagLink(blog, tag);
+        ArticleTag? temp = null;
+        var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
         {
             UserId = userId,
             TagId = tag.Id,
-            BlogId = Guid.NewGuid()
+            ArticleId = Guid.NewGuid()
         };
 
-        blog = null;
+        Article = null;
 
         var tagRepository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        var blogRepository = A.Fake<IBlogRepository>();
+        var linkRepository = A.Fake<IArticleTagRepository>();
+        var ArticleRepository = A.Fake<IArticleRepository>();
 
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(blog);
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(Article);
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(temp);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
-    
-        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, blogRepository);
-        
+
+        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
+
         await Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             var result = await handler.Handle(command, CancellationToken.None);
@@ -179,10 +179,10 @@ public class LinkTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Guid id, CancellationToken token) =>
             {
-                id.Should().Be(command.BlogId);
+                id.Should().Be(command.ArticleId);
                 token.Should().Be(CancellationToken.None);
                 return true;
             })
@@ -190,7 +190,7 @@ public class LinkTests
 
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .MustNotHaveHappened();
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
     }
 
@@ -198,33 +198,33 @@ public class LinkTests
     public async Task LinkTag_WithNotNullLink_ShouldSuccess()
     {
         var userId = Guid.NewGuid();
-        var blog = BlogFactory.CreateBlog(userId: userId);
+        var Article = ArticleFactory.CreateArticle(userId: userId);
         var tag = TagFactory.CreateTag(userId: userId);
-        var expected = LinkFactory.CreateBlogTagLink(blog, tag);
+        var expected = LinkFactory.CreateArticleTagLink(Article, tag);
 
         var command = new LinkTagCommand()
         {
             UserId = userId,
             TagId = tag.Id,
-            BlogId = Guid.NewGuid()
+            ArticleId = Guid.NewGuid()
         };
 
         var tagRepository = A.Fake<ITagRepository>();
-        var linkRepository = A.Fake<IBlogTagRepository>();
-        var blogRepository = A.Fake<IBlogRepository>();
+        var linkRepository = A.Fake<IArticleTagRepository>();
+        var ArticleRepository = A.Fake<IArticleRepository>();
 
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(blog);
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(Article);
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(tag);
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
 
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .Returns(expected.Id);
-    
-        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, blogRepository);
-        
+
+        var handler = new LinkTagCommandHandler(tagRepository, linkRepository, ArticleRepository);
+
         var result = await handler.Handle(command, CancellationToken.None);
 
         A.CallTo(() => tagRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
@@ -236,26 +236,26 @@ public class LinkTests
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .WhenArgumentsMatch((Guid id, CancellationToken token) =>
             {
-                id.Should().Be(command.BlogId);
+                id.Should().Be(command.ArticleId);
                 token.Should().Be(CancellationToken.None);
                 return true;
             })
             .MustHaveHappenedOnceExactly();
 
         A.CallTo(() => linkRepository.GetAsync(A<Guid>._, A<Guid>._, A<CancellationToken>._))
-            .WhenArgumentsMatch((Guid blogId, Guid tagId, CancellationToken token) =>
+            .WhenArgumentsMatch((Guid ArticleId, Guid tagId, CancellationToken token) =>
             {
                 tagId.Should().Be(tag.Id);
-                blogId.Should().Be(blog.Id);
+                ArticleId.Should().Be(Article.Id);
                 token.Should().Be(CancellationToken.None);
                 return true;
             })
             .MustHaveHappenedOnceExactly();
 
-        A.CallTo(() => linkRepository.CreateAsync(A<BlogTagLink>._, A<CancellationToken>._))
+        A.CallTo(() => linkRepository.CreateAsync(A<ArticleTag>._, A<CancellationToken>._))
             .MustNotHaveHappened();
 
         result.Should().Be(expected.Id);

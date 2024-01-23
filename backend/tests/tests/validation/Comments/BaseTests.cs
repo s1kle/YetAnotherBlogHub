@@ -8,7 +8,7 @@ public class BaseTests
     [Theory]
     [InlineData(typeof(CreateCommentCommand))]
     [InlineData(typeof(DeleteCommentCommand))]
-    [InlineData(typeof(GetBlogCommentsQuery))]
+    [InlineData(typeof(GetArticleCommentsQuery))]
     public void ValidRequests_ShouldSuccess(Type type)
     {
         var requestsMethod = typeof(ValidatorFactory)

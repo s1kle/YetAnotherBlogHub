@@ -14,7 +14,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             await HandleExceptionAsync(exception, context);
         }
@@ -26,17 +26,17 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
         (var status, var title, var detail) = exception switch
         {
-            NotFoundException e => 
-                (StatusCodes.Status404NotFound, 
-                "Entity not found", 
+            NotFoundException e =>
+                (StatusCodes.Status404NotFound,
+                "Entity not found",
                 e.Message),
-            ValidationException => 
-                (StatusCodes.Status400BadRequest, 
-                "Validation failed", 
+            ValidationException =>
+                (StatusCodes.Status400BadRequest,
+                "Validation failed",
                 $"The provided data failed one or more validation rules. Please check the values."),
-            _ => 
-                (StatusCodes.Status500InternalServerError, 
-                "Server error", 
+            _ =>
+                (StatusCodes.Status500InternalServerError,
+                "Server error",
                 "An internal server error has occurred."),
         };
 

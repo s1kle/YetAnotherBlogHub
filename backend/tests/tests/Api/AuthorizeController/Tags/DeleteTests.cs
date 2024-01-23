@@ -23,13 +23,13 @@ public class DeleteTests
 
         result.Should().BeEquivalentTo(expected);
 
-        fixture.TagDbContext.Tags.Should().BeEmpty();
+        fixture.BlogHubDbContext.Tags.Should().BeEmpty();
 
         fixture.EnsureDeleted();
     }
 
     [Fact]
-    public async void Delete_WithEmptyBlogId_ShouldFail()
+    public async void Delete_WithEmptyArticleId_ShouldFail()
     {
         var fixture = ControllerFactory.CreateFixture<AuthorizeTagController>();
         fixture.EnsureCreated();

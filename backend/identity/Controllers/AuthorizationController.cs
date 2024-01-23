@@ -15,8 +15,8 @@ public class AuthorizationController : Controller
     private readonly IIdentityServerInteractionService _interactionService;
     private readonly IUserEventService _userEventService;
 
-    public AuthorizationController(UserManager<ApplicationUser> userManager, 
-        SignInManager<ApplicationUser> signInManager, 
+    public AuthorizationController(UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
         IIdentityServerInteractionService interactionService,
         IUserEventService userEventService)
     {
@@ -116,7 +116,8 @@ public class AuthorizationController : Controller
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> Logout(string logoutId) {
+    public async Task<IActionResult> Logout(string logoutId)
+    {
         await _signInManager.SignOutAsync();
         var request = await _interactionService.GetLogoutContextAsync(logoutId);
         return Redirect(request.PostLogoutRedirectUri);

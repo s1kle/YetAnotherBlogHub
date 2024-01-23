@@ -1,0 +1,29 @@
+services:
+  identity:
+    container_name: identity
+    build:
+      dockerfile: identity.dockerfile
+      target: development
+
+    networks:
+      api-identity:
+      identity-rabbit:
+      identity-db:
+
+    ports:
+      - 8081:8081
+
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8081

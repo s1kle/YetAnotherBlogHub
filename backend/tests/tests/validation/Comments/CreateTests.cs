@@ -7,7 +7,7 @@ public class CreateTests
     {
         var requests = ValidatorFactory.CreateInvalidRequest<CreateCommentCommand>(
             (c => c.UserId, Guid.Empty),
-            (c => c.BlogId, Guid.Empty),
+            (c => c.ArticleId, Guid.Empty),
             (c => c.Content, new string('f', 1001)),
             (c => c.Content, new string(' ', 10)));
         var validators = ValidatorFactory.GetValidators<CreateCommentCommand>();

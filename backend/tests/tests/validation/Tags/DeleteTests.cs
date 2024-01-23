@@ -10,7 +10,7 @@ public class DeleteTests
             (c => c.Id, Guid.Empty));
         var validators = ValidatorFactory.GetValidators<DeleteTagCommand>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
             var context = new ValidationContext<DeleteTagCommand>(request);
 

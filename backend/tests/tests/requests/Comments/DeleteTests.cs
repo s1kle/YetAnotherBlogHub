@@ -5,9 +5,9 @@ public class DeleteTests
     [Fact]
     public async Task DeleteComment_WithCorrectData_ShouldSuccess()
     {
-        var blog = BlogFactory.CreateBlog("title", Guid.NewGuid());
+        var Article = ArticleFactory.CreateArticle("title", Guid.NewGuid());
 
-        var expected = CommentFactory.CreateComment(blog, blog.UserId);
+        var expected = CommentFactory.CreateComment(Article, Article.UserId);
 
         var command = new DeleteCommentCommand()
         {
@@ -16,7 +16,7 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ICommentRepository>();
-        
+
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(expected);
         A.CallTo(() => repository.RemoveAsync(A<Comment>._, A<CancellationToken>._))
@@ -47,9 +47,9 @@ public class DeleteTests
     [Fact]
     public async Task DeleteComment_WithIncorrectUserId_ShouldFail()
     {
-        var blog = BlogFactory.CreateBlog("title", Guid.NewGuid());
+        var Article = ArticleFactory.CreateArticle("title", Guid.NewGuid());
 
-        var comment = CommentFactory.CreateComment(blog, blog.UserId);
+        var comment = CommentFactory.CreateComment(Article, Article.UserId);
 
         var command = new DeleteCommentCommand()
         {
@@ -58,7 +58,7 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ICommentRepository>();
-        
+
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(comment);
 
@@ -88,7 +88,7 @@ public class DeleteTests
         };
 
         var repository = A.Fake<ICommentRepository>();
-        
+
         A.CallTo(() => repository.GetAsync(A<Guid>._, A<CancellationToken>._))
             .Returns(comment);
 

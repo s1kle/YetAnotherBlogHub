@@ -7,17 +7,24 @@ namespace BlogHub.Identity.Services;
 
 public class UserEventService : IUserEventService, IDisposable
 {
-    private readonly string _createdKey = "created";
-    private readonly string _deletedKey = "deleted";
-    private readonly string _eventCreatedKey = "user-created";
-    private readonly string _eventDeletedKey = "user-deleted";
+    private const string RabbitMQHost = "RabbitMQ:Host";
+    private const string RabbitMQUser = "RabbitMQ:User";
+    private const string RabbitMQPassword = "RabbitMQ:Password";
+    private const string RabbitMQExchange = "RabbitMQ:Exchange";
+    private const string _createdKey = "created";
+    private const string _deletedKey = "deleted";
+    private const string _eventCreatedKey = "user-created";
+    private const string _eventDeletedKey = "user-deleted";
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly string _exchange;
 
-    public UserEventService(string hostName, string userName, string password, string exchange)
+    public UserEventService(IConfiguration configuration)
     {
-        _exchange = exchange;
+        var hostName = configuration[RabbitMQHost]!;
+        var userName = configuration[RabbitMQUser]!;
+        var password = configuration[RabbitMQPassword]!;
+        _exchange = configuration[RabbitMQExchange]!;
 
         var factory = new ConnectionFactory();
         factory.HostName = hostName;
@@ -31,15 +38,15 @@ public class UserEventService : IUserEventService, IDisposable
 
         _channel.QueueDeclare(
                 queue: _eventCreatedKey,
-                durable: false,  
-                exclusive: false, 
+                durable: false,
+                exclusive: false,
                 autoDelete: false,
                 arguments: null);
 
         _channel.QueueDeclare(
                 queue: _eventDeletedKey,
-                durable: false,  
-                exclusive: false, 
+                durable: false,
+                exclusive: false,
                 autoDelete: false,
                 arguments: null);
 
@@ -49,13 +56,13 @@ public class UserEventService : IUserEventService, IDisposable
 
     public void Publish(UserCreatedEvent userCreatedEvent)
     {
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userCreatedEvent)); 
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userCreatedEvent));
         Publish(body, _createdKey);
     }
 
     public void Publish(UserDeletedEvent userDeletedEvent)
     {
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userDeletedEvent)); 
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userDeletedEvent));
         Publish(body, _deletedKey);
     }
 

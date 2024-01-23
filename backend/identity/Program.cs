@@ -8,10 +8,9 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 app.UseStaticFiles();
-app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("All");
 app.UseIdentityServer();
+app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();

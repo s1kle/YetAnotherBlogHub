@@ -11,7 +11,7 @@ public class BaseTests
     [InlineData(typeof(LinkTagCommand))]
     [InlineData(typeof(UnlinkTagCommand))]
     [InlineData(typeof(GetAllTagsQuery))]
-    [InlineData(typeof(GetBlogTagsQuery))]
+    [InlineData(typeof(GetArticleTagsQuery))]
     [InlineData(typeof(GetUserTagsQuery))]
     public void ValidRequests_ShouldSuccess(Type type)
     {

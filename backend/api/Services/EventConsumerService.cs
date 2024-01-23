@@ -12,21 +12,24 @@ namespace BlogHub.Api.Services;
 
 public class EventConsumerService : BackgroundService
 {
-	private readonly string _createdKey = "created";
-	private readonly string _deletedKey = "deleted";
-	private readonly string _eventCreatedKey = "user-created";
-	private readonly string _eventDeletedKey = "user-deleted";
+	private const string RabbitMQHost = "RabbitMQ:Host";
+	private const string RabbitMQUser = "RabbitMQ:User";
+	private const string RabbitMQPassword = "RabbitMQ:Password";
+	private const string RabbitMQExchange = "RabbitMQ:Exchange";
+	private const string _createdKey = "created";
+	private const string _deletedKey = "deleted";
+	private const string _eventCreatedKey = "user-created";
+	private const string _eventDeletedKey = "user-deleted";
 	private IConnection _connection;
 	private IModel _channel;
 	private IServiceProvider _provider;
 
-	public EventConsumerService(
-		string hostName,
-		string userName,
-		string password,
-		string exchange,
-		IServiceProvider provider)
+	public EventConsumerService(IConfiguration configuration, IServiceProvider provider)
 	{
+		var hostName = configuration[RabbitMQHost]!;
+        var userName = configuration[RabbitMQUser]!;
+		var password = configuration[RabbitMQPassword]!;
+		var exchange = configuration[RabbitMQExchange]!;
 		_provider = provider;
 
 		var factory = new ConnectionFactory { HostName = hostName, UserName = userName, Password = password };

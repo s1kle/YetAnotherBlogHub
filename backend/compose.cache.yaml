@@ -1,0 +1,9 @@
+services:
+  cache:
+    container_name: cache
+    image: redis
+
+    networks:
+      api-cache:
+
+    restart: always

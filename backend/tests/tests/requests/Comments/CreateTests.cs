@@ -5,26 +5,26 @@ public class CreateTests
     [Fact]
     public async Task CreateComment_ShouldSuccess()
     {
-        var blog = BlogFactory.CreateBlog("title", Guid.NewGuid());
+        var Article = ArticleFactory.CreateArticle("title", Guid.NewGuid());
 
-        var expected = CommentFactory.CreateComment(blog, blog.UserId);
+        var expected = CommentFactory.CreateComment(Article, Article.UserId);
 
         var command = new CreateCommentCommand()
         {
             UserId = expected.UserId,
-            BlogId = expected.BlogId,
+            ArticleId = expected.ArticleId,
             Content = expected.Content
         };
 
         var repository = A.Fake<ICommentRepository>();
-        var blogRepository = A.Fake<IBlogRepository>();
+        var ArticleRepository = A.Fake<IArticleRepository>();
 
         A.CallTo(() => repository.CreateAsync(A<Comment>._, A<CancellationToken>._))
             .Returns(expected.Id);
-        A.CallTo(() => blogRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
-            .Returns(blog);
+        A.CallTo(() => ArticleRepository.GetAsync(A<Guid>._, A<CancellationToken>._))
+            .Returns(Article);
 
-        var handler = new CreateCommentCommandHandler(repository, blogRepository);
+        var handler = new CreateCommentCommandHandler(repository, ArticleRepository);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
@@ -32,7 +32,7 @@ public class CreateTests
             .WhenArgumentsMatch((Comment actual, CancellationToken token) =>
             {
                 actual.UserId.Should().Be(expected.UserId);
-                actual.BlogId.Should().Be(expected.BlogId);
+                actual.ArticleId.Should().Be(expected.ArticleId);
                 actual.Content.Should().BeEquivalentTo(expected.Content);
                 actual.CreationDate.Should().BeOnOrAfter(expected.CreationDate);
 

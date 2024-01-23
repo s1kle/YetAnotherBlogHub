@@ -47,19 +47,21 @@ public class LoggingDistributedCache : IDistributedCache
 
     public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
     {
+        options = new DistributedCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromHours(1))
+            .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
         Log.Information($"Setting cache for key - {key}");
-        _cache.Set(key, value, new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
-        });
+        _cache.Set(key, value, options);
     }
 
     public async Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options, CancellationToken token = default)
     {
+        options = new DistributedCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromHours(1))
+            .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
         Log.Information($"Setting cache for key - {key}");
-        await _cache.SetAsync(key, value, new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
-        }, token);
+        await _cache.SetAsync(key, value, options, token);
     }
 }

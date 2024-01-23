@@ -11,7 +11,7 @@ public class CreateTests
             (c => c.Name, new string(' ', 6)));
         var validators = ValidatorFactory.GetValidators<CreateTagCommand>();
 
-        foreach(var request in requests)
+        foreach (var request in requests)
         {
             var context = new ValidationContext<CreateTagCommand>(request);
 
