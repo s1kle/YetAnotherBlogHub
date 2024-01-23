@@ -1,0 +1,36 @@
+services:
+  rabbitmq:
+    container_name: events
+    image: rabbitmq:management
+
+    volumes:
+      - rabbitmq-data:/data
+
+    networks:
+      api-rabbit:
+      identity-rabbit:
+
+    ports:
+      - 15672:15672
+      
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
+    entrypoint: >
+      sh -c '
+        rabbitmq-server &
+        if [ ! -f /data/created ]; then
+          until rabbitmqctl status; do
+            sleep 10
+          done &&
+          rabbitmqctl add_user api api &&
+          rabbitmqctl set_permissions -p / api ".*" ".*" ".*" &&
+          rabbitmqctl add_user identity identity &&
+          rabbitmqctl set_permissions -p / identity ".*" ".*" ".*" &&
+          touch /data/created
+        fi
+        wait
+      '
+
+    restart: always

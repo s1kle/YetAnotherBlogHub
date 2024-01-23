@@ -1,0 +1,13 @@
+volumes:
+  rabbitmq-data:
+  db-data:
+
+networks:
+  api-identity:
+
+  api-cache:
+  api-db:
+  api-rabbit:
+
+  identity-db:
+  identity-rabbit:

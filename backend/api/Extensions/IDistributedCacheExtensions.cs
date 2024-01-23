@@ -10,7 +10,7 @@ namespace BlogHub.Api.Extensions
             var prefix = GetPrefix(key);
             var actualKey = RemovePrefix(key);
             var currentKey = await cache.GetStringAsync(prefix);
-            await cache.SetStringAsync(prefix, $"{actualKey}{currentKey ?? ""}");
+            await cache.SetStringAsync(prefix, $"{actualKey};{currentKey}");
             var bytes = JsonSerializer.SerializeToUtf8Bytes(value);
             await cache.SetAsync(actualKey, bytes, cancellationToken);
         }
@@ -26,8 +26,7 @@ namespace BlogHub.Api.Extensions
 
         public static async Task<TItem?> GetOrCreateItemAsync<TItem>(this IDistributedCache cache, string key, Func<Task<TItem?>> getItem, CancellationToken cancellationToken = default)
         {
-            var actualKey = RemovePrefix(key);
-            var value = await cache.GetItemAsync<TItem>(actualKey, cancellationToken);
+            var value = await cache.GetItemAsync<TItem>(key, cancellationToken);
             if (value is null)
             {
                 value = await getItem();
@@ -44,8 +43,17 @@ namespace BlogHub.Api.Extensions
             return currentKey?.Contains(actualKey) ?? false;
         }
 
-        public static async Task ClearAsync(this IDistributedCache cache, string prefix, CancellationToken cancellationToken) =>
+        public static async Task ClearAsync(this IDistributedCache cache, string prefix, CancellationToken cancellationToken)
+        {
+            var currentKey = await cache.GetStringAsync(prefix, cancellationToken);
+
+            var keys = currentKey?.Split(';') ?? Array.Empty<string>();
+
+            foreach (var key in keys)
+                await cache.RemoveAsync(key, cancellationToken);
+
             await cache.RemoveAsync(prefix, cancellationToken);
+        }
 
         private static string RemovePrefix(string key) => new string(
             key.Skip(key.IndexOf(':') + 1).ToArray());

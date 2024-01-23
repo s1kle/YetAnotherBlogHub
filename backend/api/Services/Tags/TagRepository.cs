@@ -17,7 +17,7 @@ public class TagRepository : ITagRepository
 
     public async Task<List<Tag>?> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix}:user{userId}";
+        var key = $"{_prefix}:tagfromuser{userId}";
 
         var query =
             from tag in _dbContext.Tags
@@ -32,7 +32,7 @@ public class TagRepository : ITagRepository
 
     public async Task<List<Tag>?> GetAllByArticleIdAsync(Guid articleId, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix}:article{articleId}";
+        var key = $"{_prefix}:tagfromarticle{articleId}";
 
         var query =
             from tag in _dbContext.Tags

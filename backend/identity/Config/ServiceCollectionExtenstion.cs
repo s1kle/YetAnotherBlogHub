@@ -9,6 +9,7 @@ namespace BlogHub.Identity.Configuration;
 public static class ServiceCollectionExtensions
 {
     private const string IdentityConnectionString = "Identity";
+    private const string ContainerConnectionString = "Container";
 
     public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
@@ -16,19 +17,13 @@ public static class ServiceCollectionExtensions
             .AddDbContext<AuthorizationDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(IdentityConnectionString)))
 
-            .AddSingleton<IUserEventService, UserEventService>(provider => new UserEventService(
-                configuration["RabbitMQ:Host"]!,
-                configuration["RabbitMQ:User"]!,
-                configuration["RabbitMQ:Password"]!,
-                configuration["RabbitMQ:Exchange"]!))
+            .AddSingleton<IUserEventService, UserEventService>(provider => new UserEventService(configuration))
 
             .AddCors(options => options
-                .AddPolicy("All", policy =>
-                {
-                    policy.AllowAnyOrigin();
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                }));
+                .AddPolicy("AllowAll", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()));
 
         services.AddIdentity<ApplicationUser, IdentityRole>(config =>
         {
@@ -50,7 +45,10 @@ public static class ServiceCollectionExtensions
 
 
 
-        services.AddIdentityServer()
+        services.AddIdentityServer(config =>
+        {
+            config.IssuerUri = config.IssuerUri = configuration.GetConnectionString(ContainerConnectionString); ;
+        })
             .AddAspNetIdentity<ApplicationUser>()
             .AddInMemoryApiScopes(IdentityServerConfiguration.ApiScopes)
             .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)

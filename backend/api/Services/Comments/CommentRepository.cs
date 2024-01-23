@@ -17,7 +17,7 @@ public class CommentRepository : ICommentRepository
 
     public async Task<List<Comment>?> GetAllByArticleIdAsync(Guid articleId, CancellationToken cancellationToken)
     {
-        var key = $"{_prefix}:article{articleId}";
+        var key = $"{_prefix}:commentfromarticle{articleId}";
 
         var query =
             from comment in _dbContext.Comments

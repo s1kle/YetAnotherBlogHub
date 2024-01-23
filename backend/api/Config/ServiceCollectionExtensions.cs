@@ -20,29 +20,21 @@ public static class ServiceCollectionExtensions
 {
     private const string ArticlesString = "Articles";
     private const string RedisString = "Redis";
-    private const string ClientString = "Client";
-    private const string RedisInstanceName = "Redis:InstanceName";
+    private const string IdentityString = "Identity";
+    private const string RedisInstanceName = "InstanceName";
     private const string Authority = "JwtOptions:Authority";
     private const string Audience = "JwtOptions:Audience";
-    private const string RabbitMQHost = "RabbitMQ:Host";
-    private const string RabbitMQUser = "RabbitMQ:User";
-    private const string RabbitMQPassword = "RabbitMQ:Password";
-    private const string RabbitMQExchange = "RabbitMQ:Exchange";
 
     public static IServiceCollection AddDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSerilog(config => config
             .ReadFrom
             .Configuration(configuration));
+
         services
             .AddDataDependencies()
 
-            .AddHostedService(provider => new EventConsumerService(
-                configuration[RabbitMQHost]!,
-                configuration[RabbitMQUser]!,
-                configuration[RabbitMQPassword]!,
-                configuration[RabbitMQExchange]!,
-                provider))
+            .AddHostedService(provider => new EventConsumerService(configuration, provider))
 
             .AddTransient<ExceptionHandlingMiddleware>()
 
@@ -65,14 +57,12 @@ public static class ServiceCollectionExtensions
                     provider.GetRequiredService<IOptions<RedisCacheOptions>>())))
 
             .AddCors(options => options
-                .AddPolicy(ClientString, policy =>
-                {
-                    policy.WithOrigins(configuration.GetConnectionString(ClientString)
-                        ?? throw new ArgumentNullException("No connection string for client provided"));
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                }))
+                .AddPolicy("AllowAll", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()));
 
+        services
             .AddEndpointsApiExplorer()
             .AddSwaggerGen(options =>
             {
@@ -83,11 +73,11 @@ public static class ServiceCollectionExtensions
                     {
                         AuthorizationCode = new()
                         {
-                            AuthorizationUrl = new Uri($"{configuration[Authority]}/connect/authorize"),
-                            TokenUrl = new Uri($"{configuration[Authority]}/connect/token"),
+                            AuthorizationUrl = new Uri($"{configuration.GetConnectionString(IdentityString)}connect/authorize"),
+                            TokenUrl = new Uri($"{configuration.GetConnectionString(IdentityString)}connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                {configuration[Audience]!, "Api"}
+                                {configuration[Audience]!, configuration[Audience]!}
                             }
                         }
                     }
@@ -118,6 +108,7 @@ public static class ServiceCollectionExtensions
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                options.RequireHttpsMetadata = false;
                 options.Authority = configuration[Authority];
                 options.Audience = configuration[Audience];
             });
